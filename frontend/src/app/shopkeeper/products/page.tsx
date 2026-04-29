@@ -60,7 +60,8 @@ export default function ProductsPage() {
     fetchProducts();
   };
 
-  const BASE = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '');
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
+  const BASE = API_URL.replace('/api', '');
 
   return (
     <div className="min-h-screen bg-gray-950">

@@ -65,15 +65,7 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <div className="mt-8 p-6 bg-brand-50 rounded-3xl border border-brand-100/50">
-            <p className="font-black text-[10px] uppercase tracking-widest text-brand-600 mb-3">Quick Access (Demo)</p>
-            <div className="space-y-2 text-xs font-bold text-gray-600">
-              <div className="flex justify-between"><span>Admin:</span> <span className="text-gray-900">admin@credikart.com</span></div>
-              <div className="flex justify-between"><span>Shop:</span> <span className="text-gray-900">shop@credikart.com</span></div>
-              <div className="flex justify-between"><span>Customer:</span> <span className="text-gray-900">customer@credikart.com</span></div>
-              <div className="mt-2 text-[10px] text-brand-400 font-black italic">Password: Admin@123 / Shop@123 / Cust@123</div>
-            </div>
-          </div>
+
         </div>
       </div>
     </div>
