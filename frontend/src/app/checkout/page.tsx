@@ -1,0 +1,218 @@
+'use client';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Navbar from '@/components/layout/Navbar';
+import { useCartStore } from '@/store/cartStore';
+import { useAuthStore } from '@/store/authStore';
+import api from '@/lib/api';
+import toast from 'react-hot-toast';
+
+declare global { interface Window { Razorpay: any } }
+
+const PLATFORM_FEE_RATE = 0.028;
+
+export default function CheckoutPage() {
+  const { items, total, clearCart } = useCartStore();
+  const { user } = useAuthStore();
+  const router = useRouter();
+
+  const [payMethod, setPayMethod] = useState<'RAZORPAY' | 'CREDIPAY'>('RAZORPAY');
+  const [deliveryType, setDeliveryType] = useState<'PICKUP' | 'DELIVERY'>('DELIVERY');
+  const [address, setAddress] = useState('');
+  const [ledger, setLedger] = useState<any>(null);
+  const [placing, setPlacing] = useState(false);
+
+  const subtotal = total();
+  const platformFee = payMethod === 'CREDIPAY' ? parseFloat((subtotal * PLATFORM_FEE_RATE).toFixed(2)) : 0;
+  const deliveryFee = deliveryType === 'DELIVERY' ? 25 : 0;
+  const grandTotal = parseFloat((subtotal + platformFee + deliveryFee).toFixed(2));
+
+  useEffect(() => {
+    if (!user) { router.push('/auth/login'); return; }
+    if (user.role === 'CUSTOMER') {
+      api.get('/credipay/ledger').then(r => setLedger(r.data)).catch(() => {});
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (payMethod === 'RAZORPAY') {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      document.body.appendChild(script);
+    }
+  }, [payMethod]);
+
+  const placeOrder = async () => {
+    if (items.length === 0) { toast.error('Cart is empty'); return; }
+    if (deliveryType === 'DELIVERY' && !address.trim()) { toast.error('Delivery address required'); return; }
+    if (payMethod === 'CREDIPAY' && ledger && ledger.available_credit < grandTotal) {
+      toast.error(`Insufficient CrediPay credit. Available: ₹${ledger.available_credit}`); return;
+    }
+
+    setPlacing(true);
+    try {
+      const orderPayload = {
+        shop_id: items[0].shop_id,
+        items: items.map(i => ({ product_id: i.product_id, qty: i.qty })),
+        payment_method: payMethod,
+        delivery_type: deliveryType,
+        address: deliveryType === 'DELIVERY' ? address : 'Self pickup',
+      };
+
+      const { data } = await api.post('/orders', orderPayload);
+
+      if (payMethod === 'RAZORPAY') {
+        const rzp = new window.Razorpay({
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
+          order_id: data.razorpay_order_id,
+          amount: grandTotal * 100,
+          currency: 'INR',
+          name: 'CrediKart',
+          description: `Order #${data.order_id}`,
+          handler: async (response: any) => {
+            await api.post('/orders/verify-payment', {
+              order_id: data.order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            });
+            clearCart();
+            toast.success('Order placed successfully!');
+            router.push(`/dashboard/orders`);
+          },
+          prefill: { name: user?.name, email: user?.email },
+          theme: { color: '#f59e0b' },
+        });
+        rzp.open();
+      } else {
+        clearCart();
+        toast.success('Order placed on CrediPay!');
+        router.push(`/dashboard/orders`);
+      }
+    } catch (err: any) {
+      toast.error(err?.response?.data?.error || 'Failed to place order');
+    } finally {
+      setPlacing(false);
+    }
+  };
+
+  if (items.length === 0) return (
+    <div className="min-h-screen bg-gray-950">
+      <Navbar />
+      <div className="flex flex-col items-center justify-center h-96 text-gray-400 gap-4">
+        <div className="text-6xl">🛒</div>
+        <p>Your cart is empty</p>
+        <button onClick={() => router.push('/')} className="btn-primary">Continue Shopping</button>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="min-h-screen bg-gray-950">
+      <Navbar />
+      <div className="max-w-5xl mx-auto px-4 py-8">
+        <h1 className="font-display font-bold text-2xl text-white mb-6">Checkout</h1>
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+
+          {/* Left - Options */}
+          <div className="lg:col-span-3 space-y-5">
+            {/* Delivery type */}
+            <div className="card p-5">
+              <h2 className="font-semibold text-white mb-4">Delivery Option</h2>
+              <div className="grid grid-cols-2 gap-3">
+                {(['DELIVERY', 'PICKUP'] as const).map(t => (
+                  <button key={t} onClick={() => setDeliveryType(t)}
+                    className={`p-4 rounded-xl border text-center transition-all ${deliveryType === t ? 'border-brand-500 bg-brand-500/10' : 'border-gray-700 bg-gray-800 hover:border-gray-500'}`}>
+                    <div className="text-2xl mb-1">{t === 'DELIVERY' ? '🚴' : '🏪'}</div>
+                    <div className="text-sm font-semibold text-white">{t === 'DELIVERY' ? 'Home Delivery' : 'Self Pickup'}</div>
+                    <div className="text-xs text-gray-400">{t === 'DELIVERY' ? '+₹25 fee' : 'Free'}</div>
+                  </button>
+                ))}
+              </div>
+              {deliveryType === 'DELIVERY' && (
+                <div className="mt-4">
+                  <label className="label">Delivery Address</label>
+                  <textarea value={address} onChange={e => setAddress(e.target.value)} className="input min-h-[80px] resize-none" placeholder="Enter your full delivery address..." />
+                </div>
+              )}
+            </div>
+
+            {/* Payment method */}
+            <div className="card p-5">
+              <h2 className="font-semibold text-white mb-4">Payment Method</h2>
+              <div className="space-y-3">
+                <button onClick={() => setPayMethod('RAZORPAY')}
+                  className={`w-full p-4 rounded-xl border flex items-center gap-4 transition-all ${payMethod === 'RAZORPAY' ? 'border-brand-500 bg-brand-500/10' : 'border-gray-700 bg-gray-800 hover:border-gray-500'}`}>
+                  <div className="text-2xl">💳</div>
+                  <div className="text-left">
+                    <p className="font-semibold text-white">Razorpay</p>
+                    <p className="text-xs text-gray-400">UPI, Cards, Net Banking – Instant payment</p>
+                  </div>
+                  {payMethod === 'RAZORPAY' && <span className="ml-auto text-brand-500 font-bold">✓</span>}
+                </button>
+
+                <button onClick={() => setPayMethod('CREDIPAY')}
+                  className={`w-full p-4 rounded-xl border flex items-center gap-4 transition-all ${payMethod === 'CREDIPAY' ? 'border-brand-500 bg-brand-500/10' : 'border-gray-700 bg-gray-800 hover:border-gray-500'}`}>
+                  <div className="text-2xl">🪙</div>
+                  <div className="text-left flex-1">
+                    <p className="font-semibold text-white">CrediPay</p>
+                    <p className="text-xs text-gray-400">Buy now, pay within 7 days. 2.8% fee applies.</p>
+                    {ledger && (
+                      <p className="text-xs text-green-400 mt-0.5">Available: ₹{Number(ledger.available_credit).toFixed(0)}</p>
+                    )}
+                  </div>
+                  {payMethod === 'CREDIPAY' && <span className="ml-auto text-brand-500 font-bold">✓</span>}
+                </button>
+              </div>
+            </div>
+
+            {/* Cart summary */}
+            <div className="card p-5">
+              <h2 className="font-semibold text-white mb-3">Order Items</h2>
+              <div className="space-y-2 max-h-48 overflow-y-auto">
+                {items.map(i => (
+                  <div key={i.product_id} className="flex justify-between text-sm">
+                    <span className="text-gray-300">{i.name} <span className="text-gray-500">× {i.qty}</span></span>
+                    <span className="text-white font-medium">₹{(i.price * i.qty).toFixed(2)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right - Summary */}
+          <div className="lg:col-span-2">
+            <div className="card p-5 sticky top-20">
+              <h2 className="font-semibold text-white mb-4">Order Summary</h2>
+              <div className="space-y-3 text-sm mb-5">
+                <div className="flex justify-between text-gray-300"><span>Subtotal</span><span>₹{subtotal.toFixed(2)}</span></div>
+                {platformFee > 0 && (
+                  <div className="flex justify-between text-gray-300">
+                    <span>CrediPay fee (2.8%)</span>
+                    <span className="text-orange-400">+₹{platformFee.toFixed(2)}</span>
+                  </div>
+                )}
+                {deliveryFee > 0 && (
+                  <div className="flex justify-between text-gray-300"><span>Delivery</span><span>+₹{deliveryFee}</span></div>
+                )}
+                <div className="border-t border-gray-700 pt-3 flex justify-between text-white font-bold text-base">
+                  <span>Total</span><span>₹{grandTotal.toFixed(2)}</span>
+                </div>
+              </div>
+
+              {payMethod === 'CREDIPAY' && (
+                <div className="mb-4 p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-xs text-amber-300">
+                  <p className="font-semibold mb-1">CrediPay Terms</p>
+                  <p>Pay within 7 days to avoid extra interest. After 7 days, 0.5%/week is charged on the outstanding balance.</p>
+                </div>
+              )}
+
+              <button onClick={placeOrder} disabled={placing} className="btn-primary w-full py-3 text-base">
+                {placing ? 'Placing order...' : `Place Order • ₹${grandTotal.toFixed(2)}`}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
