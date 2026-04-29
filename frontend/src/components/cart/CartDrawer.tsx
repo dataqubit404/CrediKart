@@ -35,7 +35,7 @@ export default function CartDrawer() {
               <div key={item.product_id} className="flex items-center gap-3 bg-gray-800 rounded-xl p-3">
                 <div className="w-12 h-12 rounded-lg bg-gray-700 flex items-center justify-center text-2xl shrink-0">
                   {item.image_url ? (
-                    <img src={`${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}${item.image_url}`} alt={item.name} className="w-full h-full object-cover rounded-lg" />
+                    <img src={`${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api').replace('/api', '')}${item.image_url}`} alt={item.name} className="w-full h-full object-cover rounded-lg" />
                   ) : '🛍️'}
                 </div>
                 <div className="flex-1 min-w-0">

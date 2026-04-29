@@ -34,7 +34,8 @@ export default function ProductCard({ product }: { product: Product }) {
     toast.success(`${product.name} added to cart`);
   };
 
-  const BASE = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '');
+  const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api';
+  const BASE = API_URL.replace('/api', '');
 
   return (
     <div className="bg-white border border-gray-100 rounded-2xl p-3 flex flex-col gap-2 hover:border-brand-300 transition-all duration-200 group relative">
