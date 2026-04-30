@@ -65,7 +65,7 @@ const Order = sequelize.define('Order', {
   payment_method: { type: DataTypes.ENUM('RAZORPAY', 'CREDIPAY'), allowNull: false },
   delivery_type: { type: DataTypes.ENUM('PICKUP', 'DELIVERY'), allowNull: false },
   status: {
-    type: DataTypes.ENUM('PENDING', 'CONFIRMED', 'PREPARING', 'OUT_FOR_DELIVERY', 'DELIVERED', 'CANCELLED', 'REFUNDED'),
+    type: DataTypes.ENUM('PENDING', 'CONFIRMED', 'PREPARING', 'OUT_FOR_DELIVERY', 'DELIVERED', 'COLLECTED', 'CANCELLED', 'REFUNDED'),
     defaultValue: 'PENDING',
   },
   address: { type: DataTypes.TEXT },

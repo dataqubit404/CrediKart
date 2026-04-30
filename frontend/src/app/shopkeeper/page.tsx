@@ -64,25 +64,25 @@ export default function ShopkeeperDashboard() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#FDFDFD]">
+    <div className="min-h-screen bg-gray-950">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div>
             <div className="flex items-center gap-3 mb-2">
               <span className="bg-brand-500 text-black text-[10px] font-black px-2 py-1 rounded uppercase tracking-widest">Active Store</span>
-              <h1 className="font-display font-black text-3xl text-gray-900 tracking-tight">{shop.name}</h1>
+              <h1 className="font-display font-black text-3xl text-white tracking-tight">{shop.name}</h1>
             </div>
-            <p className="text-gray-500 font-medium flex items-center gap-2">
+            <p className="text-gray-400 font-medium flex items-center gap-2">
               <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-              Store Status: <span className="font-black text-gray-900 uppercase text-xs tracking-widest">{shop.status}</span>
+              Store Status: <span className="font-black text-gray-200 uppercase text-xs tracking-widest">{shop.status}</span>
             </p>
           </div>
           <div className="flex gap-4">
-            <Link href="/shopkeeper/register" className="bg-white border border-gray-200 text-gray-700 font-bold px-6 py-3 rounded-2xl hover:bg-gray-50 transition-all">
+            <Link href="/shopkeeper/register" className="bg-gray-800 border border-gray-700 text-gray-200 font-bold px-6 py-3 rounded-2xl hover:bg-gray-700 transition-all">
               Store Settings
             </Link>
-            <Link href={`/shop/${shop.id}`} className="bg-gray-900 text-white font-bold px-6 py-3 rounded-2xl hover:bg-black transition-all">
+            <Link href={`/shop/${shop.id}`} className="bg-brand-500 text-black font-bold px-6 py-3 rounded-2xl hover:bg-brand-600 transition-all">
               View Public Shop
             </Link>
           </div>
@@ -91,10 +91,10 @@ export default function ShopkeeperDashboard() {
         {/* Stats Grid */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {stats.map(s => (
-            <div key={s.label} className={`${s.bg} rounded-[2.5rem] p-8 border border-white/50 shadow-sm`}>
+            <div key={s.label} className="card p-8 group transition-all">
               <div className="text-3xl mb-4">{s.icon}</div>
               <p className={`text-3xl font-black ${s.color} tracking-tight`}>{s.value}</p>
-              <p className="text-sm font-black text-gray-400 uppercase tracking-widest mt-1">{s.label}</p>
+              <p className="text-sm font-black text-gray-500 uppercase tracking-widest mt-1">{s.label}</p>
             </div>
           ))}
         </div>
@@ -104,42 +104,42 @@ export default function ShopkeeperDashboard() {
           <div className="lg:col-span-2 space-y-8">
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-6">
               {[
-                { href: '/shopkeeper/products', label: 'Manage Inventory', icon: '🏷️', color: 'bg-indigo-50 text-indigo-600' },
-                { href: '/shopkeeper/orders', label: 'Customer Orders', icon: '📦', color: 'bg-emerald-50 text-emerald-600' },
-                { href: '/shopkeeper/receivables', label: 'Receivables', icon: '💳', color: 'bg-amber-50 text-amber-600' },
+                { href: '/shopkeeper/products', label: 'Manage Inventory', icon: '🏷️', color: 'text-indigo-400' },
+                { href: '/shopkeeper/orders', label: 'Customer Orders', icon: '📦', color: 'text-emerald-400' },
+                { href: '/shopkeeper/receivables', label: 'Receivables', icon: '💳', color: 'text-amber-400' },
               ].map(l => (
-                <Link key={l.href} href={l.href} className="bg-white border border-gray-100 p-8 rounded-[2.5rem] text-center hover:border-brand-300 hover:shadow-xl hover:shadow-brand-50 transition-all group">
-                  <div className={`w-16 h-16 ${l.color} rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 group-hover:scale-110 transition-transform`}>{l.icon}</div>
-                  <p className="font-black text-gray-900 tracking-tight">{l.label}</p>
+                <Link key={l.href} href={l.href} className="card p-8 text-center hover:border-brand-500/50 transition-all group">
+                  <div className={`w-16 h-16 bg-gray-800 ${l.color} rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 group-hover:scale-110 transition-transform`}>{l.icon}</div>
+                  <p className="font-black text-white tracking-tight">{l.label}</p>
                 </Link>
               ))}
             </div>
 
             {/* Recent Orders Card */}
-            <div className="bg-white border border-gray-100 rounded-[2.5rem] p-10 shadow-sm">
+            <div className="card p-10">
               <div className="flex items-center justify-between mb-8">
-                <h2 className="font-display font-black text-xl text-gray-900 tracking-tight">Recent Activity</h2>
-                <Link href="/shopkeeper/orders" className="text-sm font-black text-brand-600 hover:underline">Full History →</Link>
+                <h2 className="font-display font-black text-xl text-white tracking-tight">Recent Activity</h2>
+                <Link href="/shopkeeper/orders" className="text-sm font-black text-brand-500 hover:underline">Full History →</Link>
               </div>
               {recentOrders.length === 0 ? (
                 <div className="py-12 text-center">
-                  <p className="text-gray-400 font-medium">No recent orders found.</p>
+                  <p className="text-gray-500 font-medium">No recent orders found.</p>
                 </div>
               ) : (
-                <div className="divide-y divide-gray-50">
+                <div className="divide-y divide-gray-800">
                   {recentOrders.map(o => (
                     <div key={o.id} className="py-6 flex items-center justify-between group cursor-pointer">
                       <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 bg-gray-50 rounded-xl flex items-center justify-center text-xl">📦</div>
+                        <div className="w-12 h-12 bg-gray-800 rounded-xl flex items-center justify-center text-xl">📦</div>
                         <div>
-                          <p className="text-sm font-black text-gray-900">Order #{o.id}</p>
-                          <p className="text-xs font-medium text-gray-400">{o.customer?.name} • {o.payment_method}</p>
+                          <p className="text-sm font-black text-white">Order #{o.id}</p>
+                          <p className="text-xs font-medium text-gray-500">{o.customer?.name} • {o.payment_method}</p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm font-black text-gray-900">₹{Number(o.total).toFixed(2)}</p>
+                        <p className="text-sm font-black text-white">₹{Number(o.total).toFixed(2)}</p>
                         <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-0.5 rounded ${
-                          o.status === 'DELIVERED' ? 'bg-green-50 text-green-600' : 'bg-brand-50 text-brand-600'
+                          o.status === 'DELIVERED' || o.status === 'COLLECTED' ? 'bg-green-500/10 text-green-400' : 'bg-brand-500/10 text-brand-400'
                         }`}>
                           {o.status}
                         </span>
@@ -153,20 +153,20 @@ export default function ShopkeeperDashboard() {
 
           {/* Sidebar / Quick Info */}
           <div className="space-y-8">
-            <div className="bg-gray-900 rounded-[2.5rem] p-8 text-white">
+            <div className="bg-brand-500 rounded-[2.5rem] p-8 text-black">
               <h3 className="font-display font-black text-lg mb-4">CrediPay Benefits</h3>
-              <p className="text-gray-400 text-sm mb-6 leading-relaxed">Shopkeepers with CrediPay enabled see a <span className="text-brand-500 font-black">40% increase</span> in average order value.</p>
-              <button className="w-full bg-white text-gray-900 font-black py-4 rounded-2xl text-sm transition-all hover:bg-brand-500">
+              <p className="text-black/70 text-sm mb-6 font-medium leading-relaxed">Shopkeepers with CrediPay enabled see a <span className="text-black font-black underline">40% increase</span> in average order value.</p>
+              <button className="w-full bg-black text-white font-black py-4 rounded-2xl text-sm transition-all hover:bg-gray-900">
                 Learn How it Works
               </button>
             </div>
             
-            <div className="bg-brand-100 rounded-[2.5rem] p-8 border border-brand-200">
-              <h3 className="font-display font-black text-gray-900 text-lg mb-2">Need Help?</h3>
-              <p className="text-gray-700 text-sm font-medium mb-6">Our partner support is available 24/7 to help you grow.</p>
+            <div className="card p-8 border-brand-500/20">
+              <h3 className="font-display font-black text-white text-lg mb-2">Need Help?</h3>
+              <p className="text-gray-400 text-sm font-medium mb-6">Our partner support is available 24/7 to help you grow.</p>
               <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-lg shadow-sm">📞</div>
-                <span className="font-black text-gray-900">+91 1800-CREDIPAY</span>
+                <div className="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center text-lg shadow-sm">📞</div>
+                <span className="font-black text-white">+91 1800-CREDIPAY</span>
               </div>
             </div>
           </div>

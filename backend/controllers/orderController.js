@@ -204,7 +204,7 @@ exports.updateOrderStatus = async (req, res) => {
       return res.status(403).json({ error: 'Access denied' });
     }
 
-    const valid = ['CONFIRMED', 'PREPARING', 'OUT_FOR_DELIVERY', 'DELIVERED', 'CANCELLED'];
+    const valid = ['CONFIRMED', 'PREPARING', 'OUT_FOR_DELIVERY', 'DELIVERED', 'COLLECTED', 'CANCELLED'];
     if (!valid.includes(status)) return res.status(400).json({ error: 'Invalid status' });
 
     await order.update({ status });

@@ -4,10 +4,10 @@ import Navbar from '@/components/layout/Navbar';
 import api from '@/lib/api';
 import toast from 'react-hot-toast';
 
-const STATUSES = ['CONFIRMED','PREPARING','OUT_FOR_DELIVERY','DELIVERED','CANCELLED'];
-const STATUS_COLOR: Record<string,string> = {
-  PENDING:'badge-yellow',CONFIRMED:'badge-blue',PREPARING:'badge-blue',
-  OUT_FOR_DELIVERY:'badge-blue',DELIVERED:'badge-green',CANCELLED:'badge-red'
+const STATUSES = ['CONFIRMED', 'PREPARING', 'OUT_FOR_DELIVERY', 'DELIVERED', 'COLLECTED', 'CANCELLED'];
+const STATUS_COLOR: Record<string, string> = {
+  PENDING: 'badge-yellow', CONFIRMED: 'badge-blue', PREPARING: 'badge-blue',
+  OUT_FOR_DELIVERY: 'badge-blue', DELIVERED: 'badge-green', COLLECTED: 'badge-green', CANCELLED: 'badge-red'
 };
 
 export default function ShopOrdersPage() {
@@ -63,13 +63,28 @@ export default function ShopOrdersPage() {
                 <div className="text-xs text-gray-400 mb-3">
                   {(o.items||[]).map((i:any) => `${i.product_name||'Item'} ×${i.qty}`).join(', ')}
                 </div>
-                {['PENDING','CONFIRMED','PREPARING'].includes(o.status) && (
+                {['PENDING', 'CONFIRMED', 'PREPARING', 'DELIVERED'].includes(o.status) && (
                   <div className="flex gap-2 flex-wrap">
-                    {o.status === 'PENDING' && <button onClick={() => updateStatus(o.id,'CONFIRMED')} className="btn-primary text-xs">Confirm</button>}
-                    {o.status === 'CONFIRMED' && <button onClick={() => updateStatus(o.id,'PREPARING')} className="btn-primary text-xs">Start Preparing</button>}
-                    {o.status === 'PREPARING' && <button onClick={() => updateStatus(o.id,'OUT_FOR_DELIVERY')} className="btn-primary text-xs">Out for Delivery</button>}
-                    {o.delivery_type === 'PICKUP' && o.status === 'PREPARING' && <button onClick={() => updateStatus(o.id,'DELIVERED')} className="btn-primary text-xs">Mark Collected</button>}
-                    <button onClick={() => updateStatus(o.id,'CANCELLED')} className="btn-danger text-xs">Cancel</button>
+                    {o.status === 'PENDING' && <button onClick={() => updateStatus(o.id, 'CONFIRMED')} className="btn-primary text-xs">Confirm</button>}
+                    {o.status === 'CONFIRMED' && <button onClick={() => updateStatus(o.id, 'PREPARING')} className="btn-primary text-xs">Start Preparing</button>}
+                    
+                    {o.status === 'PREPARING' && (
+                      <>
+                        {o.delivery_type === 'DELIVERY' ? (
+                          <button onClick={() => updateStatus(o.id, 'OUT_FOR_DELIVERY')} className="btn-primary text-xs">Out for Delivery</button>
+                        ) : (
+                          <button onClick={() => updateStatus(o.id, 'DELIVERED')} className="btn-primary text-xs">Mark Collected</button>
+                        )}
+                      </>
+                    )}
+
+                    {o.status === 'DELIVERED' && (
+                      <button onClick={() => updateStatus(o.id, 'COLLECTED')} className="btn-primary text-xs">Mark Collected</button>
+                    )}
+
+                    {['PENDING', 'CONFIRMED', 'PREPARING'].includes(o.status) && (
+                      <button onClick={() => updateStatus(o.id, 'CANCELLED')} className="btn-danger text-xs">Cancel</button>
+                    )}
                   </div>
                 )}
               </div>

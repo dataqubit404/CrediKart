@@ -5,7 +5,7 @@ import api from '@/lib/api';
 
 const STATUS_COLORS: Record<string, string> = {
   PENDING: 'badge-yellow', CONFIRMED: 'badge-blue', PREPARING: 'badge-blue',
-  OUT_FOR_DELIVERY: 'badge-blue', DELIVERED: 'badge-green', CANCELLED: 'badge-red', REFUNDED: 'badge-red',
+  OUT_FOR_DELIVERY: 'badge-blue', DELIVERED: 'badge-green', COLLECTED: 'badge-green', CANCELLED: 'badge-red', REFUNDED: 'badge-red',
 };
 
 export default function OrdersPage() {
