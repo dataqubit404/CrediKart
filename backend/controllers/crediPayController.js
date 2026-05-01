@@ -1,4 +1,4 @@
-const { CrediPayLedger, CrediPayEntry, CrediPayPayment, Shop, Order, Notification, InterestRule } = require('../models');
+const { User, CrediPayLedger, CrediPayEntry, CrediPayPayment, Shop, Order, Notification, InterestRule } = require('../models');
 const crediPayEngine = require('../services/crediPayEngine');
 const { Op } = require('sequelize');
 
@@ -50,8 +50,13 @@ exports.getReceivables = async (req, res) => {
     const entries = await CrediPayEntry.findAll({
       where: { shop_id: shop.id, status: { [Op.ne]: 'PAID' } },
       include: [
-        { model: 'CrediPayLedger', as: 'ledger', include: [{ model: 'User', as: 'customer', attributes: ['id', 'name', 'phone'] }] },
+        { 
+          model: CrediPayLedger, 
+          as: 'ledger', 
+          include: [{ model: User, as: 'customer', attributes: ['id', 'name', 'phone'] }] 
+        },
         { model: Order, as: 'order', attributes: ['id', 'created_at'] },
+        { model: CrediPayPayment, as: 'payments' },
       ],
       order: [['due_date', 'ASC']],
     });
@@ -60,6 +65,7 @@ exports.getReceivables = async (req, res) => {
 
     res.json({ entries, total_receivable: total_receivable.toFixed(2) });
   } catch (err) {
+    console.error('Get receivables error:', err);
     res.status(500).json({ error: 'Failed to fetch receivables' });
   }
 };
