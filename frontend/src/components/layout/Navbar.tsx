@@ -33,13 +33,6 @@ export default function Navbar() {
               <span className="font-display font-black text-gray-900 text-xl tracking-tight hidden lg:block">CrediKart</span>
             </Link>
 
-            <div className="hidden md:flex flex-col cursor-pointer">
-              <span className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Delivery in 10 mins</span>
-              <div className="flex items-center gap-1">
-                <span className="text-sm font-bold text-gray-900">Home - Mumbai</span>
-                <span className="text-[10px] text-gray-400">▼</span>
-              </div>
-            </div>
           </div>
 
           {/* Search bar */}
