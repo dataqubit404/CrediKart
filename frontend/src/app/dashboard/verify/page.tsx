@@ -10,6 +10,9 @@ export default function VerifyIDPage() {
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   const BASE = api.defaults.baseURL?.replace('/api', '') || '';
 
@@ -35,7 +38,7 @@ export default function VerifyIDPage() {
     if (e.target.files?.[0]) setSelectedFileName(e.target.files[0].name);
   };
 
-  if (user?.is_verified) return (
+  if (mounted && user?.is_verified) return (
     <div className="min-h-screen bg-gray-950">
       <Navbar />
       <div className="flex flex-col items-center justify-center h-96 text-center gap-4">
@@ -75,7 +78,7 @@ export default function VerifyIDPage() {
               {uploading ? 'Uploading...' : 'Upload ID Document'}
             </button>
           </form>
-          {user?.id_proof_url && (
+          {mounted && user?.id_proof_url && (
             <div className="mt-8 p-4 bg-gray-900/50 border border-gray-800 rounded-xl flex items-center justify-between">
               <div>
                 <p className="text-xs text-gray-500 uppercase font-black tracking-widest mb-1">Status</p>

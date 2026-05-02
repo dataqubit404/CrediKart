@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useAuthStore } from '@/store/authStore';
 import { useCartStore } from '@/store/cartStore';
@@ -10,6 +10,9 @@ export default function Navbar() {
   const { itemCount, openCart } = useCartStore();
   const [search, setSearch] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => { setMounted(true); }, []);
 
   const dashboardLink =
     user?.role === 'ADMIN' ? '/admin' :
@@ -56,7 +59,7 @@ export default function Navbar() {
 
           {/* Right actions */}
           <div className="flex items-center gap-4 shrink-0">
-            {user ? (
+            {mounted && user ? (
               <div className="flex items-center gap-4">
                 <Link href={dashboardLink} className="text-sm font-bold text-gray-600 hover:text-gray-900 hidden sm:block transition-colors">
                   My Account
@@ -84,10 +87,12 @@ export default function Navbar() {
                   )}
                 </div>
               </div>
-            ) : (
+            ) : mounted ? (
               <Link href="/auth/login" className="text-sm font-bold text-gray-700 hover:text-gray-900 transition-colors px-2">
                 Login
               </Link>
+            ) : (
+              <div className="w-20 h-8 skeleton rounded-lg" />
             )}
 
             <button
@@ -96,7 +101,7 @@ export default function Navbar() {
             >
               <div className="flex flex-col items-start leading-none">
                 <span className="text-[10px] text-green-100 opacity-80 uppercase font-black">My Cart</span>
-                <span className="text-sm">{itemCount()} Items</span>
+                <span className="text-sm">{mounted ? itemCount() : 0} Items</span>
               </div>
               <div className="w-px h-6 bg-white/20"></div>
               <span className="text-lg">🛒</span>
