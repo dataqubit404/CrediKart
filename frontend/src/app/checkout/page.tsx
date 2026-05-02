@@ -18,7 +18,7 @@ export default function CheckoutPage() {
 
   const [payMethod, setPayMethod] = useState<'RAZORPAY' | 'CREDIPAY'>('RAZORPAY');
   const [deliveryType, setDeliveryType] = useState<'PICKUP' | 'DELIVERY'>('DELIVERY');
-  const [address, setAddress] = useState('');
+  const [addrForm, setAddrForm] = useState({ street: '', landmark: '', city: '', state: '', pincode: '' });
   const [ledger, setLedger] = useState<any>(null);
   const [placing, setPlacing] = useState(false);
 
@@ -44,19 +44,25 @@ export default function CheckoutPage() {
 
   const placeOrder = async () => {
     if (items.length === 0) { toast.error('Cart is empty'); return; }
-    if (deliveryType === 'DELIVERY' && !address.trim()) { toast.error('Delivery address required'); return; }
+    if (deliveryType === 'DELIVERY' && (!addrForm.street || !addrForm.city || !addrForm.state || !addrForm.pincode)) { 
+      toast.error('Please complete all address fields'); return; 
+    }
     if (payMethod === 'CREDIPAY' && ledger && ledger.available_credit < grandTotal) {
       toast.error(`Insufficient CrediPay credit. Available: ₹${ledger.available_credit}`); return;
     }
 
     setPlacing(true);
     try {
+      const fullAddress = deliveryType === 'DELIVERY' 
+        ? `${addrForm.street}, ${addrForm.landmark ? addrForm.landmark + ', ' : ''}${addrForm.city}, ${addrForm.state} - ${addrForm.pincode}`
+        : 'Self pickup';
+
       const orderPayload = {
         shop_id: items[0].shop_id,
         items: items.map(i => ({ product_id: i.product_id, qty: i.qty })),
         payment_method: payMethod,
         delivery_type: deliveryType,
-        address: deliveryType === 'DELIVERY' ? address : 'Self pickup',
+        address: fullAddress,
       };
 
       const { data } = await api.post('/orders', orderPayload);
@@ -129,9 +135,29 @@ export default function CheckoutPage() {
                 ))}
               </div>
               {deliveryType === 'DELIVERY' && (
-                <div className="mt-4">
-                  <label className="label">Delivery Address</label>
-                  <textarea value={address} onChange={e => setAddress(e.target.value)} className="input min-h-[80px] resize-none" placeholder="Enter your full delivery address..." />
+                <div className="mt-6 space-y-4">
+                  <div>
+                    <label className="label">Street Address / House No.</label>
+                    <input type="text" value={addrForm.street} onChange={e => setAddrForm({...addrForm, street: e.target.value})} className="input" placeholder="e.g. 123, Sunrise Apartments" />
+                  </div>
+                  <div>
+                    <label className="label">Landmark (Optional)</label>
+                    <input type="text" value={addrForm.landmark} onChange={e => setAddrForm({...addrForm, landmark: e.target.value})} className="input" placeholder="e.g. Near City Mall" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="label">City</label>
+                      <input type="text" value={addrForm.city} onChange={e => setAddrForm({...addrForm, city: e.target.value})} className="input" placeholder="e.g. Mumbai" />
+                    </div>
+                    <div>
+                      <label className="label">State</label>
+                      <input type="text" value={addrForm.state} onChange={e => setAddrForm({...addrForm, state: e.target.value})} className="input" placeholder="e.g. Maharashtra" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="label">Pincode</label>
+                    <input type="text" value={addrForm.pincode} onChange={e => setAddrForm({...addrForm, pincode: e.target.value})} className="input" placeholder="e.g. 400001" maxLength={6} />
+                  </div>
                 </div>
               )}
             </div>

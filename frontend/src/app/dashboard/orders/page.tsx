@@ -39,6 +39,9 @@ export default function OrdersPage() {
                   </div>
                   <span className={STATUS_COLORS[o.status] || 'badge-yellow'}>{o.status}</span>
                 </div>
+                {o.address && o.delivery_type === 'DELIVERY' && (
+                  <p className="text-xs text-gray-500 mb-2 truncate">📍 {o.address}</p>
+                )}
                 <div className="flex items-center justify-between mt-3">
                   <div className="flex gap-4 text-sm">
                     <span className="text-gray-400">{o.payment_method}</span>
