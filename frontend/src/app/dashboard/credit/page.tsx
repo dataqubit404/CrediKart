@@ -117,6 +117,17 @@ export default function CreditPage() {
                         </button>
                       )}
                     </div>
+                    {/* Unconfirmed payments */}
+                    {(entry.payments || []).filter((p: any) => !p.confirmed_by_shop).length > 0 && (
+                      <div className="mt-4 pt-4 border-t border-gray-800">
+                        {(entry.payments || []).filter((p: any) => !p.confirmed_by_shop).map((p: any) => (
+                          <div key={p.id} className="flex items-center justify-between text-xs">
+                            <p className="text-gray-400">Payment of <span className="text-white font-bold">₹{Number(p.amount).toFixed(2)}</span> recorded</p>
+                            <span className="text-yellow-500 font-bold animate-pulse">Awaiting Shopkeeper Confirmation</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 ))
               )}

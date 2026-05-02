@@ -121,6 +121,7 @@ exports.confirmPayment = async (req, res) => {
     if (!shop) return res.status(403).json({ error: 'Access denied' });
 
     await payment.update({ confirmed_by_shop: true });
+    await crediPayEngine.finalizePayment(payment.id);
 
     // Notify customer
     await Notification.create({
@@ -132,6 +133,7 @@ exports.confirmPayment = async (req, res) => {
 
     res.json({ success: true, message: 'Payment confirmed' });
   } catch (err) {
+    console.error('Confirm payment error:', err);
     res.status(500).json({ error: 'Failed to confirm payment' });
   }
 };

@@ -94,23 +94,44 @@ const crediPayEngine = {
     return processed;
   },
 
-  // ── Record payment (QR or Razorpay) ─────────────────────────────────────────
+  // ── Record payment request ──────────────────────────────────────────────────
   async recordPayment({ entry_id, customer_id, shopkeeper_id, amount, method, razorpay_id }) {
     const t = await sequelize.transaction();
     try {
-      const entry = await CrediPayEntry.findByPk(entry_id, {
-        include: [{ model: CrediPayLedger, as: 'ledger' }],
-        transaction: t,
-        lock: t.LOCK.UPDATE,
-      });
-      if (!entry) throw new Error('Entry not found');
-
       const payment = await CrediPayPayment.create({
         entry_id, customer_id, shopkeeper_id, amount,
         method,
         razorpay_id: razorpay_id || null,
         confirmed_by_shop: method === 'RAZORPAY',
       }, { transaction: t });
+
+      if (method === 'RAZORPAY') {
+        await this.finalizePayment(payment.id, t);
+      }
+
+      await t.commit();
+      return payment;
+    } catch (err) {
+      await t.rollback();
+      throw err;
+    }
+  },
+
+  // ── Finalize payment (update entry and ledger) ──────────────────────────────
+  async finalizePayment(payment_id, transaction = null) {
+    const t = transaction || await sequelize.transaction();
+    try {
+      const payment = await CrediPayPayment.findByPk(payment_id, { transaction: t });
+      if (!payment) throw new Error('Payment not found');
+
+      const entry = await CrediPayEntry.findByPk(payment.entry_id, {
+        include: [{ model: CrediPayLedger, as: 'ledger' }],
+        transaction: t,
+        lock: t.LOCK.UPDATE,
+      });
+      if (!entry) throw new Error('Entry not found');
+
+      const amount = parseFloat(payment.amount);
 
       await entry.increment('amount_paid', { by: amount, transaction: t });
       await entry.reload({ transaction: t });
@@ -120,7 +141,11 @@ const crediPayEngine = {
       let newStatus = 'PARTIAL';
       if (balance <= 0.01) newStatus = 'PAID'; // ₹0.01 tolerance
       else if (new Date(entry.due_date) < new Date()) newStatus = 'OVERDUE';
-      await entry.update({ status: newStatus, paid_at: newStatus === 'PAID' ? new Date() : null }, { transaction: t });
+      
+      await entry.update({ 
+        status: newStatus, 
+        paid_at: newStatus === 'PAID' ? new Date() : entry.paid_at 
+      }, { transaction: t });
 
       // Update ledger
       await CrediPayLedger.increment(
@@ -129,13 +154,12 @@ const crediPayEngine = {
       );
       await CrediPayLedger.decrement(
         { total_due: amount },
-        { where: { customer_id }, transaction: t }
+        { where: { customer_id: payment.customer_id }, transaction: t }
       );
 
-      await t.commit();
-      return payment;
+      if (!transaction) await t.commit();
     } catch (err) {
-      await t.rollback();
+      if (!transaction) await t.rollback();
       throw err;
     }
   },
