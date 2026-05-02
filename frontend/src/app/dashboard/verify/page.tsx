@@ -9,6 +9,9 @@ export default function VerifyIDPage() {
   const { user, fetchMe } = useAuthStore();
   const fileRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
+  const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
+
+  const BASE = api.defaults.baseURL?.replace('/api', '') || '';
 
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,7 +27,12 @@ export default function VerifyIDPage() {
       toast.error(err?.response?.data?.error || 'Upload failed');
     } finally {
       setUploading(false);
+      setSelectedFileName(null);
     }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.[0]) setSelectedFileName(e.target.files[0].name);
   };
 
   if (user?.is_verified) return (
@@ -57,15 +65,28 @@ export default function VerifyIDPage() {
           <form onSubmit={handleUpload}>
             <label className="label">ID Document (Image or PDF)</label>
             <div className="border-2 border-dashed border-gray-700 rounded-xl p-8 text-center mb-5 hover:border-gray-500 transition-colors cursor-pointer" onClick={() => fileRef.current?.click()}>
-              <div className="text-4xl mb-2">📄</div>
-              <p className="text-gray-400 text-sm">Click to select file</p>
-              <p className="text-gray-600 text-xs mt-1">JPEG, PNG, PDF – max 5MB</p>
-              <input type="file" ref={fileRef} accept="image/*,.pdf" className="hidden" />
+              <div className="text-4xl mb-2">{selectedFileName ? '📄' : '📤'}</div>
+              <p className="text-gray-400 text-sm font-medium">{selectedFileName || 'Click to select file'}</p>
+              {selectedFileName && <p className="text-brand-500 text-xs mt-1 font-bold">Ready to upload</p>}
+              {!selectedFileName && <p className="text-gray-600 text-xs mt-1">JPEG, PNG, PDF – max 5MB</p>}
+              <input type="file" ref={fileRef} accept="image/*,.pdf" className="hidden" onChange={handleFileChange} />
             </div>
             <button type="submit" disabled={uploading} className="btn-primary w-full py-3">
               {uploading ? 'Uploading...' : 'Upload ID Document'}
             </button>
           </form>
+          {user?.id_proof_url && (
+            <div className="mt-8 p-4 bg-gray-900/50 border border-gray-800 rounded-xl flex items-center justify-between">
+              <div>
+                <p className="text-xs text-gray-500 uppercase font-black tracking-widest mb-1">Status</p>
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></span>
+                  <p className="text-sm text-white font-bold">Verification Pending</p>
+                </div>
+              </div>
+              <a href={`${BASE}${user.id_proof_url}`} target="_blank" rel="noreferrer" className="text-xs font-black text-brand-500 hover:underline">VIEW UPLOADED ID</a>
+            </div>
+          )}
         </div>
       </div>
     </div>

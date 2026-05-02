@@ -8,6 +8,8 @@ import toast from 'react-hot-toast';
 export default function RegisterShopPage() {
   const [form, setForm] = useState({ name: '', description: '', address: '', lat: '', lng: '' });
   const [loading, setLoading] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [docName, setDocName] = useState<string | null>(null);
   const router = useRouter();
 
   const set = (k: string, v: string) => setForm(f => ({ ...f, [k]: v }));
@@ -25,6 +27,19 @@ export default function RegisterShopPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setImagePreview(reader.result as string);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleDocChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files?.[0]) setDocName(e.target.files[0].name);
   };
 
   return (
@@ -80,20 +95,30 @@ export default function RegisterShopPage() {
               <div>
                 <label className="label">Store Front Image</label>
                 <div className="relative group">
-                  <input name="image" type="file" accept="image/*" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" />
-                  <div className="border-2 border-dashed border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center gap-2 group-hover:border-brand-500 group-hover:bg-brand-50 transition-all">
-                    <span className="text-3xl">📸</span>
-                    <span className="text-sm font-bold text-gray-400 group-hover:text-brand-600">Click to upload image</span>
+                  <input name="image" type="file" accept="image/*" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onChange={handleImageChange} />
+                  <div className={`border-2 border-dashed ${imagePreview ? 'border-brand-500 bg-brand-50/10' : 'border-gray-200'} rounded-2xl p-8 flex flex-col items-center justify-center gap-2 group-hover:border-brand-500 group-hover:bg-brand-50 transition-all overflow-hidden relative min-h-[160px]`}>
+                    {imagePreview ? (
+                      <img src={imagePreview} alt="Preview" className="absolute inset-0 w-full h-full object-cover opacity-40" />
+                    ) : (
+                      <span className="text-3xl">📸</span>
+                    )}
+                    <span className={`text-sm font-bold ${imagePreview ? 'text-brand-700 z-10' : 'text-gray-400'} group-hover:text-brand-600`}>
+                      {imagePreview ? 'Change Store Image' : 'Click to upload image'}
+                    </span>
+                    {imagePreview && <span className="text-[10px] font-black uppercase tracking-widest text-brand-600 bg-white/80 px-2 py-0.5 rounded z-10">Preview Ready</span>}
                   </div>
                 </div>
               </div>
               <div>
                 <label className="label">Business Verification Document</label>
                 <div className="relative group">
-                  <input name="verification_doc" type="file" accept="image/*,.pdf" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" required />
-                  <div className="border-2 border-dashed border-gray-200 rounded-2xl p-8 flex flex-col items-center justify-center gap-2 group-hover:border-brand-500 group-hover:bg-brand-50 transition-all">
-                    <span className="text-3xl">📄</span>
-                    <span className="text-sm font-bold text-gray-400 group-hover:text-brand-600">GST or Trade License</span>
+                  <input name="verification_doc" type="file" accept="image/*,.pdf" className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" required onChange={handleDocChange} />
+                  <div className={`border-2 border-dashed ${docName ? 'border-brand-500 bg-brand-50/10' : 'border-gray-200'} rounded-2xl p-8 flex flex-col items-center justify-center gap-2 group-hover:border-brand-500 group-hover:bg-brand-50 transition-all`}>
+                    <span className="text-3xl">{docName ? '✅' : '📄'}</span>
+                    <span className={`text-sm font-bold ${docName ? 'text-brand-700' : 'text-gray-400'} group-hover:text-brand-600 text-center px-4 line-clamp-1`}>
+                      {docName || 'GST or Trade License'}
+                    </span>
+                    {docName && <span className="text-[10px] font-black uppercase tracking-widest text-brand-600 bg-brand-100 px-2 py-0.5 rounded">Ready to verify</span>}
                   </div>
                 </div>
               </div>

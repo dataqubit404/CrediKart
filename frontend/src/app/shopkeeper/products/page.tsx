@@ -14,8 +14,8 @@ export default function ProductsPage() {
   const [editId, setEditId] = useState<number | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
   const [shopId, setShopId] = useState<number | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const fetchProducts = () => {
@@ -53,6 +53,15 @@ export default function ProductsPage() {
     }
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => setImagePreview(reader.result as string);
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleDelete = async (id: number) => {
     if (!confirm('Remove this product?')) return;
     await api.delete(`/products/${id}`);
@@ -69,7 +78,7 @@ export default function ProductsPage() {
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-6">
           <h1 className="font-display font-bold text-2xl text-white">Products</h1>
-          <button onClick={() => { setForm(empty); setEditId(null); setShowForm(!showForm); }} className="btn-primary">
+          <button onClick={() => { setForm(empty); setEditId(null); setImagePreview(null); setShowForm(!showForm); }} className="btn-primary">
             {showForm ? 'Cancel' : '+ Add Product'}
           </button>
         </div>
@@ -107,7 +116,16 @@ export default function ProductsPage() {
               </div>
               <div>
                 <label className="label">Product Image</label>
-                <input type="file" ref={fileRef} accept="image/*" className="input text-sm" />
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center overflow-hidden border border-gray-700">
+                    {imagePreview ? (
+                      <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                    ) : (
+                      <span className="text-xl">📸</span>
+                    )}
+                  </div>
+                  <input type="file" ref={fileRef} accept="image/*" className="input text-sm flex-1" onChange={handleImageChange} />
+                </div>
               </div>
               <div className="sm:col-span-2">
                 <label className="label">Description</label>
@@ -145,7 +163,13 @@ export default function ProductsPage() {
                 <p className="text-xs text-gray-400 mb-2">{p.unit} • Stock: {p.stock}</p>
                 <p className="text-brand-500 font-bold text-sm mb-3">₹{p.price}</p>
                 <div className="flex gap-2">
-                  <button onClick={() => { setForm({ name: p.name, description: p.description || '', price: p.price, mrp: p.mrp || '', stock: p.stock, unit: p.unit || '', category: p.category || 'Staples', is_active: p.is_active }); setEditId(p.id); setShowForm(true); window.scrollTo(0, 0); }}
+                  <button onClick={() => { 
+                    setForm({ name: p.name, description: p.description || '', price: p.price, mrp: p.mrp || '', stock: p.stock, unit: p.unit || '', category: p.category || 'Staples', is_active: p.is_active }); 
+                    setEditId(p.id); 
+                    setImagePreview(p.image_url ? `${BASE}${p.image_url}` : null);
+                    setShowForm(true); 
+                    window.scrollTo(0, 0); 
+                  }}
                     className="flex-1 text-xs btn-secondary py-1.5">Edit</button>
                   <button onClick={() => handleDelete(p.id)} className="flex-1 text-xs btn-danger py-1.5">Remove</button>
                 </div>
