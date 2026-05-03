@@ -38,7 +38,7 @@ export default function ProductCard({ product }: { product: Product }) {
   const BASE = API_URL.replace('/api', '');
 
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl p-3 flex flex-col gap-2 hover:border-brand-300 transition-all duration-200 group relative">
+    <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-3 flex flex-col gap-2 hover:border-brand-300 dark:hover:border-brand-700 transition-all duration-200 group relative">
       {/* Discount Badge */}
       {discount > 0 && (
         <div className="absolute top-2 left-2 z-10 bg-blue-600 text-white text-[10px] font-black px-1.5 py-0.5 rounded shadow-sm flex flex-col items-center leading-none">
@@ -48,7 +48,7 @@ export default function ProductCard({ product }: { product: Product }) {
       )}
 
       {/* Image */}
-      <div className="relative bg-gray-50 rounded-xl overflow-hidden aspect-square flex items-center justify-center">
+      <div className="relative bg-gray-50 dark:bg-gray-800 rounded-xl overflow-hidden aspect-square flex items-center justify-center">
         {product.image_url ? (
           <img
             src={`${BASE}${product.image_url}`}
@@ -60,8 +60,8 @@ export default function ProductCard({ product }: { product: Product }) {
         )}
         
         {product.stock === 0 && (
-          <div className="absolute inset-0 bg-white/80 flex items-center justify-center backdrop-blur-[1px]">
-            <span className="text-gray-900 text-xs font-black uppercase tracking-tighter border-2 border-gray-900 px-2 py-1 rounded">Sold Out</span>
+          <div className="absolute inset-0 bg-white/80 dark:bg-black/80 flex items-center justify-center backdrop-blur-[1px]">
+            <span className="text-gray-900 dark:text-white text-xs font-black uppercase tracking-tighter border-2 border-gray-900 dark:border-white px-2 py-1 rounded">Sold Out</span>
           </div>
         )}
       </div>
@@ -69,21 +69,21 @@ export default function ProductCard({ product }: { product: Product }) {
       {/* Info */}
       <div className="flex-1 mt-1">
         <div className="flex items-center gap-1 mb-1">
-          <span className="text-[10px] font-bold text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded uppercase tracking-wide">
+          <span className="text-[10px] font-bold text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-800 px-1.5 py-0.5 rounded uppercase tracking-wide">
             {product.unit || 'Each'}
           </span>
         </div>
-        <h3 className="text-sm font-bold text-gray-800 leading-tight line-clamp-2 h-10">
+        <h3 className="text-sm font-bold text-gray-800 dark:text-gray-200 leading-tight line-clamp-2 h-10">
           {product.name}
         </h3>
       </div>
 
       {/* Price + Add Section */}
-      <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-50">
+      <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-50 dark:border-gray-800">
         <div className="flex flex-col">
-          <span className="text-sm font-black text-gray-900">₹{product.price}</span>
+          <span className="text-sm font-black text-gray-900 dark:text-white">₹{product.price}</span>
           {product.mrp && product.mrp > product.price && (
-            <span className="text-[10px] text-gray-400 line-through">₹{product.mrp}</span>
+            <span className="text-[10px] text-gray-400 dark:text-gray-500 line-through">₹{product.mrp}</span>
           )}
         </div>
 
@@ -103,7 +103,7 @@ export default function ProductCard({ product }: { product: Product }) {
           ) : (
             <button
               onClick={handleAdd}
-              className="bg-white hover:bg-brand-50 text-blinkit-green border border-blinkit-green font-black px-4 py-1.5 rounded-xl text-xs transition-all uppercase tracking-tighter hover:shadow-lg hover:shadow-brand-100"
+              className="bg-white dark:bg-gray-900 hover:bg-brand-50 dark:hover:bg-gray-800 text-blinkit-green border border-blinkit-green font-black px-4 py-1.5 rounded-xl text-xs transition-all uppercase tracking-tighter hover:shadow-lg hover:shadow-brand-100"
             >
               Add
             </button>

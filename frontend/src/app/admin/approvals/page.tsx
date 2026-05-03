@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useState } from 'react';
-import Navbar from '@/components/layout/Navbar';
 import api from '@/lib/api';
 import toast from 'react-hot-toast';
 
@@ -37,10 +36,8 @@ export default function ApprovalsPage() {
   const BASE = API_URL.replace('/api', '');
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      <Navbar />
-      <div className="max-w-5xl mx-auto px-4 py-8">
-        <h1 className="font-display font-bold text-2xl text-white mb-8">Pending Approvals</h1>
+    <div className="max-w-5xl mx-auto px-4 py-8">
+      <h1 className="font-display font-bold text-2xl text-white mb-8">Pending Approvals</h1>
 
         {/* Shop approvals */}
         <section className="mb-10">

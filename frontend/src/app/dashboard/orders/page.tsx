@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useState } from 'react';
-import Navbar from '@/components/layout/Navbar';
 import api from '@/lib/api';
 
 const STATUS_COLORS: Record<string, string> = {
@@ -17,14 +16,12 @@ export default function OrdersPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      <Navbar />
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <h1 className="font-display font-bold text-2xl text-white mb-6">My Orders</h1>
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      <h1 className="font-display font-bold text-2xl text-gray-900 mb-6">My Orders</h1>
         {loading ? (
           <div className="space-y-3">{[...Array(4)].map((_, i) => <div key={i} className="skeleton h-28 rounded-2xl" />)}</div>
         ) : orders.length === 0 ? (
-          <div className="text-center py-16 text-gray-500">
+          <div className="text-center py-16 text-gray-400">
             <div className="text-5xl mb-4">📦</div>
             <p>No orders yet. Start shopping!</p>
           </div>
@@ -34,8 +31,8 @@ export default function OrdersPage() {
               <div key={o.id} className="card p-5">
                 <div className="flex items-start justify-between mb-2">
                   <div>
-                    <p className="font-semibold text-white">Order #{o.id}</p>
-                    <p className="text-xs text-gray-400">{o.shop?.name} • {new Date(o.created_at).toLocaleDateString()}</p>
+                    <p className="font-semibold text-gray-900">Order #{o.id}</p>
+                    <p className="text-xs text-gray-500">{o.shop?.name} • {new Date(o.created_at).toLocaleDateString()}</p>
                   </div>
                   <span className={STATUS_COLORS[o.status] || 'badge-yellow'}>{o.status}</span>
                 </div>
@@ -46,9 +43,9 @@ export default function OrdersPage() {
                   <div className="flex gap-4 text-sm">
                     <span className="text-gray-400">{o.payment_method}</span>
                     <span className="text-gray-400">{o.delivery_type}</span>
-                    <span className="text-gray-400">{o.items?.length || 0} items</span>
+                    <span className="text-gray-500">{o.items?.length || 0} items</span>
                   </div>
-                  <span className="text-white font-bold">₹{Number(o.total).toFixed(2)}</span>
+                  <span className="text-gray-900 font-bold">₹{Number(o.total).toFixed(2)}</span>
                 </div>
               </div>
             ))}

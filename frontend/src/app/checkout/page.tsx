@@ -102,7 +102,7 @@ export default function CheckoutPage() {
   };
 
   if (items.length === 0) return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
       <div className="flex flex-col items-center justify-center h-96 text-gray-400 gap-4">
         <div className="text-6xl">🛒</div>
@@ -113,24 +113,24 @@ export default function CheckoutPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
       <div className="max-w-5xl mx-auto px-4 py-8">
-        <h1 className="font-display font-bold text-2xl text-white mb-6">Checkout</h1>
+        <h1 className="font-display font-bold text-2xl text-gray-900 mb-6">Checkout</h1>
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
 
           {/* Left - Options */}
           <div className="lg:col-span-3 space-y-5">
             {/* Delivery type */}
             <div className="card p-5">
-              <h2 className="font-semibold text-white mb-4">Delivery Option</h2>
+              <h2 className="font-semibold text-gray-900 mb-4">Delivery Option</h2>
               <div className="grid grid-cols-2 gap-3">
                 {(['DELIVERY', 'PICKUP'] as const).map(t => (
                   <button key={t} onClick={() => setDeliveryType(t)}
-                    className={`p-4 rounded-xl border text-center transition-all ${deliveryType === t ? 'border-brand-500 bg-brand-500/10' : 'border-gray-700 bg-gray-800 hover:border-gray-500'}`}>
+                    className={`p-4 rounded-xl border text-center transition-all ${deliveryType === t ? 'border-brand-500 bg-brand-50' : 'border-gray-100 bg-white hover:border-gray-200'}`}>
                     <div className="text-2xl mb-1">{t === 'DELIVERY' ? '🚴' : '🏪'}</div>
-                    <div className="text-sm font-semibold text-white">{t === 'DELIVERY' ? 'Home Delivery' : 'Self Pickup'}</div>
-                    <div className="text-xs text-gray-400">{t === 'DELIVERY' ? '+₹25 fee' : 'Free'}</div>
+                    <div className="text-sm font-semibold text-gray-900">{t === 'DELIVERY' ? 'Home Delivery' : 'Self Pickup'}</div>
+                    <div className="text-xs text-gray-500">{t === 'DELIVERY' ? '+₹25 fee' : 'Free'}</div>
                   </button>
                 ))}
               </div>
@@ -164,26 +164,26 @@ export default function CheckoutPage() {
 
             {/* Payment method */}
             <div className="card p-5">
-              <h2 className="font-semibold text-white mb-4">Payment Method</h2>
+              <h2 className="font-semibold text-gray-900 mb-4">Payment Method</h2>
               <div className="space-y-3">
                 <button onClick={() => setPayMethod('RAZORPAY')}
-                  className={`w-full p-4 rounded-xl border flex items-center gap-4 transition-all ${payMethod === 'RAZORPAY' ? 'border-brand-500 bg-brand-500/10' : 'border-gray-700 bg-gray-800 hover:border-gray-500'}`}>
+                  className={`w-full p-4 rounded-xl border flex items-center gap-4 transition-all ${payMethod === 'RAZORPAY' ? 'border-brand-500 bg-brand-50' : 'border-gray-100 bg-white hover:border-gray-200'}`}>
                   <div className="text-2xl">💳</div>
                   <div className="text-left">
-                    <p className="font-semibold text-white">Razorpay</p>
-                    <p className="text-xs text-gray-400">UPI, Cards, Net Banking – Instant payment</p>
+                    <p className="font-semibold text-gray-900">Razorpay</p>
+                    <p className="text-xs text-gray-500">UPI, Cards, Net Banking – Instant payment</p>
                   </div>
                   {payMethod === 'RAZORPAY' && <span className="ml-auto text-brand-500 font-bold">✓</span>}
                 </button>
 
                 <button onClick={() => setPayMethod('CREDIPAY')}
-                  className={`w-full p-4 rounded-xl border flex items-center gap-4 transition-all ${payMethod === 'CREDIPAY' ? 'border-brand-500 bg-brand-500/10' : 'border-gray-700 bg-gray-800 hover:border-gray-500'}`}>
+                  className={`w-full p-4 rounded-xl border flex items-center gap-4 transition-all ${payMethod === 'CREDIPAY' ? 'border-brand-500 bg-brand-50' : 'border-gray-100 bg-white hover:border-gray-200'}`}>
                   <div className="text-2xl">🪙</div>
                   <div className="text-left flex-1">
-                    <p className="font-semibold text-white">CrediPay</p>
-                    <p className="text-xs text-gray-400">Buy now, pay within 7 days. 2.8% fee applies.</p>
+                    <p className="font-semibold text-gray-900">CrediPay</p>
+                    <p className="text-xs text-gray-500">Buy now, pay within 7 days. 2.8% fee applies.</p>
                     {ledger && (
-                      <p className="text-xs text-green-400 mt-0.5">Available: ₹{Number(ledger.available_credit).toFixed(0)}</p>
+                      <p className="text-xs text-green-600 mt-0.5">Available: ₹{Number(ledger.available_credit).toFixed(0)}</p>
                     )}
                   </div>
                   {payMethod === 'CREDIPAY' && <span className="ml-auto text-brand-500 font-bold">✓</span>}
@@ -193,12 +193,12 @@ export default function CheckoutPage() {
 
             {/* Cart summary */}
             <div className="card p-5">
-              <h2 className="font-semibold text-white mb-3">Order Items</h2>
+              <h2 className="font-semibold text-gray-900 mb-3">Order Items</h2>
               <div className="space-y-2 max-h-48 overflow-y-auto">
                 {items.map(i => (
                   <div key={i.product_id} className="flex justify-between text-sm">
-                    <span className="text-gray-300">{i.name} <span className="text-gray-500">× {i.qty}</span></span>
-                    <span className="text-white font-medium">₹{(i.price * i.qty).toFixed(2)}</span>
+                    <span className="text-gray-600">{i.name} <span className="text-gray-400">× {i.qty}</span></span>
+                    <span className="text-gray-900 font-medium">₹{(i.price * i.qty).toFixed(2)}</span>
                   </div>
                 ))}
               </div>
@@ -208,25 +208,25 @@ export default function CheckoutPage() {
           {/* Right - Summary */}
           <div className="lg:col-span-2">
             <div className="card p-5 sticky top-20">
-              <h2 className="font-semibold text-white mb-4">Order Summary</h2>
+              <h2 className="font-semibold text-gray-900 mb-4">Order Summary</h2>
               <div className="space-y-3 text-sm mb-5">
-                <div className="flex justify-between text-gray-300"><span>Subtotal</span><span>₹{subtotal.toFixed(2)}</span></div>
+                <div className="flex justify-between text-gray-600"><span>Subtotal</span><span>₹{subtotal.toFixed(2)}</span></div>
                 {platformFee > 0 && (
-                  <div className="flex justify-between text-gray-300">
+                  <div className="flex justify-between text-gray-600">
                     <span>CrediPay fee (2.8%)</span>
-                    <span className="text-orange-400">+₹{platformFee.toFixed(2)}</span>
+                    <span className="text-orange-600">+₹{platformFee.toFixed(2)}</span>
                   </div>
                 )}
                 {deliveryFee > 0 && (
-                  <div className="flex justify-between text-gray-300"><span>Delivery</span><span>+₹{deliveryFee}</span></div>
+                  <div className="flex justify-between text-gray-600"><span>Delivery</span><span>+₹{deliveryFee}</span></div>
                 )}
-                <div className="border-t border-gray-700 pt-3 flex justify-between text-white font-bold text-base">
+                <div className="border-t border-gray-100 pt-3 flex justify-between text-gray-900 font-bold text-base">
                   <span>Total</span><span>₹{grandTotal.toFixed(2)}</span>
                 </div>
               </div>
 
               {payMethod === 'CREDIPAY' && (
-                <div className="mb-4 p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-xs text-amber-300">
+                <div className="mb-4 p-3 bg-amber-50 border border-amber-100 rounded-xl text-xs text-amber-700">
                   <p className="font-semibold mb-1">CrediPay Terms</p>
                   <p>Pay within 7 days to avoid extra interest. After 7 days, 0.5%/week is charged on the outstanding balance.</p>
                 </div>

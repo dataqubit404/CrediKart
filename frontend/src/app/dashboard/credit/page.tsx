@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useState } from 'react';
-import Navbar from '@/components/layout/Navbar';
 import api from '@/lib/api';
 import toast from 'react-hot-toast';
 
@@ -45,29 +44,24 @@ export default function CreditPage() {
   };
 
   if (loading) return (
-    <div className="min-h-screen bg-gray-950">
-      <Navbar />
-      <div className="max-w-4xl mx-auto px-4 py-8 space-y-4">
-        {[...Array(4)].map((_, i) => <div key={i} className="skeleton h-24 rounded-2xl" />)}
-      </div>
+    <div className="max-w-4xl mx-auto px-4 py-8 space-y-4">
+      {[...Array(4)].map((_, i) => <div key={i} className="skeleton h-24 rounded-2xl" />)}
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      <Navbar />
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <h1 className="font-display font-bold text-2xl text-white mb-6">CrediPay Account</h1>
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      <h1 className="font-display font-bold text-2xl text-gray-900 mb-6">CrediPay Account</h1>
 
         {ledger && (
           <>
             {/* Summary bar */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
               {[
-                { label: 'Credit Limit', value: `₹${Number(ledger.credit_limit).toFixed(0)}`, color: 'text-white' },
-                { label: 'Total Due', value: `₹${Number(ledger.total_due).toFixed(2)}`, color: 'text-red-400' },
-                { label: 'Available', value: `₹${Number(ledger.available_credit).toFixed(0)}`, color: 'text-green-400' },
-                { label: 'Interest Accrued', value: `₹${Number(ledger.interest_accrued).toFixed(2)}`, color: 'text-orange-400' },
+                { label: 'Credit Limit', value: `₹${Number(ledger.credit_limit).toFixed(0)}`, color: 'text-gray-900' },
+                { label: 'Total Due', value: `₹${Number(ledger.total_due).toFixed(2)}`, color: 'text-red-600' },
+                { label: 'Available', value: `₹${Number(ledger.available_credit).toFixed(0)}`, color: 'text-green-600' },
+                { label: 'Interest Accrued', value: `₹${Number(ledger.interest_accrued).toFixed(2)}`, color: 'text-orange-600' },
               ].map(s => (
                 <div key={s.label} className="card p-4">
                   <p className="text-xs text-gray-500 mb-1">{s.label}</p>
@@ -77,7 +71,7 @@ export default function CreditPage() {
             </div>
 
             {/* Entries list */}
-            <h2 className="font-semibold text-white mb-4">Payment Entries</h2>
+            <h2 className="font-semibold text-gray-900 mb-4">Payment Entries</h2>
             <div className="space-y-3">
               {(ledger.entries || []).length === 0 ? (
                 <div className="text-center py-12 text-gray-500">
@@ -89,20 +83,20 @@ export default function CreditPage() {
                   <div key={entry.id} className={`card p-5 ${entry.is_overdue ? 'border-red-500/30' : ''}`}>
                     <div className="flex items-start justify-between mb-3">
                       <div>
-                        <p className="font-semibold text-white">{entry.shop?.name || 'Shop'}</p>
-                        <p className="text-xs text-gray-400">Order #{entry.order_id} • {new Date(entry.created_at).toLocaleDateString()}</p>
+                        <p className="font-semibold text-gray-900">{entry.shop?.name || 'Shop'}</p>
+                        <p className="text-xs text-gray-500">Order #{entry.order_id} • {new Date(entry.created_at).toLocaleDateString()}</p>
                       </div>
                       <StatusBadge status={entry.status} />
                     </div>
                     <div className="grid grid-cols-3 gap-3 text-sm mb-3">
-                      <div><p className="text-gray-500 text-xs">Principal</p><p className="text-white font-medium">₹{entry.principal}</p></div>
-                      <div><p className="text-gray-500 text-xs">Platform fee</p><p className="text-orange-400 font-medium">₹{entry.platform_fee}</p></div>
-                      <div><p className="text-gray-500 text-xs">Interest</p><p className="text-red-400 font-medium">₹{entry.interest_due}</p></div>
+                      <div><p className="text-gray-500 text-xs">Principal</p><p className="text-gray-900 font-medium">₹{entry.principal}</p></div>
+                      <div><p className="text-gray-500 text-xs">Platform fee</p><p className="text-orange-600 font-medium">₹{entry.platform_fee}</p></div>
+                      <div><p className="text-gray-500 text-xs">Interest</p><p className="text-red-600 font-medium">₹{entry.interest_due}</p></div>
                     </div>
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-xs text-gray-500">Balance due</p>
-                        <p className="text-lg font-bold text-white">₹{entry.balance}</p>
+                        <p className="text-lg font-bold text-gray-900">₹{entry.balance}</p>
                         <p className="text-xs text-gray-500">Due by {new Date(entry.due_date).toLocaleDateString()}</p>
                         {entry.is_overdue && (
                           <p className="text-xs text-red-400 mt-0.5">⚠ {entry.days_overdue} days overdue – interest accruing!</p>
@@ -122,8 +116,8 @@ export default function CreditPage() {
                       <div className="mt-4 pt-4 border-t border-gray-800">
                         {(entry.payments || []).filter((p: any) => !p.confirmed_by_shop).map((p: any) => (
                           <div key={p.id} className="flex items-center justify-between text-xs">
-                            <p className="text-gray-400">Payment of <span className="text-white font-bold">₹{Number(p.amount).toFixed(2)}</span> recorded</p>
-                            <span className="text-yellow-500 font-bold animate-pulse">Awaiting Shopkeeper Confirmation</span>
+                            <p className="text-gray-500">Payment of <span className="text-gray-900 font-bold">₹{Number(p.amount).toFixed(2)}</span> recorded</p>
+                            <span className="text-yellow-600 font-bold animate-pulse">Awaiting Shopkeeper Confirmation</span>
                           </div>
                         ))}
                       </div>
@@ -140,15 +134,15 @@ export default function CreditPage() {
       {payModal && (
         <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center px-4">
           <div className="card p-6 w-full max-w-sm">
-            <h3 className="font-display font-bold text-white text-lg mb-1">Record Payment</h3>
-            <p className="text-gray-400 text-sm mb-5">Pay to {payModal.shop?.name} for Order #{payModal.order_id}</p>
+            <h3 className="font-display font-bold text-gray-900 text-lg mb-1">Record Payment</h3>
+            <p className="text-gray-500 text-sm mb-5">Pay to {payModal.shop?.name} for Order #{payModal.order_id}</p>
             <div className="mb-5">
               <label className="label">Amount (₹)</label>
               <input type="number" value={payAmount} onChange={e => setPayAmount(e.target.value)}
                 max={payModal.balance} min="1" step="0.01" className="input text-lg font-bold" />
               <p className="text-xs text-gray-500 mt-1">Balance: ₹{payModal.balance}</p>
             </div>
-            <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded-xl text-xs text-blue-300 mb-5">
+            <div className="p-3 bg-blue-50 border border-blue-100 rounded-xl text-xs text-blue-700 mb-5">
               Show your payment QR or pay cash to the shopkeeper. They will confirm the payment.
             </div>
             <div className="flex gap-3">

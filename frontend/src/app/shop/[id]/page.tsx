@@ -25,7 +25,7 @@ export default function ShopPage() {
   const BASE = process.env.NEXT_PUBLIC_API_URL?.replace('/api', '');
 
   if (loading) return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="skeleton h-48 rounded-2xl mb-6" />
@@ -37,22 +37,22 @@ export default function ShopPage() {
   );
 
   if (!shop) return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
       <div className="flex items-center justify-center h-96 text-gray-400">Shop not found</div>
     </div>
   );
 
   return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
       {/* Shop banner */}
-      <div className="relative h-52 bg-gray-800 overflow-hidden">
+      <div className="relative h-52 bg-white overflow-hidden">
         {shop.image_url
           ? <img src={`${BASE}${shop.image_url}`} alt={shop.name} className="w-full h-full object-cover" />
           : <div className="w-full h-full flex items-center justify-center text-8xl">🏪</div>
         }
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-950 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent" />
         <div className="absolute bottom-0 left-0 p-6">
           <div className="flex items-center gap-3">
             <h1 className="font-display font-bold text-3xl text-white">{shop.name}</h1>
@@ -71,7 +71,7 @@ export default function ShopPage() {
         <div className="flex gap-2 overflow-x-auto pb-2 mb-6">
           {CATS.map(c => (
             <button key={c} onClick={() => setCategory(c)}
-              className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all ${category === c ? 'bg-brand-500 text-black' : 'bg-gray-800 text-gray-300 hover:bg-gray-700'}`}>
+              className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium transition-all ${category === c ? 'bg-brand-500 text-black' : 'bg-white border border-gray-100 text-gray-600 hover:bg-gray-50'}`}>
               {c}
             </button>
           ))}

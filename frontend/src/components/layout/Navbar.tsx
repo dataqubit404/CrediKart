@@ -22,15 +22,15 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
+      <nav className="sticky top-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 h-20 flex items-center gap-6">
           {/* Logo & Location */}
-          <div className="flex items-center gap-6 shrink-0 border-r border-gray-100 pr-6 h-full">
+          <div className="flex items-center gap-6 shrink-0 border-r border-gray-100 dark:border-gray-800 pr-6 h-full">
             <Link href="/" className="flex items-center gap-2">
               <div className="w-9 h-9 rounded-xl bg-brand-500 flex items-center justify-center text-black font-black text-base shadow-sm">
                 CK
               </div>
-              <span className="font-display font-black text-gray-900 text-xl tracking-tight hidden lg:block">CrediKart</span>
+              <span className="font-display font-black text-gray-900 dark:text-white text-xl tracking-tight hidden lg:block">CrediKart</span>
             </Link>
 
           </div>
@@ -45,7 +45,7 @@ export default function Navbar() {
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 onKeyDown={e => { if (e.key === 'Enter' && search) window.location.href = `/?q=${search}`; }}
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-11 pr-4 py-3 text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
+                className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl pl-11 pr-4 py-3 text-sm text-gray-900 dark:text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500 transition-all"
               />
             </div>
           </div>
@@ -54,26 +54,26 @@ export default function Navbar() {
           <div className="flex items-center gap-4 shrink-0">
             {mounted && user ? (
               <div className="flex items-center gap-4">
-                <Link href={dashboardLink} className="text-sm font-bold text-gray-600 hover:text-gray-900 hidden sm:block transition-colors">
+                <Link href={dashboardLink} className="text-sm font-bold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hidden sm:block transition-colors">
                   My Account
                 </Link>
                 <div className="relative">
                   <button
                     onClick={() => setMenuOpen(!menuOpen)}
-                    className="w-10 h-10 rounded-full bg-gray-100 border border-gray-200 flex items-center justify-center text-sm font-bold text-gray-700 hover:bg-gray-200 transition-colors"
+                    className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex items-center justify-center text-sm font-bold text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                   >
                     {user.name?.[0]?.toUpperCase()}
                   </button>
                   {menuOpen && (
-                    <div className="absolute right-0 mt-3 w-56 bg-white border border-gray-100 rounded-2xl shadow-2xl z-50 overflow-hidden animate-fade-in">
-                      <div className="px-5 py-4 bg-gray-50 border-b border-gray-100">
-                        <p className="text-sm font-bold text-gray-900 truncate">{user.name}</p>
+                    <div className="absolute right-0 mt-3 w-56 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl shadow-2xl z-50 overflow-hidden animate-fade-in">
+                      <div className="px-5 py-4 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-100 dark:border-gray-800">
+                        <p className="text-sm font-bold text-gray-900 dark:text-white truncate">{user.name}</p>
                         <p className="text-[10px] font-bold text-brand-600 uppercase tracking-widest">{user.role}</p>
                       </div>
-                      <Link href={dashboardLink} onClick={() => setMenuOpen(false)} className="block px-5 py-3.5 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-colors">
+                      <Link href={dashboardLink} onClick={() => setMenuOpen(false)} className="block px-5 py-3.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white transition-colors">
                         Dashboard
                       </Link>
-                      <button onClick={logout} className="w-full text-left px-5 py-3.5 text-sm font-medium text-red-500 hover:bg-red-50 transition-colors">
+                      <button onClick={logout} className="w-full text-left px-5 py-3.5 text-sm font-medium text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors">
                         Sign Out
                       </button>
                     </div>

@@ -53,19 +53,19 @@ export default function DeliveryDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-gray-50">
       <Navbar />
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="font-display font-bold text-2xl text-white">Delivery Dashboard</h1>
-            <p className="text-gray-400 text-sm mt-1">Total Earned: <span className="text-green-400 font-bold text-lg">₹{myDeliveries.total_earned}</span></p>
+            <h1 className="font-display font-bold text-2xl text-gray-900">Delivery Dashboard</h1>
+            <p className="text-gray-500 text-sm mt-1">Total Earned: <span className="text-green-600 font-bold text-lg">₹{myDeliveries.total_earned}</span></p>
           </div>
           <button onClick={toggleAvailability} disabled={toggling}
             className={`px-5 py-2.5 rounded-xl font-semibold text-sm transition-all ${
               user?.is_available !== false
-                ? 'bg-green-500 text-black hover:bg-green-400'
-                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                ? 'bg-green-600 text-white hover:bg-green-700'
+                : 'bg-white border border-gray-200 text-gray-600 hover:bg-gray-50'
             }`}>
             {toggling ? '...' : user?.is_available !== false ? '🟢 Online' : '🔴 Offline'}
           </button>
@@ -73,23 +73,23 @@ export default function DeliveryDashboard() {
 
         {/* Available orders */}
         <section className="mb-8">
-          <h2 className="font-semibold text-white mb-4">Available Orders ({orders.length})</h2>
+          <h2 className="font-semibold text-gray-900 mb-4">Available Orders ({orders.length})</h2>
           {loading ? (
             <div className="space-y-3">{[...Array(3)].map((_, i) => <div key={i} className="skeleton h-24 rounded-2xl" />)}</div>
           ) : orders.length === 0 ? (
-            <div className="card p-6 text-center text-gray-500">No orders available right now</div>
+            <div className="card p-6 text-center text-gray-400">No orders available right now</div>
           ) : (
             <div className="space-y-3">
               {orders.map(o => (
                 <div key={o.id} className="card p-5 flex items-center justify-between">
                   <div>
-                    <p className="font-semibold text-white">Order #{o.id}</p>
-                    <p className="text-sm text-gray-400">{o.shop?.name}</p>
-                    <p className="text-xs text-gray-500">📍 {o.shop?.address}</p>
-                    <p className="text-sm font-bold text-brand-500 mt-1">₹{Number(o.total).toFixed(2)}</p>
+                    <p className="font-semibold text-gray-900">Order #{o.id}</p>
+                    <p className="text-sm text-gray-500">{o.shop?.name}</p>
+                    <p className="text-xs text-gray-400">📍 {o.shop?.address}</p>
+                    <p className="text-sm font-bold text-brand-600 mt-1">₹{Number(o.total).toFixed(2)}</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-green-400 font-bold text-sm mb-2">Earn ₹30</p>
+                    <p className="text-green-600 font-bold text-sm mb-2">Earn ₹30</p>
                     <button onClick={() => acceptOrder(o.id)} className="btn-primary text-sm">Accept</button>
                   </div>
                 </div>
@@ -100,14 +100,14 @@ export default function DeliveryDashboard() {
 
         {/* Active deliveries */}
         <section>
-          <h2 className="font-semibold text-white mb-4">My Deliveries</h2>
+          <h2 className="font-semibold text-gray-900 mb-4">My Deliveries</h2>
           <div className="space-y-3">
             {(myDeliveries.assignments || []).slice(0, 10).map((a: any) => (
               <div key={a.id} className="card p-5">
                 <div className="flex items-center justify-between mb-2">
                   <div>
-                    <p className="font-semibold text-white">Order #{a.order_id}</p>
-                    <p className="text-sm text-gray-400">{a.order?.shop?.name}</p>
+                    <p className="font-semibold text-gray-900">Order #{a.order_id}</p>
+                    <p className="text-sm text-gray-500">{a.order?.shop?.name}</p>
                   </div>
                   <span className={a.status === 'DELIVERED' ? 'badge-green' : a.status === 'FAILED' ? 'badge-red' : 'badge-yellow'}>{a.status}</span>
                 </div>

@@ -17,17 +17,17 @@ export default function ShopCard({ shop }: { shop: Shop }) {
 
   return (
     <Link href={`/shop/${shop.id}`}>
-      <div className="bg-white border border-gray-100 rounded-[2rem] overflow-hidden group cursor-pointer hover:border-brand-300 hover:shadow-xl hover:shadow-brand-50 transition-all duration-300 flex flex-col">
-        <div className="relative h-44 bg-gray-50 flex items-center justify-center overflow-hidden">
+      <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-[2rem] overflow-hidden group cursor-pointer hover:border-brand-300 dark:hover:border-brand-700 hover:shadow-xl hover:shadow-brand-50 transition-all duration-300 flex flex-col">
+        <div className="relative h-44 bg-gray-50 dark:bg-gray-800 flex items-center justify-center overflow-hidden">
           {shop.image_url ? (
             <img src={`${BASE}${shop.image_url}`} alt={shop.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
           ) : (
             <div className="text-6xl opacity-20">🏪</div>
           )}
           
-          <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
+          <div className="absolute top-4 left-4 bg-white/90 dark:bg-gray-900/90 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm">
             <span className="text-yellow-500 text-sm">⭐</span>
-            <span className="text-xs font-black text-gray-900">{Number(shop.rating || 4.5).toFixed(1)}</span>
+            <span className="text-xs font-black text-gray-900 dark:text-white">{Number(shop.rating || 4.5).toFixed(1)}</span>
           </div>
 
           {shop.is_featured && (
@@ -46,20 +46,20 @@ export default function ShopCard({ shop }: { shop: Shop }) {
             <span>Local Hero</span>
           </div>
           
-          <h3 className="font-display font-black text-gray-900 text-lg mb-2 leading-tight group-hover:text-brand-600 transition-colors">
+          <h3 className="font-display font-black text-gray-900 dark:text-white text-lg mb-2 leading-tight group-hover:text-brand-600 transition-colors">
             {shop.name}
           </h3>
           
-          <p className="text-gray-500 text-xs font-medium line-clamp-2 mb-4 flex-1">
+          <p className="text-gray-500 dark:text-gray-400 text-xs font-medium line-clamp-2 mb-4 flex-1">
             {shop.description || 'Providing fresh essentials and more at your doorstep.'}
           </p>
 
-          <div className="pt-4 border-t border-gray-50 flex items-center justify-between">
-            <div className="flex items-center gap-1 text-[10px] font-bold text-gray-400 uppercase tracking-tight">
+          <div className="pt-4 border-t border-gray-50 dark:border-gray-800 flex items-center justify-between">
+            <div className="flex items-center gap-1 text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-tight">
               <span>📍</span>
               <span className="truncate max-w-[120px]">{shop.address.split(',')[0]}</span>
             </div>
-            <div className="bg-gray-100 text-gray-600 text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-tighter">
+            <div className="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-[10px] font-black px-2 py-1 rounded-md uppercase tracking-tighter">
               {shop.total_orders > 100 ? '100+ Orders' : 'New Store'}
             </div>
           </div>

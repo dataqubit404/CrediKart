@@ -18,35 +18,44 @@
     @apply bg-blinkit-green hover:bg-green-700 text-white font-bold px-4 py-2 rounded-xl transition-all duration-150 shadow-sm;
   }
   .btn-secondary {
-    @apply bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold px-4 py-2 rounded-xl transition-all duration-150 border border-gray-200;
+    @apply bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold px-4 py-2 rounded-xl transition-all duration-150 border border-gray-100;
+    @apply dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-200 dark:border-gray-700;
   }
   .card {
-    @apply bg-gray-900 border border-gray-800 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200;
+    @apply bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200;
+    @apply dark:bg-gray-900 dark:border-gray-800;
   }
   .card-light {
     @apply bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200;
   }
   .input {
-    @apply w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all;
+    @apply w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all;
+    @apply dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder-gray-500;
   }
   .label {
-    @apply block text-sm font-semibold text-gray-400 mb-1.5;
+    @apply block text-sm font-semibold text-gray-500 mb-1.5;
+    @apply dark:text-gray-400;
   }
   .badge-blue {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20;
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-600 border border-blue-100;
+    @apply dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20;
   }
   .badge-green {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-500/10 text-green-400 border border-green-500/20;
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-50 text-green-600 border border-green-100;
+    @apply dark:bg-green-500/10 dark:text-green-400 dark:border-green-500/20;
   }
   .badge-yellow {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-yellow-500/10 text-yellow-400 border border-yellow-500/20;
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-yellow-50 text-yellow-600 border border-yellow-100;
+    @apply dark:bg-yellow-500/10 dark:text-yellow-400 dark:border-yellow-500/20;
   }
   .badge-red {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-500/10 text-red-400 border border-red-500/20;
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-50 text-red-600 border border-red-100;
+    @apply dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20;
   }
   .skeleton {
-    @apply bg-gray-100 rounded animate-pulse;
+    @apply bg-gray-100 dark:bg-gray-800 rounded animate-pulse;
     background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+    @apply dark:from-gray-800 dark:via-gray-700 dark:to-gray-800;
     background-size: 200% 100%;
     animation: shimmer 1.5s infinite;
   }

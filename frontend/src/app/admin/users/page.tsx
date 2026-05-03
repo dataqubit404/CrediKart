@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useState } from 'react';
-import Navbar from '@/components/layout/Navbar';
 import api from '@/lib/api';
 import toast from 'react-hot-toast';
 
@@ -32,10 +31,8 @@ export default function AdminUsersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      <Navbar />
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <h1 className="font-display font-bold text-2xl text-white mb-6">Users ({total})</h1>
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      <h1 className="font-display font-bold text-2xl text-white mb-6">Users ({total})</h1>
 
         <div className="flex gap-3 mb-6 flex-wrap">
           <input value={q} onChange={e => setQ(e.target.value)} className="input w-64" placeholder="Search name or email..." />

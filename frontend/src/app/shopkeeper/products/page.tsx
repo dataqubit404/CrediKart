@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useState, useRef } from 'react';
-import Navbar from '@/components/layout/Navbar';
 import api from '@/lib/api';
 import toast from 'react-hot-toast';
 
@@ -14,6 +13,7 @@ export default function ProductsPage() {
   const [editId, setEditId] = useState<number | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [shopId, setShopId] = useState<number | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -73,11 +73,10 @@ export default function ProductsPage() {
   const BASE = API_URL.replace('/api', '');
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      <Navbar />
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="font-display font-bold text-2xl text-white">Products</h1>
+  return (
+    <div className="max-w-6xl mx-auto px-4 py-8">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="font-display font-bold text-2xl text-gray-900">Products</h1>
           <button onClick={() => { setForm(empty); setEditId(null); setImagePreview(null); setShowForm(!showForm); }} className="btn-primary">
             {showForm ? 'Cancel' : '+ Add Product'}
           </button>
@@ -86,7 +85,7 @@ export default function ProductsPage() {
         {/* Add/Edit Form */}
         {showForm && (
           <div className="card p-6 mb-6">
-            <h2 className="font-semibold text-white mb-4">{editId ? 'Edit Product' : 'Add New Product'}</h2>
+            <h2 className="font-semibold text-gray-900 mb-4">{editId ? 'Edit Product' : 'Add New Product'}</h2>
             <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="sm:col-span-2">
                 <label className="label">Product Name *</label>
@@ -117,7 +116,7 @@ export default function ProductsPage() {
               <div>
                 <label className="label">Product Image</label>
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gray-800 rounded-lg flex items-center justify-center overflow-hidden border border-gray-700">
+                  <div className="w-12 h-12 bg-gray-50 rounded-lg flex items-center justify-center overflow-hidden border border-gray-100">
                     {imagePreview ? (
                       <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
                     ) : (
@@ -145,7 +144,7 @@ export default function ProductsPage() {
             {[...Array(8)].map((_, i) => <div key={i} className="skeleton h-56 rounded-2xl" />)}
           </div>
         ) : products.length === 0 ? (
-          <div className="text-center py-16 text-gray-500">
+          <div className="text-center py-16 text-gray-400">
             <div className="text-5xl mb-4">📦</div>
             <p>No products yet. Add your first product!</p>
           </div>
@@ -153,15 +152,15 @@ export default function ProductsPage() {
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {products.map(p => (
               <div key={p.id} className={`card p-3 ${!p.is_active ? 'opacity-50' : ''}`}>
-                <div className="aspect-square bg-gray-800 rounded-xl mb-3 overflow-hidden">
+                <div className="aspect-square bg-gray-50 rounded-xl mb-3 overflow-hidden">
                   {p.image_url
                     ? <img src={`${BASE}${p.image_url}`} alt={p.name} className="w-full h-full object-cover" />
                     : <div className="w-full h-full flex items-center justify-center text-4xl">🛍️</div>
                   }
                 </div>
-                <p className="text-sm font-medium text-white line-clamp-2 mb-1">{p.name}</p>
-                <p className="text-xs text-gray-400 mb-2">{p.unit} • Stock: {p.stock}</p>
-                <p className="text-brand-500 font-bold text-sm mb-3">₹{p.price}</p>
+                <p className="text-sm font-medium text-gray-900 line-clamp-2 mb-1">{p.name}</p>
+                <p className="text-xs text-gray-500 mb-2">{p.unit} • Stock: {p.stock}</p>
+                <p className="text-brand-600 font-bold text-sm mb-3">₹{p.price}</p>
                 <div className="flex gap-2">
                   <button onClick={() => { 
                     setForm({ name: p.name, description: p.description || '', price: p.price, mrp: p.mrp || '', stock: p.stock, unit: p.unit || '', category: p.category || 'Staples', is_active: p.is_active }); 

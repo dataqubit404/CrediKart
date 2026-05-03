@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useState } from 'react';
-import Navbar from '@/components/layout/Navbar';
 import { useAuthStore } from '@/store/authStore';
 import api from '@/lib/api';
 import toast from 'react-hot-toast';
@@ -47,22 +46,21 @@ export default function SubscriptionsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-950">
-      <Navbar />
-      <div className="max-w-4xl mx-auto px-4 py-8">
-        <h1 className="font-display font-bold text-2xl text-white mb-2">Subscription Plans</h1>
-        <p className="text-gray-400 mb-8">Upgrade for better credit limits, lower interest, and more.</p>
+  return (
+    <div className="max-w-4xl mx-auto px-4 py-8">
+      <h1 className="font-display font-bold text-2xl text-gray-900 mb-2">Subscription Plans</h1>
+      <p className="text-gray-500 mb-8">Upgrade for better credit limits, lower interest, and more.</p>
 
         {/* Current plan */}
         {current?.plan && (
-          <div className="card p-5 mb-8 border-brand-500/40 bg-brand-500/5">
+          <div className="card p-5 mb-8 border-brand-500/40 bg-brand-50">
             <div className="flex items-center justify-between">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-brand-500 font-bold text-lg">⭐ {current.plan.name}</span>
+                  <span className="text-brand-600 font-bold text-lg">⭐ {current.plan.name}</span>
                   <span className="badge-green">Active</span>
                 </div>
-                <p className="text-gray-400 text-sm">Renews {new Date(current.ends_at).toLocaleDateString()}</p>
+                <p className="text-gray-500 text-sm">Renews {new Date(current.ends_at).toLocaleDateString()}</p>
               </div>
               <button onClick={cancel} className="btn-secondary text-sm">Cancel Plan</button>
             </div>
@@ -81,19 +79,19 @@ export default function SubscriptionsPage() {
               return (
                 <div key={plan.id} className={`card p-6 flex flex-col ${isActive ? 'border-brand-500/60' : ''}`}>
                   <div className="mb-5">
-                    <h3 className="font-display font-bold text-xl text-white mb-1">{plan.name}</h3>
+                    <h3 className="font-display font-bold text-xl text-gray-900 mb-1">{plan.name}</h3>
                     <div className="flex items-baseline gap-1">
-                      <span className="text-3xl font-bold text-brand-500">₹{Number(plan.price_monthly).toFixed(0)}</span>
-                      <span className="text-gray-400 text-sm">/month</span>
+                      <span className="text-3xl font-bold text-brand-600">₹{Number(plan.price_monthly).toFixed(0)}</span>
+                      <span className="text-gray-500 text-sm">/month</span>
                     </div>
                     {plan.price_yearly && (
-                      <p className="text-xs text-green-400 mt-1">₹{Number(plan.price_yearly).toFixed(0)}/year (save {Math.round((1 - plan.price_yearly / (plan.price_monthly * 12)) * 100)}%)</p>
+                      <p className="text-xs text-green-600 mt-1">₹{Number(plan.price_yearly).toFixed(0)}/year (save {Math.round((1 - plan.price_yearly / (plan.price_monthly * 12)) * 100)}%)</p>
                     )}
                   </div>
                   <ul className="space-y-2 flex-1 mb-6">
                     {benefits.map((b: string, i: number) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-gray-300">
-                        <span className="text-green-400 mt-0.5 shrink-0">✓</span>
+                      <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
+                        <span className="text-green-600 mt-0.5 shrink-0">✓</span>
                         {b}
                       </li>
                     ))}
