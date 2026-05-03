@@ -128,7 +128,6 @@ export default function CreditPage() {
             </div>
           </>
         )}
-      </div>
 
       {/* Pay Modal */}
       {payModal && (
