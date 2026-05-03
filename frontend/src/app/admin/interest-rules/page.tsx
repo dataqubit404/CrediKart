@@ -120,7 +120,6 @@ export default function InterestRulesPage() {
             ⚡ Run Interest Calculation Now
           </button>
         </div>
-      </div>
     </div>
   );
 }

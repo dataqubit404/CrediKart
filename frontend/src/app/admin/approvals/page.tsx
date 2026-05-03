@@ -106,7 +106,6 @@ export default function ApprovalsPage() {
             </div>
           )}
         </section>
-      </div>
     </div>
   );
 }

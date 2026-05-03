@@ -24,7 +24,6 @@ export default function ReceivablesPage() {
   };
 
   return (
-  return (
     <div className="max-w-5xl mx-auto px-4 py-8">
       <h1 className="font-display font-bold text-2xl text-gray-900 mb-2">CrediPay Receivables</h1>
       <p className="text-gray-500 mb-6">Amounts owed to you via CrediPay orders</p>
@@ -74,7 +73,6 @@ export default function ReceivablesPage() {
             ))}
           </div>
         )}
-      </div>
     </div>
   );
 }

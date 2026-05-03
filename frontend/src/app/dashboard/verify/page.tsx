@@ -85,7 +85,6 @@ export default function VerifyIDPage() {
             </div>
           )}
         </div>
-      </div>
     </div>
   );
 }

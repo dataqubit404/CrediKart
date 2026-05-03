@@ -131,7 +131,6 @@ export default function RegisterShopPage() {
           <div className="flex items-center gap-2 font-black text-xs uppercase tracking-widest"><span className="text-xl">⚡</span> Instant Approval</div>
           <div className="flex items-center gap-2 font-black text-xs uppercase tracking-widest"><span className="text-xl">💰</span> Zero Setup Fee</div>
         </div>
-      </div>
     </div>
   );
 }

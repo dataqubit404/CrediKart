@@ -46,7 +46,6 @@ export default function SubscriptionsPage() {
   };
 
   return (
-  return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <h1 className="font-display font-bold text-2xl text-gray-900 mb-2">Subscription Plans</h1>
       <p className="text-gray-500 mb-8">Upgrade for better credit limits, lower interest, and more.</p>
@@ -108,7 +107,6 @@ export default function SubscriptionsPage() {
             })}
           </div>
         )}
-      </div>
     </div>
   );
 }

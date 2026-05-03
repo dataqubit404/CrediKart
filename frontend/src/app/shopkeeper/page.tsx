@@ -31,7 +31,6 @@ export default function ShopkeeperDashboard() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
           {[...Array(4)].map((_, i) => <div key={i} className="skeleton h-32 rounded-3xl" />)}
         </div>
-      </div>
     </div>
   );
 
@@ -45,7 +44,6 @@ export default function ShopkeeperDashboard() {
             Launch My Shop 🚀
           </Link>
         </div>
-      </div>
     </div>
   );
 

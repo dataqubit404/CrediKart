@@ -80,7 +80,6 @@ export default function AdminOrdersPage() {
             </table>
           </div>
         )}
-      </div>
     </div>
   );
 }

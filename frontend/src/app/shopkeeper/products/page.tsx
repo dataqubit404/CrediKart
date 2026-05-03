@@ -73,7 +73,6 @@ export default function ProductsPage() {
   const BASE = API_URL.replace('/api', '');
 
   return (
-  return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="font-display font-bold text-2xl text-gray-900">Products</h1>
@@ -176,7 +175,6 @@ export default function ProductsPage() {
             ))}
           </div>
         )}
-      </div>
     </div>
   );
 }
