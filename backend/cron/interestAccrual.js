@@ -1,6 +1,6 @@
 const cron = require('node-cron');
 const crediPayEngine = require('../services/crediPayEngine');
-const { User, CrediPayLedger, CrediPayEntry } = require('../models');
+const { User, CrediPayLedger, CrediPayEntry, Notification } = require('../models');
 const { Op } = require('sequelize');
 const { sendPaymentReminder } = require('../services/mailer');
 
@@ -36,10 +36,21 @@ cron.schedule('0 9 * * *', async () => {
 
     for (const entry of upcomingDue) {
       const customer = entry.ledger?.customer;
+      const balance = parseFloat(entry.total_due) - parseFloat(entry.amount_paid);
+
+      // 1. Email Reminder
       if (customer?.email) {
-        const balance = parseFloat(entry.total_due) - parseFloat(entry.amount_paid);
         await sendPaymentReminder(customer.email, customer.name, balance.toFixed(2), entry.due_date);
       }
+
+      // 2. In-App Notification
+      await Notification.create({
+        user_id: entry.ledger.customer_id,
+        type: 'CREDIT',
+        title: 'Payment Due Soon ⏰',
+        message: `Your payment of ₹${balance.toFixed(2)} is due on ${new Date(entry.due_date).toDateString()}. Pay now to avoid interest charges!`,
+        data: { entry_id: entry.id, amount: balance }
+      });
     }
     console.log(`[CRON] Sent ${upcomingDue.length} payment reminders`);
   } catch (err) {
