@@ -96,6 +96,7 @@ export default function ShopkeeperDashboard() {
               { href: '/shopkeeper/products', label: 'Manage Inventory', icon: '🏷️', color: 'text-indigo-600', bg: 'bg-indigo-50' },
               { href: '/shopkeeper/orders', label: 'Customer Orders', icon: '📦', color: 'text-emerald-600', bg: 'bg-emerald-50' },
               { href: '/shopkeeper/receivables', label: 'Receivables', icon: '💳', color: 'text-amber-600', bg: 'bg-amber-50' },
+              { href: '/shopkeeper/settlements', label: 'Settlements', icon: '🏦', color: 'text-brand-700', bg: 'bg-brand-50' },
             ].map(l => (
               <Link key={l.href} href={l.href} className="card p-8 text-center hover:border-brand-500/50 transition-all group">
                 <div className={`w-16 h-16 ${l.bg} ${l.color} rounded-2xl flex items-center justify-center text-3xl mx-auto mb-4 group-hover:scale-110 transition-transform`}>{l.icon}</div>

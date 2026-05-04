@@ -1,4 +1,4 @@
-const { Shop, User, Product, Order, Notification } = require('../models');
+const { Shop, User, Product, Order, Notification, CrediPayEntry, CrediPayPayment, sequelize } = require('../models');
 const { Op } = require('sequelize');
 const QRCode = require('qrcode');
 const path = require('path');
@@ -182,5 +182,36 @@ exports.getShopAnalytics = async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch analytics' });
+  }
+};
+
+exports.getShopSettlement = async (req, res) => {
+  try {
+    const shop = await Shop.findOne({ where: { owner_id: req.user.id } });
+    if (!shop) return res.status(404).json({ error: 'Shop not found' });
+
+    // 1. Total Credits Extended (Principal)
+    const totalCredits = await CrediPayEntry.sum('principal', { where: { shop_id: shop.id } }) || 0;
+    
+    // 2. Amount Collected (Actually paid by customers)
+    const totalPaid = await CrediPayPayment.sum('amount', { 
+      where: { shopkeeper_id: req.user.id, confirmed_by_shop: true } 
+    }) || 0;
+
+    // 3. Amount Pending
+    const receivables = await CrediPayEntry.findAll({
+      where: { shop_id: shop.id, status: { [Op.ne]: 'PAID' } }
+    });
+    const pendingAmount = receivables.reduce((sum, e) => sum + (parseFloat(e.total_due) - parseFloat(e.amount_paid)), 0);
+
+    res.json({
+      total_credits: parseFloat(totalCredits).toFixed(2),
+      collected_amount: parseFloat(totalPaid).toFixed(2),
+      pending_amount: parseFloat(pendingAmount).toFixed(2),
+      withdrawable_balance: parseFloat(shop.withdrawable_balance).toFixed(2),
+    });
+  } catch (err) {
+    console.error('Settlement error:', err);
+    res.status(500).json({ error: 'Failed to fetch settlement data' });
   }
 };

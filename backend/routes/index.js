@@ -36,6 +36,7 @@ router.post('/auth/upload-id',
 router.get('/shops', shopCtrl.getShops);
 router.get('/shops/my', auth, requireRole('SHOPKEEPER'), shopCtrl.getMyShop);
 router.get('/shops/analytics', auth, requireRole('SHOPKEEPER'), shopCtrl.getShopAnalytics);
+router.get('/shops/settlement', auth, requireRole('SHOPKEEPER'), shopCtrl.getShopSettlement);
 router.get('/shops/:id', shopCtrl.getShopById);
 router.post('/shops', auth, requireRole('SHOPKEEPER'), uploadLimiter,
   upload.fields([{ name: 'image', maxCount: 1 }, { name: 'verification_doc', maxCount: 1 }]),
