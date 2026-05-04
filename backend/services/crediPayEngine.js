@@ -170,6 +170,25 @@ const crediPayEngine = {
         transaction: t 
       });
 
+      // Part 3: Shopkeeper Settlement Logic
+      // Calculate how much of this payment goes to the shopkeeper (Principal)
+      const totalPrincipal = parseFloat(entry.principal);
+      const previouslyPaid = parseFloat(entry.amount_paid) - amount; // before this payment
+      
+      let shopkeeperShare = 0;
+      if (previouslyPaid < totalPrincipal) {
+        const remainingPrincipal = totalPrincipal - previouslyPaid;
+        shopkeeperShare = Math.min(amount, remainingPrincipal);
+      }
+
+      if (shopkeeperShare > 0) {
+        await Shop.update(
+          { withdrawable_balance: sequelize.literal(`withdrawable_balance + ${shopkeeperShare}`) },
+          { where: { id: entry.shop_id }, transaction: t }
+        );
+        console.log(`[CrediPay] Settled ₹${shopkeeperShare} to Shop ${entry.shop_id} withdrawable balance`);
+      }
+
       // Part 2: Auto Credit Limit Increase
       if (isPaidNow && isOnTime) {
         // Fetch updated ledger to check streak

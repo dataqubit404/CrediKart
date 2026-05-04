@@ -36,6 +36,7 @@ const Shop = sequelize.define('Shop', {
   verification_doc_url: { type: DataTypes.STRING(500) },
   rating: { type: DataTypes.DECIMAL(3, 2), defaultValue: 0.00 },
   total_orders: { type: DataTypes.INTEGER, defaultValue: 0 },
+  withdrawable_balance: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0.00 },
 }, { tableName: 'shops', underscored: true });
 
 // ─── PRODUCT ─────────────────────────────────────────────────────────────────
