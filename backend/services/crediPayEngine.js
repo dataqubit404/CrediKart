@@ -1,4 +1,4 @@
-const { CrediPayLedger, CrediPayEntry, CrediPayPayment, InterestRule, UserSubscription, SubscriptionPlan, Shop, Order, sequelize } = require('../models');
+const { CrediPayLedger, CrediPayEntry, CrediPayPayment, InterestRule, UserSubscription, SubscriptionPlan, Shop, Order, User, Notification, sequelize } = require('../models');
 const { Op } = require('sequelize');
 
 const crediPayEngine = {
@@ -169,6 +169,43 @@ const crediPayEngine = {
         where: { id: entry.ledger_id }, 
         transaction: t 
       });
+
+      // Part 2: Auto Credit Limit Increase
+      if (isPaidNow && isOnTime) {
+        // Fetch updated ledger to check streak
+        const updatedLedger = await CrediPayLedger.findByPk(entry.ledger_id, { transaction: t });
+        const streak = updatedLedger.consecutive_on_time_payments;
+        
+        // Every 3 consecutive on-time payments, increase limit by ₹1000, cap at ₹20,000
+        const INCREASE_THRESHOLD = 3;
+        const INCREMENT_AMOUNT = 1000;
+        const MAX_LIMIT = 20000;
+
+        if (streak > 0 && streak % INCREASE_THRESHOLD === 0) {
+          const currentLimit = parseFloat(updatedLedger.credit_limit);
+          if (currentLimit < MAX_LIMIT) {
+            const newLimit = Math.min(currentLimit + INCREMENT_AMOUNT, MAX_LIMIT);
+            
+            await updatedLedger.update({ credit_limit: newLimit }, { transaction: t });
+            // Sync with User model
+            await User.update({ credit_limit: newLimit }, { 
+              where: { id: updatedLedger.customer_id }, 
+              transaction: t 
+            });
+
+            // Notify user
+            await Notification.create({
+              user_id: updatedLedger.customer_id,
+              type: 'CREDIT',
+              title: 'Credit Limit Increased! 🎉',
+              message: `Congratulations! Your consistent on-time payments have earned you a credit limit increase. Your new limit is ₹${newLimit}.`,
+              data: { new_limit: newLimit }
+            }, { transaction: t });
+            
+            console.log(`[CrediPay] Credit limit increased for user ${updatedLedger.customer_id} to ${newLimit}`);
+          }
+        }
+      }
 
       if (!transaction) await t.commit();
     } catch (err) {
