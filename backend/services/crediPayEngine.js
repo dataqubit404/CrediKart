@@ -148,14 +148,27 @@ const crediPayEngine = {
       }, { transaction: t });
 
       // Update ledger
-      await CrediPayLedger.increment(
-        { total_paid: amount },
-        { where: { id: entry.ledger_id }, transaction: t }
-      );
-      await CrediPayLedger.decrement(
-        { total_due: amount },
-        { where: { customer_id: payment.customer_id }, transaction: t }
-      );
+      const isPaidNow = newStatus === 'PAID';
+      const isOnTime = isPaidNow && new Date(entry.paid_at || new Date()) <= new Date(entry.due_date);
+
+      const ledgerUpdates = {
+        total_paid: sequelize.literal(`total_paid + ${amount}`),
+        total_due: sequelize.literal(`total_due - ${amount}`)
+      };
+
+      if (isPaidNow) {
+        if (isOnTime) {
+          ledgerUpdates.on_time_payments_count = sequelize.literal('on_time_payments_count + 1');
+          ledgerUpdates.consecutive_on_time_payments = sequelize.literal('consecutive_on_time_payments + 1');
+        } else {
+          ledgerUpdates.consecutive_on_time_payments = 0;
+        }
+      }
+
+      await CrediPayLedger.update(ledgerUpdates, { 
+        where: { id: entry.ledger_id }, 
+        transaction: t 
+      });
 
       if (!transaction) await t.commit();
     } catch (err) {

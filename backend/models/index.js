@@ -94,6 +94,8 @@ const CrediPayLedger = sequelize.define('CrediPayLedger', {
   interest_accrued: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0.00 },
   total_paid: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0.00 },
   last_interest_calc: { type: DataTypes.DATE },
+  on_time_payments_count: { type: DataTypes.INTEGER, defaultValue: 0 },
+  consecutive_on_time_payments: { type: DataTypes.INTEGER, defaultValue: 0 },
 }, { tableName: 'credipay_ledger', underscored: true });
 
 // ─── CREDIPAY ENTRY ───────────────────────────────────────────────────────────
