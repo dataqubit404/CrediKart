@@ -16,8 +16,19 @@ const User = sequelize.define('User', {
   credit_limit: { type: DataTypes.DECIMAL(10, 2), defaultValue: 5000.00 },
   is_blocked: { type: DataTypes.BOOLEAN, defaultValue: false },
   is_available: { type: DataTypes.BOOLEAN, defaultValue: true }, // for delivery partner
+  loyalty_points: { type: DataTypes.INTEGER, defaultValue: 0 },
+  referral_code: { type: DataTypes.STRING(50), unique: true },
   refresh_token: { type: DataTypes.TEXT },
 }, { tableName: 'users', underscored: true });
+
+// ─── LOYALTY TRANSACTION ──────────────────────────────────────────────────────
+const LoyaltyTransaction = sequelize.define('LoyaltyTransaction', {
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  user_id: { type: DataTypes.INTEGER, allowNull: false },
+  amount: { type: DataTypes.INTEGER, allowNull: false },
+  type: { type: DataTypes.ENUM('EARNED', 'REDEEMED', 'REFERRAL_BONUS'), allowNull: false },
+  description: { type: DataTypes.TEXT },
+}, { tableName: 'loyalty_transactions', underscored: true });
 
 // ─── SHOP ────────────────────────────────────────────────────────────────────
 const Shop = sequelize.define('Shop', {
@@ -225,10 +236,13 @@ DeliveryAssignment.belongsTo(User, { foreignKey: 'partner_id', as: 'partner' });
 User.hasMany(Notification, { foreignKey: 'user_id', as: 'notifications' });
 Notification.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
 
+User.hasMany(LoyaltyTransaction, { foreignKey: 'user_id', as: 'loyaltyTransactions' });
+LoyaltyTransaction.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+
 module.exports = {
   sequelize,
   User, Shop, Product, Order, OrderItem,
   CrediPayLedger, CrediPayEntry, CrediPayPayment,
   InterestRule, SubscriptionPlan, UserSubscription,
-  DeliveryAssignment, Notification,
+  DeliveryAssignment, Notification, LoyaltyTransaction,
 };

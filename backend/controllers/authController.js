@@ -26,12 +26,14 @@ exports.register = async (req, res) => {
 
     const password_hash = await bcrypt.hash(password, 12);
     const email_verify_token = uuidv4();
+    const referral_code = `CK-${Math.random().toString(36).substring(2, 8).toUpperCase()}`;
 
     const user = await User.create({
       name, email, phone, password_hash, role,
       email_verify_token: null, // No token needed if auto-verified
       is_email_verified: true, // Auto-verify for development
       credit_limit: parseFloat(process.env.CREDIPAY_DEFAULT_CREDIT_LIMIT) || 5000,
+      referral_code,
     });
 
     // Create CrediPay ledger for customers
