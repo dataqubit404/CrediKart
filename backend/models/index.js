@@ -18,6 +18,7 @@ const User = sequelize.define('User', {
   is_available: { type: DataTypes.BOOLEAN, defaultValue: true }, // for delivery partner
   loyalty_points: { type: DataTypes.INTEGER, defaultValue: 0 },
   referral_code: { type: DataTypes.STRING(50), unique: true },
+  referred_by_id: { type: DataTypes.INTEGER },
   refresh_token: { type: DataTypes.TEXT },
 }, { tableName: 'users', underscored: true });
 

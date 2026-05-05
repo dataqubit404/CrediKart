@@ -13,7 +13,14 @@ const generateTokens = (user) => {
 
 exports.register = async (req, res) => {
   try {
-    const { name, email, phone, password, role } = req.body;
+    const { name, email, phone, password, role, referral_code: invite_code } = req.body;
+
+    // Check for referrer
+    let referred_by_id = null;
+    if (invite_code) {
+      const referrer = await User.findOne({ where: { referral_code: invite_code.toUpperCase() } });
+      if (referrer) referred_by_id = referrer.id;
+    }
 
     // Only allow certain roles on public registration
     const allowedRoles = ['CUSTOMER', 'SHOPKEEPER', 'DELIVERY'];
@@ -34,6 +41,7 @@ exports.register = async (req, res) => {
       is_email_verified: true, // Auto-verify for development
       credit_limit: parseFloat(process.env.CREDIPAY_DEFAULT_CREDIT_LIMIT) || 5000,
       referral_code,
+      referred_by_id,
     });
 
     // Create CrediPay ledger for customers
