@@ -1,6 +1,7 @@
 const { sequelize, Order, OrderItem, Product, Shop, CrediPayLedger, DeliveryAssignment, Notification, User } = require('../models');
 const crediPayEngine = require('../services/crediPayEngine');
 const razorpayService = require('../services/razorpay');
+const loyaltyEngine = require('../services/loyaltyEngine');
 
 exports.placeOrder = async (req, res) => {
   const t = await sequelize.transaction();
@@ -208,6 +209,11 @@ exports.updateOrderStatus = async (req, res) => {
     if (!valid.includes(status)) return res.status(400).json({ error: 'Invalid status' });
 
     await order.update({ status });
+
+    // Award loyalty points if completed
+    if (status === 'DELIVERED' || status === 'COLLECTED') {
+      loyaltyEngine.awardPoints(order.id); // async
+    }
 
     // Notify customer
     await Notification.create({

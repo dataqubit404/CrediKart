@@ -1,5 +1,6 @@
 const { User, Order, Shop, DeliveryAssignment, Notification } = require('../models');
 const { Op } = require('sequelize');
+const loyaltyEngine = require('../services/loyaltyEngine');
 
 exports.toggleAvailability = async (req, res) => {
   try {
@@ -77,6 +78,7 @@ exports.updateDeliveryStatus = async (req, res) => {
 
     if (status === 'DELIVERED') {
       await Order.update({ status: 'DELIVERED' }, { where: { id: assignment.order_id } });
+      loyaltyEngine.awardPoints(assignment.order_id); // async
     }
 
     res.json({ success: true, status });
