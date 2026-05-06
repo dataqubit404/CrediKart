@@ -1,4 +1,4 @@
-const { User, LoyaltyTransaction, Notification, UserSubscription, SubscriptionPlan, sequelize } = require('../models');
+const { User, LoyaltyTransaction, Notification, UserSubscription, SubscriptionPlan, CrediPayLedger, sequelize } = require('../models');
 
 const loyaltyEngine = {
   /**
@@ -69,6 +69,38 @@ const loyaltyEngine = {
         }, { transaction: t });
 
         console.log(`[Loyalty] Awarded ${totalPoints} points to user ${order.customer_id} for order ${order.id}`);
+      }
+
+      // --- Part 4: Referral Rewards ---
+      // Check if this is the customer's first completed order
+      const completedCount = await Order.count({
+        where: { customer_id: order.customer_id, status: ['DELIVERED', 'COLLECTED'] },
+        transaction: t
+      });
+
+      if (completedCount === 1) { // This was their first one!
+        const user = await User.findByPk(order.customer_id, { transaction: t });
+        if (user.referred_by_id) {
+          const referrerId = user.referred_by_id;
+          const refereeId = user.id;
+          
+          const BONUS_CREDIT = 500;
+          const BONUS_POINTS = 50;
+
+          // 1. Reward Referrer
+          await User.increment({ loyalty_points: BONUS_POINTS, credit_limit: BONUS_CREDIT }, { where: { id: referrerId }, transaction: t });
+          await CrediPayLedger.increment('credit_limit', { by: BONUS_CREDIT, where: { customer_id: referrerId }, transaction: t });
+          await LoyaltyTransaction.create({ user_id: referrerId, amount: BONUS_POINTS, type: 'REFERRAL_BONUS', description: `Referral bonus for inviting ${user.name}` }, { transaction: t });
+          await Notification.create({ user_id: referrerId, type: 'CREDIT', title: 'Referral Bonus! 🎁', message: `Your friend ${user.name} made their first purchase! You earned ₹${BONUS_CREDIT} credit and ${BONUS_POINTS} points.` }, { transaction: t });
+
+          // 2. Reward Referee (The current customer)
+          await User.increment({ loyalty_points: BONUS_POINTS, credit_limit: BONUS_CREDIT }, { where: { id: refereeId }, transaction: t });
+          await CrediPayLedger.increment('credit_limit', { by: BONUS_CREDIT, where: { customer_id: refereeId }, transaction: t });
+          await LoyaltyTransaction.create({ user_id: refereeId, amount: BONUS_POINTS, type: 'REFERRAL_BONUS', description: `Welcome bonus for using referral code` }, { transaction: t });
+          await Notification.create({ user_id: refereeId, type: 'CREDIT', title: 'Welcome Bonus! 🎁', message: `Since you joined via invite, you earned a ₹${BONUS_CREDIT} credit limit increase and ${BONUS_POINTS} bonus points!` }, { transaction: t });
+
+          console.log(`[Loyalty] Referral bonus processed for referrer ${referrerId} and referee ${refereeId}`);
+        }
       }
 
       await t.commit();
