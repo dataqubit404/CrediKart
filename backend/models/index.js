@@ -19,6 +19,7 @@ const User = sequelize.define('User', {
   loyalty_points: { type: DataTypes.INTEGER, defaultValue: 0 },
   referral_code: { type: DataTypes.STRING(50), unique: true },
   referred_by_id: { type: DataTypes.INTEGER },
+  membership_tier: { type: DataTypes.ENUM('BRONZE', 'SILVER', 'GOLD', 'PLATINUM'), defaultValue: 'BRONZE' },
   refresh_token: { type: DataTypes.TEXT },
 }, { tableName: 'users', underscored: true });
 

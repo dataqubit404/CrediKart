@@ -60,7 +60,24 @@ const loyaltyEngine = {
           description: `Order #${order.id} bonus`,
         }, { transaction: t });
 
-        // Notify user
+        // --- Part 5: Membership Tier Upgrade Logic ---
+        const updatedUser = await User.findByPk(order.customer_id, { transaction: t });
+        let newTier = 'BRONZE';
+        if (updatedUser.loyalty_points >= 5000) newTier = 'PLATINUM';
+        else if (updatedUser.loyalty_points >= 2000) newTier = 'GOLD';
+        else if (updatedUser.loyalty_points >= 500) newTier = 'SILVER';
+
+        if (newTier !== updatedUser.membership_tier) {
+          await updatedUser.update({ membership_tier: newTier }, { transaction: t });
+          await Notification.create({
+            user_id: order.customer_id,
+            type: 'SYSTEM',
+            title: `Level Up! You are now ${newTier} 🎖️`,
+            message: `Congratulations! You've been promoted to the ${newTier} tier. Unlock better rewards and higher limits now!`,
+          }, { transaction: t });
+        }
+
+        // Notify user about points
         await Notification.create({
           user_id: order.customer_id,
           type: 'SYSTEM',
