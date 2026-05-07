@@ -1,4 +1,4 @@
-const { Product, Shop } = require('../models');
+const { Product, Shop, User, Notification } = require('../models');
 const { Op } = require('sequelize');
 
 exports.getProducts = async (req, res) => {
@@ -64,6 +64,22 @@ exports.createProduct = async (req, res) => {
       is_donation: is_donation === 'true' || is_donation === true,
     });
 
+    // Notify customers if it's a flash sale
+    if (product.is_flash_sale) {
+      const customers = await User.findAll({ where: { role: 'CUSTOMER' }, attributes: ['id'] });
+      const savings = Math.round(((product.price - product.flash_price) / product.price) * 100);
+      
+      const notifications = customers.map(c => ({
+        user_id: c.id,
+        type: 'SYSTEM',
+        title: `🔥 FLASH DEAL at ${shop.name}!`,
+        message: `${product.name} is now ₹${product.flash_price} (${savings}% OFF). Grab it before it's gone!`,
+        data: { product_id: product.id, shop_id: shop.id }
+      }));
+      
+      await Notification.bulkCreate(notifications);
+    }
+
     res.status(201).json({ success: true, product });
   } catch (err) {
     console.error('Create product error:', err);
@@ -84,7 +100,25 @@ exports.updateProduct = async (req, res) => {
     }
     if (req.file) updates.image_url = `/uploads/image/${req.file.filename}`;
 
+    const wasFlash = product.is_flash_sale;
     await product.update(updates);
+
+    // Notify customers if it's a NEW flash sale or price dropped further
+    if (product.is_flash_sale && (!wasFlash || updates.flash_price < product.flash_price)) {
+        const customers = await User.findAll({ where: { role: 'CUSTOMER' }, attributes: ['id'] });
+        const savings = Math.round(((product.price - product.flash_price) / product.price) * 100);
+        
+        const notifications = customers.map(c => ({
+          user_id: c.id,
+          type: 'SYSTEM',
+          title: `💥 HUGE PRICE DROP at ${shop.name}!`,
+          message: `${product.name} just went on Flash Sale for ₹${product.flash_price} (${savings}% OFF)!`,
+          data: { product_id: product.id, shop_id: shop.id }
+        }));
+        
+        await Notification.bulkCreate(notifications);
+    }
+
     res.json({ success: true, product });
   } catch (err) {
     res.status(500).json({ error: 'Failed to update product' });
