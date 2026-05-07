@@ -3,14 +3,18 @@ const { Op } = require('sequelize');
 
 exports.getProducts = async (req, res) => {
   try {
-    const { shop_id, category, q, page = 1, limit = 40, sort = 'name' } = req.query;
+    const { shop_id, category, q, flash, page = 1, limit = 40, sort = 'name' } = req.query;
     const where = { is_active: true };
 
     if (shop_id) where.shop_id = shop_id;
     if (category) where.category = category;
     if (q) where.name = { [Op.like]: `%${q}%` };
+    if (flash === 'true') {
+        where.is_flash_sale = true;
+        where.flash_ends_at = { [Op.gt]: new Date() };
+    }
 
-    const sortMap = { name: ['name', 'ASC'], price_asc: ['price', 'ASC'], price_desc: ['price', 'DESC'] };
+    const sortMap = { name: ['name', 'ASC'], price_asc: ['price', 'ASC'], price_desc: ['price', 'DESC'], flash: ['flash_price', 'ASC'] };
     const order = sortMap[sort] || ['name', 'ASC'];
 
     const products = await Product.findAndCountAll({
@@ -44,7 +48,7 @@ exports.createProduct = async (req, res) => {
     const shop = await Shop.findOne({ where: { owner_id: req.user.id, status: 'APPROVED' } });
     if (!shop) return res.status(403).json({ error: 'Approved shop required to add products' });
 
-    const { name, description, price, mrp, stock, unit, category } = req.body;
+    const { name, description, price, mrp, stock, unit, category, expiry_date, is_flash_sale, flash_price, flash_ends_at, is_donation } = req.body;
     const image_url = req.file ? `/uploads/image/${req.file.filename}` : null;
 
     const product = await Product.create({
@@ -53,6 +57,11 @@ exports.createProduct = async (req, res) => {
       mrp: mrp ? parseFloat(mrp) : null,
       stock: parseInt(stock) || 0,
       unit, category, image_url,
+      expiry_date: expiry_date || null,
+      is_flash_sale: is_flash_sale === 'true' || is_flash_sale === true,
+      flash_price: flash_price ? parseFloat(flash_price) : null,
+      flash_ends_at: flash_ends_at || null,
+      is_donation: is_donation === 'true' || is_donation === true,
     });
 
     res.status(201).json({ success: true, product });
@@ -69,7 +78,7 @@ exports.updateProduct = async (req, res) => {
     if (!product) return res.status(404).json({ error: 'Product not found' });
 
     const updates = {};
-    const allowed = ['name', 'description', 'price', 'mrp', 'stock', 'unit', 'category', 'is_active'];
+    const allowed = ['name', 'description', 'price', 'mrp', 'stock', 'unit', 'category', 'is_active', 'expiry_date', 'is_flash_sale', 'flash_price', 'flash_ends_at', 'is_donation'];
     for (const f of allowed) {
       if (req.body[f] !== undefined) updates[f] = req.body[f];
     }

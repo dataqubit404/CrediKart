@@ -20,6 +20,7 @@ const CATEGORIES = [
 export default function Home() {
   const [shops, setShops] = useState<any[]>([]);
   const [products, setProducts] = useState<any[]>([]);
+  const [flashProducts, setFlashProducts] = useState<any[]>([]);
   const [category, setCategory] = useState('All');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
@@ -28,9 +29,11 @@ export default function Home() {
     Promise.all([
       api.get('/shops?limit=8'),
       api.get('/products?limit=24'),
-    ]).then(([s, p]) => {
+      api.get('/products?flash=true&limit=10'),
+    ]).then(([s, p, f]) => {
       setShops(s.data.shops || []);
       setProducts(p.data.products || []);
+      setFlashProducts(f.data.products || []);
     }).finally(() => setLoading(false));
   }, []);
 
@@ -68,6 +71,57 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* Flash Zone - Urgency Section */}
+      {flashProducts.length > 0 && (
+        <div className="max-w-7xl mx-auto px-4 mb-12">
+            <div className="bg-red-600 rounded-[2.5rem] p-8 sm:p-12 text-white shadow-2xl overflow-hidden relative group">
+                {/* Background Glow */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-white/20 blur-[100px] rounded-full -mr-20 -mt-20 group-hover:bg-white/30 transition-all duration-700"></div>
+                
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10 relative z-10">
+                    <div>
+                        <div className="flex items-center gap-3 mb-2">
+                            <span className="bg-white text-red-600 px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest animate-pulse">Live Now</span>
+                            <h2 className="font-display font-black text-3xl sm:text-4xl italic tracking-tighter">⚡ Flash Zone</h2>
+                        </div>
+                        <p className="text-red-100 font-medium">Items nearing expiry at 70-90% OFF. Grab them before they vanish!</p>
+                    </div>
+                    <div className="flex items-center gap-4 bg-black/20 backdrop-blur-md px-6 py-3 rounded-2xl border border-white/10">
+                        <div className="text-center">
+                            <p className="text-[10px] font-black uppercase tracking-widest text-red-200">Ending In</p>
+                            <p className="font-mono font-black text-xl">00:45:12</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="flex gap-6 overflow-x-auto pb-4 no-scrollbar relative z-10">
+                    {flashProducts.map(p => (
+                        <div key={p.id} className="min-w-[200px] bg-white rounded-3xl p-4 text-gray-900 shadow-xl flex flex-col justify-between group/card hover:-translate-y-2 transition-all">
+                            <div className="relative">
+                                <div className="aspect-square rounded-2xl bg-gray-50 mb-4 overflow-hidden">
+                                    <img 
+                                        src={p.image_url ? `${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}${p.image_url}` : 'https://placehold.co/400x400?text=Flash'} 
+                                        className="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-500"
+                                        alt={p.name}
+                                    />
+                                </div>
+                                <span className="absolute top-2 right-2 bg-red-600 text-white text-[10px] font-black px-2 py-1 rounded-lg shadow-lg italic">-{Math.round(((p.price - p.flash_price)/p.price)*100)}%</span>
+                            </div>
+                            <div>
+                                <h4 className="font-black text-sm line-clamp-1 mb-1">{p.name}</h4>
+                                <div className="flex items-end gap-2 mb-4">
+                                    <span className="text-xl font-black text-red-600 tracking-tighter">₹{p.flash_price}</span>
+                                    <span className="text-xs text-gray-400 line-through mb-1 font-bold">₹{p.price}</span>
+                                </div>
+                                <button className="w-full bg-gray-900 text-white py-2.5 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-red-600 transition-colors">Grab Now</button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+      )}
 
       <div className="max-w-7xl mx-auto px-4">
         {/* Categories Grid */}
