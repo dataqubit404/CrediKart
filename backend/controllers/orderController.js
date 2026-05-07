@@ -6,8 +6,29 @@ const loyaltyEngine = require('../services/loyaltyEngine');
 exports.placeOrder = async (req, res) => {
   const t = await sequelize.transaction();
   try {
-    const { shop_id, items, payment_method, delivery_type, address, notes } = req.body;
+    const { shop_id, items, payment_method, delivery_type, address, notes, redeem_points } = req.body;
     const customer_id = req.user.id;
+
+    // Loyalty Redemption Logic
+    let pointsDiscount = 0;
+    if (redeem_points && parseInt(redeem_points) > 0) {
+      const user = await User.findByPk(customer_id, { transaction: t, lock: t.LOCK.UPDATE });
+      if (user.loyalty_points < redeem_points) {
+        await t.rollback();
+        return res.status(400).json({ error: 'Insufficient loyalty points' });
+      }
+      
+      // Conversion rate: 10 points = ₹1
+      pointsDiscount = parseFloat((parseInt(redeem_points) / 10).toFixed(2));
+      
+      await user.decrement('loyalty_points', { by: redeem_points, transaction: t });
+      await LoyaltyTransaction.create({
+        user_id: customer_id,
+        amount: -redeem_points,
+        type: 'REDEEMED',
+        description: `Redeemed for discount on Order #${Date.now().toString().slice(-6)}`, // Temporary desc until order id is known
+      }, { transaction: t });
+    }
 
     // Validate customer verification for first order
     if (!req.user.is_verified) {
@@ -51,7 +72,7 @@ exports.placeOrder = async (req, res) => {
       ? parseFloat((subtotal * (parseFloat(process.env.CREDIPAY_PLATFORM_FEE_RATE) || 0.028)).toFixed(2))
       : 0;
     const delivery_fee = delivery_type === 'DELIVERY' ? 25 : 0;
-    const total = parseFloat((subtotal + platform_fee + delivery_fee).toFixed(2));
+    const total = parseFloat(Math.max(0, (subtotal + platform_fee + delivery_fee - pointsDiscount)).toFixed(2));
 
     // CrediPay credit check
     if (payment_method === 'CREDIPAY') {

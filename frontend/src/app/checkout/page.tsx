@@ -20,17 +20,21 @@ export default function CheckoutPage() {
   const [deliveryType, setDeliveryType] = useState<'PICKUP' | 'DELIVERY'>('DELIVERY');
   const [addrForm, setAddrForm] = useState({ street: '', landmark: '', city: '', state: '', pincode: '' });
   const [ledger, setLedger] = useState<any>(null);
+  const [loyalty, setLoyalty] = useState<any>(null);
+  const [redeem, setRedeem] = useState(false);
   const [placing, setPlacing] = useState(false);
 
   const subtotal = total();
+  const pointsDiscount = redeem ? Math.min(subtotal, (loyalty?.loyalty_points || 0) / 10) : 0;
   const platformFee = payMethod === 'CREDIPAY' ? parseFloat((subtotal * PLATFORM_FEE_RATE).toFixed(2)) : 0;
   const deliveryFee = deliveryType === 'DELIVERY' ? 25 : 0;
-  const grandTotal = parseFloat((subtotal + platformFee + deliveryFee).toFixed(2));
+  const grandTotal = parseFloat(Math.max(0, (subtotal + platformFee + deliveryFee - pointsDiscount)).toFixed(2));
 
   useEffect(() => {
     if (!user) { router.push('/auth/login'); return; }
     if (user.role === 'CUSTOMER') {
       api.get('/credipay/ledger').then(r => setLedger(r.data)).catch(() => {});
+      api.get('/loyalty/me').then(r => setLoyalty(r.data)).catch(() => {});
     }
   }, [user]);
 
@@ -63,6 +67,7 @@ export default function CheckoutPage() {
         payment_method: payMethod,
         delivery_type: deliveryType,
         address: fullAddress,
+        redeem_points: redeem ? Math.min(loyalty?.loyalty_points || 0, Math.floor(subtotal * 10)) : 0,
       };
 
       const { data } = await api.post('/orders', orderPayload);
@@ -207,6 +212,26 @@ export default function CheckoutPage() {
 
           {/* Right - Summary */}
           <div className="lg:col-span-2">
+            {loyalty?.loyalty_points > 0 && (
+              <div className="card p-5 mb-5 border-2 border-brand-100 bg-brand-50/30">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="font-bold text-gray-900 flex items-center gap-2">
+                    <span>🏆</span> Spend Points
+                  </h3>
+                  <button 
+                    onClick={() => setRedeem(!redeem)}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${redeem ? 'bg-brand-500' : 'bg-gray-200'}`}
+                  >
+                    <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${redeem ? 'translate-x-6' : 'translate-x-1'}`} />
+                  </button>
+                </div>
+                <p className="text-xs text-gray-600 mb-1">You have <b>{loyalty.loyalty_points}</b> CrediPoints available.</p>
+                <p className="text-xs font-semibold text-brand-700">
+                  {redeem ? `Using points to save ₹${pointsDiscount.toFixed(2)}` : `Redeem to save up to ₹${Math.min(subtotal, loyalty.loyalty_points / 10).toFixed(0)}`}
+                </p>
+              </div>
+            )}
+
             <div className="card p-5 sticky top-20">
               <h2 className="font-semibold text-gray-900 mb-4">Order Summary</h2>
               <div className="space-y-3 text-sm mb-5">
@@ -219,6 +244,12 @@ export default function CheckoutPage() {
                 )}
                 {deliveryFee > 0 && (
                   <div className="flex justify-between text-gray-600"><span>Delivery</span><span>+₹{deliveryFee}</span></div>
+                )}
+                {pointsDiscount > 0 && (
+                  <div className="flex justify-between text-green-600 font-medium">
+                    <span>Loyalty Discount</span>
+                    <span>-₹{pointsDiscount.toFixed(2)}</span>
+                  </div>
                 )}
                 <div className="border-t border-gray-100 pt-3 flex justify-between text-gray-900 font-bold text-base">
                   <span>Total</span><span>₹{grandTotal.toFixed(2)}</span>
