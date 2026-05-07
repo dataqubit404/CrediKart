@@ -52,6 +52,11 @@ export default function Navbar() {
 
           {/* Right actions */}
           <div className="flex items-center gap-4 shrink-0">
+            {mounted && (
+              <Link href="/flash-deals" className="text-sm font-black text-brand-600 hover:text-brand-700 transition-colors flex items-center gap-1.5 px-3 py-1.5 bg-brand-50 rounded-xl">
+                <span>⚡</span> Flash Deals
+              </Link>
+            )}
             {mounted && user ? (
               <div className="flex items-center gap-4">
                 <Link href={dashboardLink} className="text-sm font-bold text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hidden sm:block transition-colors">
