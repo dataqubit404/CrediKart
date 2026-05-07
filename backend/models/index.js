@@ -65,6 +65,11 @@ const Product = sequelize.define('Product', {
   category: { type: DataTypes.STRING(100) },
   image_url: { type: DataTypes.STRING(500) },
   is_active: { type: DataTypes.BOOLEAN, defaultValue: true },
+  expiry_date: { type: DataTypes.DATEONLY },
+  is_flash_sale: { type: DataTypes.BOOLEAN, defaultValue: false },
+  flash_price: { type: DataTypes.DECIMAL(10, 2) },
+  flash_ends_at: { type: DataTypes.DATE },
+  is_donation: { type: DataTypes.BOOLEAN, defaultValue: false },
 }, { tableName: 'products', underscored: true });
 
 // ─── ORDER ───────────────────────────────────────────────────────────────────
