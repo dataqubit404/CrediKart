@@ -11,6 +11,7 @@ const crediPayCtrl = require('../controllers/crediPayController');
 const adminCtrl = require('../controllers/adminController');
 const subCtrl = require('../controllers/subscriptionController');
 const deliveryCtrl = require('../controllers/deliveryController');
+const loyaltyCtrl = require('../controllers/loyaltyController');
 const { Notification } = require('../models');
 
 // ── Auth ─────────────────────────────────────────────────────────────────────
@@ -73,6 +74,7 @@ router.post('/credipay/confirm-payment/:id', auth, requireRole('SHOPKEEPER'), cr
 router.get('/credipay/rules', crediPayCtrl.getInterestRules);
 router.put('/credipay/rules', auth, requireRole('ADMIN'), crediPayCtrl.updateInterestRules);
 router.post('/credipay/calculate-interest', auth, requireRole('ADMIN'), crediPayCtrl.triggerInterestCalc);
+router.get('/loyalty/me', auth, loyaltyCtrl.getLoyaltyInfo);
 
 // ── Subscriptions ─────────────────────────────────────────────────────────────
 router.get('/subscriptions/plans', subCtrl.getPlans);

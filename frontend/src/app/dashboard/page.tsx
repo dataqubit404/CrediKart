@@ -14,6 +14,7 @@ export default function DashboardPage() {
   const cards = [
     { label: 'My Orders', href: '/dashboard/orders', icon: '📦', desc: 'Track and manage orders' },
     { label: 'CrediPay Dues', href: '/dashboard/credit', icon: '💳', desc: 'View and pay dues' },
+    { label: 'Rewards Hub', href: '/dashboard/rewards', icon: '🏆', desc: 'Points and Perks' },
     { label: 'Subscriptions', href: '/dashboard/subscriptions', icon: '⭐', desc: 'Manage your plan' },
   ];
 
@@ -34,7 +35,7 @@ export default function DashboardPage() {
         <div className="md:col-span-1">
           <CreditMeter />
         </div>
-        <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
           {cards.map(c => (
             <Link key={c.href} href={c.href} className="card p-5 hover:border-gray-300 transition-all group">
               <div className="text-3xl mb-3">{c.icon}</div>
