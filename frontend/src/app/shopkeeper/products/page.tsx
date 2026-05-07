@@ -5,7 +5,21 @@ import toast from 'react-hot-toast';
 
 const CATEGORIES = ['Dairy','Bakery','Staples','Oils','Instant Food','Beverages','Cleaning','Snacks','Fruits & Veg','Other'];
 
-const empty = { name: '', description: '', price: '', mrp: '', stock: '', unit: '', category: 'Staples', is_active: true };
+const empty = { 
+    name: '', 
+    description: '', 
+    price: '', 
+    mrp: '', 
+    stock: '', 
+    unit: '', 
+    category: 'Staples', 
+    is_active: true,
+    expiry_date: '',
+    is_flash_sale: false,
+    flash_price: '',
+    flash_ends_at: '',
+    is_donation: false
+};
 
 export default function ProductsPage() {
   const [products, setProducts] = useState<any[]>([]);
@@ -129,6 +143,41 @@ export default function ProductsPage() {
                 <label className="label">Description</label>
                 <textarea value={form.description} onChange={e => set('description', e.target.value)} className="input" rows={2} placeholder="Brief description..." />
               </div>
+
+              {/* Special Offers Section */}
+              <div className="sm:col-span-2 border-t border-gray-100 pt-6 mt-2">
+                <h3 className="font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <span>⚡</span> Waste Control & Flash Sales
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="label">Expiry Date</label>
+                    <input type="date" value={form.expiry_date} onChange={e => set('expiry_date', e.target.value)} className="input" />
+                  </div>
+                  <div className="flex items-center gap-4 h-full pt-6">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" checked={form.is_flash_sale} onChange={e => set('is_flash_sale', e.target.checked)} className="w-4 h-4 rounded border-gray-300 text-brand-600 focus:ring-brand-500" />
+                      <span className="text-sm font-medium text-gray-700">Enable Flash Sale</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" checked={form.is_donation} onChange={e => set('is_donation', e.target.checked)} className="w-4 h-4 rounded border-gray-300 text-green-600 focus:ring-green-500" />
+                      <span className="text-sm font-medium text-gray-700">Mark for Donation (₹0)</span>
+                    </label>
+                  </div>
+                  {form.is_flash_sale && (
+                    <>
+                      <div>
+                        <label className="label">Flash Price (₹)</label>
+                        <input type="number" value={form.flash_price} onChange={e => set('flash_price', e.target.value)} className="input border-brand-200 bg-brand-50/20" placeholder="Discounted price" />
+                      </div>
+                      <div>
+                        <label className="label">Flash Ends At</label>
+                        <input type="datetime-local" value={form.flash_ends_at} onChange={e => set('flash_ends_at', e.target.value)} className="input border-brand-200 bg-brand-50/20" />
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
               <div className="sm:col-span-2 flex justify-end gap-3">
                 <button type="button" onClick={() => setShowForm(false)} className="btn-secondary">Cancel</button>
                 <button type="submit" disabled={saving} className="btn-primary">{saving ? 'Saving...' : editId ? 'Update' : 'Add Product'}</button>
@@ -162,7 +211,21 @@ export default function ProductsPage() {
                 <p className="text-brand-600 font-bold text-sm mb-3">₹{p.price}</p>
                 <div className="flex gap-2">
                   <button onClick={() => { 
-                    setForm({ name: p.name, description: p.description || '', price: p.price, mrp: p.mrp || '', stock: p.stock, unit: p.unit || '', category: p.category || 'Staples', is_active: p.is_active }); 
+                    setForm({ 
+                      name: p.name, 
+                      description: p.description || '', 
+                      price: p.price, 
+                      mrp: p.mrp || '', 
+                      stock: p.stock, 
+                      unit: p.unit || '', 
+                      category: p.category || 'Staples', 
+                      is_active: p.is_active,
+                      expiry_date: p.expiry_date || '',
+                      is_flash_sale: p.is_flash_sale || false,
+                      flash_price: p.flash_price || '',
+                      flash_ends_at: p.flash_ends_at ? new Date(p.flash_ends_at).toISOString().slice(0, 16) : '',
+                      is_donation: p.is_donation || false
+                    }); 
                     setEditId(p.id); 
                     setImagePreview(p.image_url ? `${BASE}${p.image_url}` : null);
                     setShowForm(true); 
