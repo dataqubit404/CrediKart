@@ -5,60 +5,45 @@ const loyaltyEngine = {
    * Award points for a completed order
    */
   async awardPoints(order_id) {
-    const { Order } = require('../models'); // lazy load to avoid circular dep
-    const t = await sequelize.transaction();
-    try {
-      const order = await Order.findByPk(order_id, { transaction: t });
-      if (!order) return;
-      if (order.status !== 'DELIVERED' && order.status !== 'COLLECTED') return;
+      const { Order, OrderItem } = require('../models'); // lazy load
+      const t = await sequelize.transaction();
+      try {
+        const order = await Order.findByPk(order_id, { transaction: t });
+        if (!order) return;
+        if (order.status !== 'DELIVERED' && order.status !== 'COLLECTED') return;
 
-      // Avoid double awarding
-      const existing = await LoyaltyTransaction.findOne({
-        where: { user_id: order.customer_id, description: `Order #${order.id} bonus` },
-        transaction: t
-      });
-      if (existing) {
-        await t.rollback();
-        return;
-      }
+        // --- Part 6: Waste Warrior Bonus Calculation ---
+        let flashItemsCount = 0;
+        const orderItems = await OrderItem.findAll({ where: { order_id: order.id }, transaction: t });
+        for (const item of orderItems) {
+            if (item.is_flash_sale) flashItemsCount += item.qty;
+        }
 
-      const subtotal = parseFloat(order.subtotal);
-      
-      // 1. Base Earning: 1 point per ₹100
-      let points = Math.floor(subtotal / 100);
-      let multiplier = 1;
+        const subtotal = parseFloat(order.subtotal);
+        
+        // 1. Base Earning: 1 point per ₹100
+        let points = Math.floor(subtotal / 100);
+        let multiplier = 1;
 
-      // 2. CrediPay Bonus: 2x
-      if (order.payment_method === 'CREDIPAY') {
-        multiplier *= 2;
-      }
+        // 2. Bonus Multipliers
+        if (order.payment_method === 'CREDIPAY') multiplier *= 2;
+        const sub = await UserSubscription.findOne({ where: { user_id: order.customer_id, is_active: true }, transaction: t });
+        if (sub) multiplier *= 2;
 
-      // 3. Subscription Bonus: 2x if active
-      const sub = await UserSubscription.findOne({
-        where: { user_id: order.customer_id, is_active: true },
-        transaction: t
-      });
-      if (sub) {
-        multiplier *= 2;
-      }
+        let totalPoints = points * multiplier;
+        
+        // 3. Add Waste Warrior Fixed Bonus
+        const wasteBonus = flashItemsCount * 10; 
+        totalPoints += wasteBonus;
 
-      const totalPoints = points * multiplier;
-
-      if (totalPoints > 0) {
-        // Update user balance
-        await User.increment('loyalty_points', {
-          by: totalPoints,
-          where: { id: order.customer_id },
-          transaction: t
-        });
-
-        // Create transaction log
-        await LoyaltyTransaction.create({
-          user_id: order.customer_id,
-          amount: totalPoints,
-          type: 'EARNED',
-          description: `Order #${order.id} bonus`,
-        }, { transaction: t });
+        if (totalPoints > 0) {
+          await User.increment('loyalty_points', { by: totalPoints, where: { id: order.customer_id }, transaction: t });
+          await LoyaltyTransaction.create({
+            user_id: order.customer_id,
+            amount: totalPoints,
+            type: 'EARNED',
+            description: flashItemsCount > 0 ? `Order #${order.id} (incl. Waste Warrior bonus)` : `Order #${order.id} bonus`,
+          }, { transaction: t });
 
         // --- Part 5: Membership Tier Upgrade Logic ---
         const updatedUser = await User.findByPk(order.customer_id, { transaction: t });

@@ -55,14 +55,19 @@ exports.placeOrder = async (req, res) => {
       if (!product) { await t.rollback(); return res.status(400).json({ error: `Product ${item.product_id} not found` }); }
       if (product.stock < item.qty) { await t.rollback(); return res.status(400).json({ error: `Insufficient stock for ${product.name}` }); }
 
-      const totalPrice = parseFloat((product.price * item.qty).toFixed(2));
+      const isFlash = product.is_flash_sale && product.flash_ends_at && new Date(product.flash_ends_at) > new Date();
+      const currentPrice = isFlash ? parseFloat(product.flash_price) : product.price;
+
+      const totalPrice = parseFloat((currentPrice * item.qty).toFixed(2));
       subtotal += totalPrice;
       enrichedItems.push({
         product_id: item.product_id,
         product_name: product.name,
         qty: item.qty,
-        unit_price: product.price,
+        unit_price: currentPrice,
         total_price: totalPrice,
+        is_flash_sale: isFlash,
+        is_donation: product.is_donation,
       });
     }
     subtotal = parseFloat(subtotal.toFixed(2));

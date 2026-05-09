@@ -102,6 +102,8 @@ const OrderItem = sequelize.define('OrderItem', {
   unit_price: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
   total_price: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
   product_name: { type: DataTypes.STRING(200) }, // snapshot
+  is_flash_sale: { type: DataTypes.BOOLEAN, defaultValue: false },
+  is_donation: { type: DataTypes.BOOLEAN, defaultValue: false },
 }, { tableName: 'order_items', underscored: true });
 
 // ─── CREDIPAY LEDGER ──────────────────────────────────────────────────────────
