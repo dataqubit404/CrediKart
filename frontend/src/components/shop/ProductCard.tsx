@@ -11,13 +11,21 @@ interface Product {
   category?: string;
   image_url?: string;
   stock: number;
+  is_flash_sale?: boolean;
+  flash_price?: number;
+  flash_ends_at?: string;
+  is_donation?: boolean;
   shop?: { id: number; name: string };
 }
 
 export default function ProductCard({ product }: { product: Product }) {
   const { addItem, items, updateQty } = useCartStore();
   const inCart = items.find(i => i.product_id === product.id);
-  const discount = product.mrp ? Math.round(((product.mrp - product.price) / product.mrp) * 100) : 0;
+
+  const isFlashActive = product.is_flash_sale && product.flash_ends_at && new Date(product.flash_ends_at) > new Date();
+  const currentPrice = product.is_donation ? 0 : (isFlashActive ? Number(product.flash_price) : product.price);
+  
+  const discount = product.mrp ? Math.round(((product.mrp - currentPrice) / product.mrp) * 100) : 0;
 
   const handleAdd = () => {
     if (!product.shop) { toast.error('Shop info missing'); return; }
@@ -26,7 +34,7 @@ export default function ProductCard({ product }: { product: Product }) {
       shop_id: product.shop.id,
       shop_name: product.shop.name,
       name: product.name,
-      price: product.price,
+      price: currentPrice,
       mrp: product.mrp,
       unit: product.unit,
       image_url: product.image_url,
@@ -39,13 +47,24 @@ export default function ProductCard({ product }: { product: Product }) {
 
   return (
     <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-3 flex flex-col gap-2 hover:border-brand-300 dark:hover:border-brand-700 transition-all duration-200 group relative">
-      {/* Discount Badge */}
-      {discount > 0 && (
-        <div className="absolute top-2 left-2 z-10 bg-blue-600 text-white text-[10px] font-black px-1.5 py-0.5 rounded shadow-sm flex flex-col items-center leading-none">
-          <span>{discount}%</span>
-          <span className="text-[7px] uppercase">OFF</span>
-        </div>
-      )}
+      {/* Badges */}
+      <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
+        {product.is_donation && (
+          <div className="bg-green-600 text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm flex items-center gap-1 uppercase">
+            <span>🌍</span> FREE
+          </div>
+        )}
+        {isFlashActive && (
+          <div className="bg-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm flex items-center gap-1 uppercase italic animate-pulse">
+            <span>⚡</span> FLASH
+          </div>
+        )}
+        {discount > 0 && !product.is_donation && (
+          <div className="bg-blue-600 text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm flex flex-col items-center leading-none">
+            <span>{discount}% OFF</span>
+          </div>
+        )}
+      </div>
 
       {/* Image */}
       <div className="relative bg-gray-50 dark:bg-gray-800 rounded-xl overflow-hidden aspect-square flex items-center justify-center">
@@ -81,10 +100,12 @@ export default function ProductCard({ product }: { product: Product }) {
       {/* Price + Add Section */}
       <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-50 dark:border-gray-800">
         <div className="flex flex-col">
-          <span className="text-sm font-black text-gray-900 dark:text-white">₹{product.price}</span>
-          {product.mrp && product.mrp > product.price && (
-            <span className="text-[10px] text-gray-400 dark:text-gray-500 line-through">₹{product.mrp}</span>
-          )}
+          <span className={`text-sm font-black ${product.is_donation ? 'text-green-600' : (isFlashActive ? 'text-red-600' : 'text-gray-900 dark:text-white')}`}>
+            {product.is_donation ? 'FREE' : `₹${currentPrice}`}
+          </span>
+          {(product.mrp && product.mrp > currentPrice) || isFlashActive ? (
+            <span className="text-[10px] text-gray-400 dark:text-gray-500 line-through">₹{product.is_donation ? product.price : (isFlashActive ? product.price : product.mrp)}</span>
+          ) : null}
         </div>
 
         {product.stock > 0 && (
