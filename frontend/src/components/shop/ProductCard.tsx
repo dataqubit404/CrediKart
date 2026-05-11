@@ -15,6 +15,8 @@ interface Product {
   flash_price?: number;
   flash_ends_at?: string;
   is_donation?: boolean;
+  offer_type?: 'NONE' | 'BOGO' | 'COMBO';
+  combo_product_id?: number;
   shop?: { id: number; name: string };
 }
 
@@ -57,6 +59,16 @@ export default function ProductCard({ product }: { product: Product }) {
         {isFlashActive && (
           <div className="bg-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm flex items-center gap-1 uppercase italic animate-pulse">
             <span>⚡</span> FLASH
+          </div>
+        )}
+        {product.offer_type === 'BOGO' && (
+          <div className="bg-yellow-400 text-black text-[9px] font-black px-2 py-0.5 rounded shadow-sm flex items-center gap-1 uppercase">
+            <span>🎁</span> BOGO
+          </div>
+        )}
+        {product.offer_type === 'COMBO' && (
+          <div className="bg-indigo-600 text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm flex items-center gap-1 uppercase">
+            <span>🤝</span> COMBO
           </div>
         )}
         {discount > 0 && !product.is_donation && (

@@ -70,6 +70,9 @@ const Product = sequelize.define('Product', {
   flash_price: { type: DataTypes.DECIMAL(10, 2) },
   flash_ends_at: { type: DataTypes.DATE },
   is_donation: { type: DataTypes.BOOLEAN, defaultValue: false },
+  offer_type: { type: DataTypes.ENUM('NONE', 'BOGO', 'COMBO'), defaultValue: 'NONE' },
+  combo_product_id: { type: DataTypes.INTEGER },
+  combo_discount: { type: DataTypes.DECIMAL(10, 2), defaultValue: 0 },
 }, { tableName: 'products', underscored: true });
 
 // ─── ORDER ───────────────────────────────────────────────────────────────────

@@ -68,8 +68,35 @@ exports.placeOrder = async (req, res) => {
         total_price: totalPrice,
         is_flash_sale: isFlash,
         is_donation: product.is_donation,
+        offer_type: product.offer_type,
+        combo_product_id: product.combo_product_id,
+        combo_discount: product.combo_discount,
       });
     }
+
+    // --- Part 8: Advanced Promo Logic ---
+    let totalPromoDiscount = 0;
+    for (const item of enrichedItems) {
+      // 1. BOGO (Buy 1 Get 1)
+      if (item.offer_type === 'BOGO') {
+        const freeQty = Math.floor(item.qty / 2);
+        if (freeQty > 0) {
+          totalPromoDiscount += (freeQty * item.unit_price);
+          console.log(`[Promo] Applied BOGO discount of ₹${freeQty * item.unit_price} for ${item.product_name}`);
+        }
+      }
+      
+      // 2. COMBO
+      if (item.offer_type === 'COMBO' && item.combo_product_id) {
+        const comboPartner = enrichedItems.find(ei => ei.product_id === item.combo_product_id);
+        if (comboPartner) {
+          const comboCount = Math.min(item.qty, comboPartner.qty);
+          totalPromoDiscount += (comboCount * parseFloat(item.combo_discount));
+          console.log(`[Promo] Applied COMBO discount of ₹${comboCount * item.combo_discount} for ${item.product_name} pair`);
+        }
+      }
+    }
+    
     subtotal = parseFloat(subtotal.toFixed(2));
 
     // Calculate fees
@@ -77,7 +104,7 @@ exports.placeOrder = async (req, res) => {
       ? parseFloat((subtotal * (parseFloat(process.env.CREDIPAY_PLATFORM_FEE_RATE) || 0.028)).toFixed(2))
       : 0;
     const delivery_fee = delivery_type === 'DELIVERY' ? 25 : 0;
-    const total = parseFloat(Math.max(0, (subtotal + platform_fee + delivery_fee - pointsDiscount)).toFixed(2));
+    const total = parseFloat(Math.max(0, (subtotal + platform_fee + delivery_fee - pointsDiscount - totalPromoDiscount)).toFixed(2));
 
     // CrediPay credit check
     if (payment_method === 'CREDIPAY') {
