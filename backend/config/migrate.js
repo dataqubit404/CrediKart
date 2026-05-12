@@ -6,7 +6,7 @@ async function migrate() {
   try {
     console.log('🔄 Connecting to database...');
     await sequelize.authenticate();
-    console.log('✅ Connected to MySQL');
+    console.log('✅ Connected to PostgreSQL');
 
     console.log('🔄 Syncing models...');
     await sequelize.sync({ alter: process.env.NODE_ENV === 'development' });
