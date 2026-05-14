@@ -1,6 +1,7 @@
 'use client';
 import { useCartStore } from '@/store/cartStore';
 import toast from 'react-hot-toast';
+import { ShoppingCart, Plus, Minus, Zap, Globe, Gift, Package, Star } from 'lucide-react';
 
 interface Product {
   id: number;
@@ -48,97 +49,106 @@ export default function ProductCard({ product }: { product: Product }) {
   const BASE = API_URL.replace('/api', '');
 
   return (
-    <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-3 flex flex-col gap-2 hover:border-brand-300 dark:hover:border-brand-700 transition-all duration-200 group relative">
-      {/* Badges */}
-      <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
+    <div className="card-premium h-full group flex flex-col relative">
+      {/* Badges Container */}
+      <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
         {product.is_donation && (
-          <div className="bg-green-600 text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm flex items-center gap-1 uppercase">
-            <span>🌍</span> FREE
+          <div className="badge-tech bg-green-500/20 text-green-500 border-green-500/30 flex items-center gap-1.5 backdrop-blur-sm">
+            <Globe className="w-3 h-3" />
+            <span>Eco-Donation</span>
           </div>
         )}
         {isFlashActive && (
-          <div className="bg-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm flex items-center gap-1 uppercase italic animate-pulse">
-            <span>⚡</span> FLASH
+          <div className="badge-tech bg-red-500/20 text-red-500 border-red-500/30 flex items-center gap-1.5 backdrop-blur-sm animate-pulse">
+            <Zap className="w-3 h-3 fill-current" />
+            <span>Flash Deal</span>
           </div>
         )}
         {product.offer_type === 'BOGO' && (
-          <div className="bg-yellow-400 text-black text-[9px] font-black px-2 py-0.5 rounded shadow-sm flex items-center gap-1 uppercase">
-            <span>🎁</span> BOGO
-          </div>
-        )}
-        {product.offer_type === 'COMBO' && (
-          <div className="bg-indigo-600 text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm flex items-center gap-1 uppercase">
-            <span>🤝</span> COMBO
-          </div>
-        )}
-        {discount > 0 && !product.is_donation && (
-          <div className="bg-blue-600 text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm flex flex-col items-center leading-none">
-            <span>{discount}% OFF</span>
+          <div className="badge-tech bg-luxury-gold/20 text-luxury-gold border-luxury-gold/30 flex items-center gap-1.5 backdrop-blur-sm">
+            <Gift className="w-3 h-3" />
+            <span>BOGO</span>
           </div>
         )}
       </div>
 
-      {/* Image */}
-      <div className="relative bg-gray-50 dark:bg-gray-800 rounded-xl overflow-hidden aspect-square flex items-center justify-center">
+      {/* Image Section */}
+      <div className="relative aspect-square rounded-[1.5rem] bg-gray-50 dark:bg-midnight-lightest/30 overflow-hidden mb-5 group-hover:shadow-2xl transition-all duration-700">
         {product.image_url ? (
           <img
             src={`${BASE}${product.image_url}`}
             alt={product.name}
-            className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-500"
+            className="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform duration-700"
           />
         ) : (
-          <div className="text-4xl opacity-20">🛍️</div>
+          <div className="w-full h-full flex items-center justify-center bg-brand-500/5">
+            <Package className="w-12 h-12 text-brand-500/20" />
+          </div>
         )}
         
+        {/* Overlay on hover */}
+        <div className="absolute inset-0 bg-brand-500/0 group-hover:bg-brand-500/5 transition-colors duration-500"></div>
+
         {product.stock === 0 && (
-          <div className="absolute inset-0 bg-white/80 dark:bg-black/80 flex items-center justify-center backdrop-blur-[1px]">
-            <span className="text-gray-900 dark:text-white text-xs font-black uppercase tracking-tighter border-2 border-gray-900 dark:border-white px-2 py-1 rounded">Sold Out</span>
+          <div className="absolute inset-0 glass-dark flex items-center justify-center">
+            <span className="px-4 py-2 bg-white/10 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] text-white border border-white/20">Out of Stock</span>
           </div>
         )}
       </div>
 
-      {/* Info */}
-      <div className="flex-1 mt-1">
-        <div className="flex items-center gap-1 mb-1">
-          <span className="text-[10px] font-bold text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-800 px-1.5 py-0.5 rounded uppercase tracking-wide">
-            {product.unit || 'Each'}
+      {/* Product Content */}
+      <div className="flex-1">
+        <div className="flex items-center gap-2 mb-2">
+          <span className="text-[10px] font-black text-brand-500 uppercase tracking-widest bg-brand-500/5 px-2 py-0.5 rounded-md border border-brand-500/10">
+            {product.unit || 'Standard'}
           </span>
+          <span className="text-[10px] font-medium text-gray-400 dark:text-gray-500">• {product.category || 'Essential'}</span>
         </div>
-        <h3 className="text-sm font-bold text-gray-800 dark:text-gray-200 leading-tight line-clamp-2 h-10">
+        
+        <h3 className="font-display font-bold text-gray-900 dark:text-white text-base leading-tight mb-4 group-hover:text-brand-500 transition-colors line-clamp-2 min-h-[2.5rem]">
           {product.name}
         </h3>
       </div>
 
-      {/* Price + Add Section */}
-      <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-50 dark:border-gray-800">
-        <div className="flex flex-col">
-          <span className={`text-sm font-black ${product.is_donation ? 'text-green-600' : (isFlashActive ? 'text-red-600' : 'text-gray-900 dark:text-white')}`}>
-            {product.is_donation ? 'FREE' : `₹${currentPrice}`}
-          </span>
-          {(product.mrp && product.mrp > currentPrice) || isFlashActive ? (
-            <span className="text-[10px] text-gray-400 dark:text-gray-500 line-through">₹{product.is_donation ? product.price : (isFlashActive ? product.price : product.mrp)}</span>
-          ) : null}
+      {/* Price & Action */}
+      <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-white/5">
+        <div>
+          <div className="flex items-center gap-2">
+            <span className={`text-xl font-black ${product.is_donation ? 'text-green-500' : (isFlashActive ? 'text-red-500' : 'text-gray-900 dark:text-white')}`}>
+              {product.is_donation ? 'FREE' : `₹${currentPrice}`}
+            </span>
+            {discount > 0 && (
+              <span className="text-xs font-bold text-brand-500 bg-brand-500/10 px-1.5 py-0.5 rounded-md">-{discount}%</span>
+            )}
+          </div>
+          {(product.mrp && product.mrp > currentPrice) && (
+            <span className="text-[10px] text-gray-400 dark:text-gray-500 line-through font-bold">₹{product.mrp}</span>
+          )}
         </div>
 
         {product.stock > 0 && (
           inCart ? (
-            <div className="flex items-center bg-blinkit-green rounded-xl overflow-hidden shadow-md shadow-green-100">
+            <div className="flex items-center bg-brand-500 rounded-2xl p-1.5 shadow-neon-blue transition-all">
               <button
                 onClick={() => updateQty(product.id, inCart.qty - 1)}
-                className="w-8 h-8 flex items-center justify-center text-white font-black hover:bg-black/10 transition-colors"
-              >−</button>
-              <span className="text-white font-black w-4 text-center text-xs">{inCart.qty}</span>
+                className="w-7 h-7 flex items-center justify-center text-white hover:bg-white/20 rounded-xl transition-colors"
+              >
+                <Minus className="w-4 h-4" />
+              </button>
+              <span className="text-white font-black px-3 text-sm">{inCart.qty}</span>
               <button
                 onClick={() => updateQty(product.id, inCart.qty + 1)}
-                className="w-8 h-8 flex items-center justify-center text-white font-black hover:bg-black/10 transition-colors"
-              >+</button>
+                className="w-7 h-7 flex items-center justify-center text-white hover:bg-white/20 rounded-xl transition-colors"
+              >
+                <Plus className="w-4 h-4" />
+              </button>
             </div>
           ) : (
             <button
               onClick={handleAdd}
-              className="bg-white dark:bg-gray-900 hover:bg-brand-50 dark:hover:bg-gray-800 text-blinkit-green border border-blinkit-green font-black px-4 py-1.5 rounded-xl text-xs transition-all uppercase tracking-tighter hover:shadow-lg hover:shadow-brand-100"
+              className="w-12 h-12 rounded-2xl bg-white dark:bg-midnight-lightest border border-gray-200 dark:border-white/10 flex items-center justify-center hover:bg-brand-500 hover:text-white hover:border-brand-500 transition-all duration-300 shadow-sm"
             >
-              Add
+              <Plus className="w-5 h-5" />
             </button>
           )
         )}
