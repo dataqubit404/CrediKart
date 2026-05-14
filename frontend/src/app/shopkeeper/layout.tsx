@@ -3,6 +3,7 @@ import { useAuthStore } from '@/store/authStore';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
+import DashboardSidebar from '@/components/layout/DashboardSidebar';
 
 export default function ShopkeeperLayout({ children }: { children: React.ReactNode }) {
   const { user } = useAuthStore();
@@ -17,9 +18,14 @@ export default function ShopkeeperLayout({ children }: { children: React.ReactNo
   if (!user || user.role !== 'SHOPKEEPER') return null;
 
   return (
-    <div className="min-h-screen bg-gray-50 text-gray-900">
+    <div className="min-h-screen bg-white dark:bg-midnight transition-colors duration-500">
       <Navbar />
-      {children}
+      <div className="max-w-7xl mx-auto px-4 flex gap-10 py-8">
+        <DashboardSidebar role="SHOPKEEPER" />
+        <main className="flex-1 min-w-0">
+          {children}
+        </main>
+      </div>
     </div>
   );
 }
