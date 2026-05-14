@@ -57,7 +57,7 @@ web_modules/
 
 
 .env
-.env.example
+# .env.example - REMOVED SO IT CAN BE TRACKED
 .env.local
 .env.local.example
 .env.development.local

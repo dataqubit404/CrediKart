@@ -49,25 +49,82 @@ export default function Home() {
     <div className="min-h-screen bg-[#FDFDFD]">
       <Navbar />
 
-      {/* Hero Banner Section */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="relative rounded-[2rem] overflow-hidden bg-[#F7D300] min-h-[300px] flex items-center px-8 sm:px-16 shadow-2xl shadow-yellow-100">
-          <div className="max-w-lg z-10 py-10">
-            <h1 className="font-display font-black text-4xl sm:text-6xl text-gray-900 leading-[1.1] mb-4">
-              Groceries <br/> delivered in <br/> <span className="text-white bg-gray-900 px-3 py-1 rounded-2xl rotate-2 inline-block">10 minutes</span>
+      {/* Elite Hero Section */}
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        <div className="relative rounded-[3rem] overflow-hidden bg-midnight-lighter min-h-[500px] flex items-center px-8 sm:px-20 shadow-2xl group">
+          {/* Animated Background Gradients */}
+          <div className="absolute top-0 -right-20 w-[600px] h-[600px] bg-brand-500/20 blur-[150px] rounded-full animate-pulse-slow"></div>
+          <div className="absolute -bottom-20 -left-20 w-[400px] h-[400px] bg-luxury-rose/10 blur-[120px] rounded-full animate-pulse"></div>
+
+          <div className="max-w-2xl z-10 py-16">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-8 backdrop-blur-sm">
+              <span className="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>
+              <span className="text-xs font-black text-brand-100 uppercase tracking-widest">CrediPay 2.0 is Live</span>
+            </div>
+            
+            <h1 className="font-display font-black text-5xl sm:text-7xl text-white leading-[1.05] mb-6 tracking-tight">
+              Smart Credit. <br/>
+              <span className="bg-clip-text text-transparent bg-premium-gradient">Lightning</span> <br/>
+              Delivery.
             </h1>
-            <p className="text-gray-800 text-lg font-medium opacity-80 mb-8">
-              Experience the magic of lightning fast delivery with CrediPay credit system.
+            
+            <p className="text-gray-400 text-lg sm:text-xl font-medium mb-12 max-w-md leading-relaxed">
+              Shop with credit, pay later, and get everything at your door in <span className="text-white font-bold">10 minutes</span>.
             </p>
-            <div className="flex gap-4">
-              <button className="bg-gray-900 text-white font-bold px-8 py-4 rounded-2xl hover:bg-black transition-all">Order Now</button>
-              <button className="bg-white/50 text-gray-900 font-bold px-8 py-4 rounded-2xl border border-gray-900/10 hover:bg-white transition-all">Learn More</button>
+            
+            <div className="flex flex-wrap gap-5">
+              <button className="btn-premium px-10 py-5 text-lg group">
+                Start Shopping
+                <span className="inline-block ml-2 transition-transform group-hover:translate-x-1">→</span>
+              </button>
+              <button className="btn-outline-premium px-10 py-5 text-lg border-white/10 text-white hover:bg-white/5">
+                Explore Shops
+              </button>
+            </div>
+
+            {/* Trust Badges */}
+            <div className="mt-16 flex items-center gap-8 opacity-40">
+              <div className="flex flex-col">
+                <span className="text-2xl font-black text-white italic">Razorpay</span>
+                <span className="text-[10px] uppercase tracking-widest font-bold">Secure Payments</span>
+              </div>
+              <div className="w-px h-8 bg-white/10"></div>
+              <div className="flex flex-col">
+                <span className="text-2xl font-black text-white">CrediPay</span>
+                <span className="text-[10px] uppercase tracking-widest font-bold">Trusted Credit</span>
+              </div>
             </div>
           </div>
-          <div className="absolute right-0 bottom-0 top-0 w-1/2 hidden lg:flex items-center justify-center pointer-events-none">
-            <div className="text-[15rem] drop-shadow-2xl opacity-90 animate-bounce delay-150">🍎</div>
-            <div className="text-8xl absolute top-10 right-20 drop-shadow-xl animate-pulse">🥛</div>
-            <div className="text-9xl absolute bottom-10 right-40 drop-shadow-xl animate-pulse">🍿</div>
+
+          {/* Floating Elite Elements */}
+          <div className="absolute right-0 bottom-0 top-0 w-1/2 hidden lg:flex items-center justify-center pointer-events-none pr-10">
+            <div className="relative w-full h-full">
+              {/* Glass Floating Card */}
+              <div className="absolute top-1/4 right-10 glass p-6 rounded-[2rem] border-white/10 shadow-2xl animate-float max-w-[240px]">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 rounded-2xl bg-green-500/20 flex items-center justify-center text-2xl">🥦</div>
+                  <div>
+                    <p className="text-xs font-black text-gray-500 uppercase">Latest Order</p>
+                    <p className="text-sm font-bold text-white">Fresh Broccoli</p>
+                  </div>
+                </div>
+                <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
+                  <div className="w-3/4 h-full bg-brand-500 animate-shimmer"></div>
+                </div>
+                <p className="text-[10px] text-brand-500 mt-2 font-black uppercase">Arriving in 4 mins</p>
+              </div>
+
+              {/* Another Card */}
+              <div className="absolute bottom-1/4 right-1/3 glass p-6 rounded-[2.5rem] border-white/10 shadow-2xl animate-pulse-slow max-w-[200px]">
+                <p className="text-xs font-black text-gray-500 uppercase mb-2">Available Credit</p>
+                <p className="text-3xl font-black text-white italic">₹5,000</p>
+                <div className="mt-3 flex -space-x-2">
+                  {[1,2,3].map(i => (
+                    <div key={i} className="w-8 h-8 rounded-full border-2 border-midnight bg-brand-500 flex items-center justify-center text-[10px] font-bold">👤</div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

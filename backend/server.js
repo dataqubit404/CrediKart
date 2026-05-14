@@ -11,13 +11,15 @@ const sequelize = require('./config/database');
 // Load models
 require('./models');
 
-const app = express();
-const PORT = process.env.PORT || 5001;
+app.set('trust proxy', 1); // Trust first proxy (Render, Vercel, Nginx)
+
+// ── Health Check ─────────────────────────────────────────────────────────────
+app.get('/health', (req, res) => res.status(200).json({ status: 'OK', timestamp: new Date() }));
 
 // ── Security Middleware ───────────────────────────────────────────────────────
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: process.env.ALLOWED_ORIGIN || process.env.FRONTEND_URL || 'http://localhost:3000',
   credentials: true,
 }));
 app.use(generalLimiter);
