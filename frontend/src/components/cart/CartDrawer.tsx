@@ -2,6 +2,7 @@
 import { useCartStore } from '@/store/cartStore';
 import Link from 'next/link';
 import { useAuthStore } from '@/store/authStore';
+import { X, ShoppingBag, Trash2, Plus, Minus, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export default function CartDrawer() {
   const { items, isOpen, closeCart, removeItem, updateQty, total, clearCart } = useCartStore();
@@ -12,41 +13,63 @@ export default function CartDrawer() {
   return (
     <>
       {/* Backdrop */}
-      <div className="fixed inset-0 bg-black/60 z-40" onClick={closeCart} />
+      <div className="fixed inset-0 bg-midnight/80 backdrop-blur-sm z-[60] animate-fade-in" onClick={closeCart} />
 
       {/* Drawer */}
-      <div className="fixed right-0 top-0 h-full w-full sm:w-96 bg-white dark:bg-gray-900 border-l border-gray-100 dark:border-gray-800 z-50 flex flex-col animate-slide-in">
+      <div className="fixed right-0 top-0 h-full w-full sm:w-[450px] glass-dark border-l border-white/5 z-[70] flex flex-col shadow-2xl animate-slide-in">
         {/* Header */}
-        <div className="flex items-center justify-between p-5 border-b border-gray-100 dark:border-gray-800">
-          <h2 className="font-display font-bold text-lg text-gray-900 dark:text-white">Your Cart</h2>
-          <button onClick={closeCart} className="text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors text-xl">✕</button>
+        <div className="flex items-center justify-between p-8 border-b border-white/5">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-brand-500/10 flex items-center justify-center text-brand-500">
+              <ShoppingBag className="w-5 h-5" />
+            </div>
+            <div>
+              <h2 className="font-display font-black text-xl text-white tracking-tight">Your Cart</h2>
+              <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">{items.length} Items Selected</p>
+            </div>
+          </div>
+          <button onClick={closeCart} className="w-10 h-10 rounded-xl hover:bg-white/5 flex items-center justify-center text-gray-400 hover:text-white transition-all">
+            <X className="w-5 h-5" />
+          </button>
         </div>
 
         {/* Items */}
-        <div className="flex-1 overflow-y-auto p-4 space-y-3">
+        <div className="flex-1 overflow-y-auto p-6 space-y-4 scrollbar-hide">
           {items.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-center gap-4">
-              <div className="text-6xl">🛒</div>
-              <p className="text-gray-400 dark:text-gray-500">Your cart is empty</p>
-              <button onClick={closeCart} className="btn-primary text-sm">Start Shopping</button>
+            <div className="flex flex-col items-center justify-center h-full text-center">
+              <div className="w-24 h-24 rounded-[2.5rem] bg-white/5 flex items-center justify-center mb-6 text-4xl">🛒</div>
+              <p className="text-white font-black text-xl mb-2">Cart is empty</p>
+              <p className="text-gray-500 font-medium mb-8">Looks like you haven't added anything yet.</p>
+              <button onClick={closeCart} className="btn-premium px-8">Start Shopping</button>
             </div>
           ) : (
             items.map(item => (
-              <div key={item.product_id} className="flex items-center gap-3 bg-gray-50 dark:bg-gray-800 rounded-xl p-3">
-                <div className="w-12 h-12 rounded-lg bg-white dark:bg-gray-700 flex items-center justify-center text-2xl shrink-0 border border-gray-100 dark:border-gray-600">
+              <div key={item.product_id} className="flex items-center gap-4 glass bg-white/5 p-4 rounded-3xl border-white/5 group">
+                <div className="w-20 h-20 rounded-2xl bg-white/5 overflow-hidden p-2 shrink-0 border border-white/5">
                   {item.image_url ? (
-                    <img src={`${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api').replace('/api', '')}${item.image_url}`} alt={item.name} className="w-full h-full object-cover rounded-lg" />
-                  ) : '🛍️'}
+                    <img src={`${(process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api').replace('/api', '')}${item.image_url}`} alt={item.name} className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-500" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-2xl opacity-20">🛍️</div>
+                  )}
                 </div>
+                
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{item.name}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{item.unit}</p>
-                  <p className="text-sm font-bold text-brand-600 dark:text-brand-500">₹{item.price}</p>
+                  <p className="text-sm font-bold text-white truncate mb-0.5">{item.name}</p>
+                  <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2">{item.unit || 'Standard Unit'}</p>
+                  <p className="text-base font-black text-brand-500">₹{item.price}</p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <button onClick={() => updateQty(item.product_id, item.qty - 1)} className="w-7 h-7 rounded-lg bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 text-gray-900 dark:text-white flex items-center justify-center font-bold transition-colors">−</button>
-                  <span className="text-gray-900 dark:text-white font-semibold w-5 text-center">{item.qty}</span>
-                  <button onClick={() => updateQty(item.product_id, item.qty + 1)} className="w-7 h-7 rounded-lg bg-brand-500 hover:bg-brand-600 text-black flex items-center justify-center font-bold transition-colors">+</button>
+
+                <div className="flex flex-col items-end gap-3">
+                  <div className="flex items-center bg-midnight rounded-xl p-1 border border-white/10">
+                    <button onClick={() => updateQty(item.product_id, item.qty - 1)} className="w-7 h-7 flex items-center justify-center text-gray-400 hover:text-white transition-colors">
+                      <Minus className="w-3.5 h-3.5" />
+                    </button>
+                    <span className="text-white font-black text-xs w-6 text-center">{item.qty}</span>
+                    <button onClick={() => updateQty(item.product_id, item.qty + 1)} className="w-7 h-7 flex items-center justify-center text-brand-500 hover:scale-110 transition-all">
+                      <Plus className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                  <button onClick={() => removeItem(item.product_id)} className="text-[10px] font-black text-red-500/50 hover:text-red-500 uppercase tracking-widest transition-colors">Remove</button>
                 </div>
               </div>
             ))
@@ -55,22 +78,31 @@ export default function CartDrawer() {
 
         {/* Footer */}
         {items.length > 0 && (
-          <div className="border-t border-gray-100 dark:border-gray-800 p-5 space-y-4">
-            {items[0]?.shop_name && (
-              <p className="text-xs text-gray-500 dark:text-gray-400">From: <span className="text-gray-900 dark:text-white font-medium">{items[0].shop_name}</span></p>
-            )}
-            <div className="flex justify-between items-center">
-              <span className="text-gray-500 dark:text-gray-400">Subtotal</span>
-              <span className="text-xl font-bold text-gray-900 dark:text-white">₹{total()}</span>
+          <div className="glass-dark border-t border-white/10 p-8 space-y-6">
+            <div className="flex items-center gap-3 p-3 rounded-2xl bg-brand-500/5 border border-brand-500/10 mb-2">
+              <ShieldCheck className="w-5 h-5 text-brand-500" />
+              <p className="text-[10px] font-bold text-brand-500 uppercase tracking-widest">Secure Checkout Guaranteed</p>
             </div>
-            <div className="flex gap-3">
-              <button onClick={clearCart} className="btn-secondary flex-1 text-sm">Clear</button>
+
+            <div className="flex justify-between items-end">
+              <div>
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Total Amount</p>
+                <p className="text-3xl font-black text-white italic">₹{total().toFixed(2)}</p>
+              </div>
+              <button onClick={clearCart} className="text-xs font-black text-red-500 uppercase tracking-widest hover:underline flex items-center gap-2 mb-1">
+                <Trash2 className="w-3.5 h-3.5" />
+                Clear
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 gap-3">
               {user ? (
-                <Link href="/checkout" onClick={closeCart} className="btn-primary flex-1 text-sm text-center">
-                  Checkout →
+                <Link href="/checkout" onClick={closeCart} className="btn-premium py-4 text-sm text-center flex items-center justify-center gap-3">
+                  Proceed to Checkout
+                  <ArrowRight className="w-4 h-4" />
                 </Link>
               ) : (
-                <Link href="/auth/login" onClick={closeCart} className="btn-primary flex-1 text-sm text-center">
+                <Link href="/auth/login" onClick={closeCart} className="btn-premium py-4 text-sm text-center">
                   Login to Checkout
                 </Link>
               )}
