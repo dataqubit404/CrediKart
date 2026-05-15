@@ -49,128 +49,72 @@ export default function Home() {
     <div className="min-h-screen bg-[#FDFDFD]">
       <Navbar />
 
-      {/* Elite Hero Section */}
-      <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="relative rounded-[3rem] overflow-hidden bg-midnight-lighter min-h-[500px] flex items-center px-8 sm:px-20 shadow-2xl group">
-          {/* Animated Background Gradients */}
-          <div className="absolute top-0 -right-20 w-[600px] h-[600px] bg-brand-500/20 blur-[150px] rounded-full animate-pulse-slow"></div>
-          <div className="absolute -bottom-20 -left-20 w-[400px] h-[400px] bg-luxury-rose/10 blur-[120px] rounded-full animate-pulse"></div>
-
-          <div className="max-w-2xl z-10 py-16">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-8 backdrop-blur-sm">
-              <span className="w-2 h-2 rounded-full bg-brand-500 animate-pulse"></span>
-              <span className="text-xs font-black text-brand-100 uppercase tracking-widest">CrediPay 2.0 is Live</span>
-            </div>
-            
-            <h1 className="font-display font-black text-5xl sm:text-7xl text-white leading-[1.05] mb-6 tracking-tight">
-              Smart Credit. <br/>
-              <span className="bg-clip-text text-transparent bg-premium-gradient">Lightning</span> <br/>
-              Delivery.
+      {/* Hero Banner Section */}
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="relative rounded-[2rem] overflow-hidden bg-[#F7D300] min-h-[300px] flex items-center px-8 sm:px-16 shadow-2xl shadow-yellow-100">
+          <div className="max-w-lg z-10 py-10">
+            <h1 className="font-display font-black text-4xl sm:text-6xl text-gray-900 leading-[1.1] mb-4">
+              Groceries <br/> delivered in <br/> <span className="text-white bg-gray-900 px-3 py-1 rounded-2xl rotate-2 inline-block">10 minutes</span>
             </h1>
-            
-            <p className="text-gray-400 text-lg sm:text-xl font-medium mb-12 max-w-md leading-relaxed">
-              Shop with credit, pay later, and get everything at your door in <span className="text-white font-bold">10 minutes</span>.
+            <p className="text-gray-800 text-lg font-medium opacity-80 mb-8">
+              Experience the magic of lightning fast delivery with CrediPay credit system.
             </p>
-            
-            <div className="flex flex-wrap gap-5">
-              <button className="btn-premium px-10 py-5 text-lg group">
-                Start Shopping
-                <span className="inline-block ml-2 transition-transform group-hover:translate-x-1">→</span>
-              </button>
-              <button className="btn-outline-premium px-10 py-5 text-lg border-white/10 text-white hover:bg-white/5">
-                Explore Shops
-              </button>
-            </div>
-
-            {/* Trust Badges */}
-            <div className="mt-16 flex items-center gap-8 opacity-40">
-              <div className="flex flex-col">
-                <span className="text-2xl font-black text-white italic">Razorpay</span>
-                <span className="text-[10px] uppercase tracking-widest font-bold">Secure Payments</span>
-              </div>
-              <div className="w-px h-8 bg-white/10"></div>
-              <div className="flex flex-col">
-                <span className="text-2xl font-black text-white">CrediPay</span>
-                <span className="text-[10px] uppercase tracking-widest font-bold">Trusted Credit</span>
-              </div>
+            <div className="flex gap-4">
+              <button className="bg-gray-900 text-white font-bold px-8 py-4 rounded-2xl hover:bg-black transition-all">Order Now</button>
+              <button className="bg-white/50 text-gray-900 font-bold px-8 py-4 rounded-2xl border border-gray-900/10 hover:bg-white transition-all">Learn More</button>
             </div>
           </div>
-
-          {/* Floating Elite Elements */}
-          <div className="absolute right-0 bottom-0 top-0 w-1/2 hidden lg:flex items-center justify-center pointer-events-none pr-10">
-            <div className="relative w-full h-full">
-              {/* Glass Floating Card */}
-              <div className="absolute top-1/4 right-10 glass p-6 rounded-[2rem] border-white/10 shadow-2xl animate-float max-w-[240px]">
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-2xl bg-green-500/20 flex items-center justify-center text-2xl">🥦</div>
-                  <div>
-                    <p className="text-xs font-black text-gray-500 uppercase">Latest Order</p>
-                    <p className="text-sm font-bold text-white">Fresh Broccoli</p>
-                  </div>
-                </div>
-                <div className="w-full h-2 bg-white/5 rounded-full overflow-hidden">
-                  <div className="w-3/4 h-full bg-brand-500 animate-shimmer"></div>
-                </div>
-                <p className="text-[10px] text-brand-500 mt-2 font-black uppercase">Arriving in 4 mins</p>
-              </div>
-
-              {/* Another Card */}
-              <div className="absolute bottom-1/4 right-1/3 glass p-6 rounded-[2.5rem] border-white/10 shadow-2xl animate-pulse-slow max-w-[200px]">
-                <p className="text-xs font-black text-gray-500 uppercase mb-2">Available Credit</p>
-                <p className="text-3xl font-black text-white italic">₹5,000</p>
-                <div className="mt-3 flex -space-x-2">
-                  {[1,2,3].map(i => (
-                    <div key={i} className="w-8 h-8 rounded-full border-2 border-midnight bg-brand-500 flex items-center justify-center text-[10px] font-bold">👤</div>
-                  ))}
-                </div>
-              </div>
-            </div>
+          <div className="absolute right-0 bottom-0 top-0 w-1/2 hidden lg:flex items-center justify-center pointer-events-none">
+            <div className="text-[15rem] drop-shadow-2xl opacity-90 animate-bounce delay-150">🍎</div>
+            <div className="text-8xl absolute top-10 right-20 drop-shadow-xl animate-pulse">🥛</div>
+            <div className="text-9xl absolute bottom-10 right-40 drop-shadow-xl animate-pulse">🍿</div>
           </div>
         </div>
       </div>
 
-      {/* Elite Flash Zone */}
+      {/* Flash Zone - Urgency Section */}
       {flashProducts.length > 0 && (
-        <div className="max-w-7xl mx-auto px-4 mb-20">
-            <div className="relative rounded-[3rem] overflow-hidden bg-luxury-rose p-8 sm:p-12 text-white shadow-2xl group">
-                {/* Background Animation */}
-                <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-white/10 blur-[100px] rounded-full animate-pulse-slow"></div>
-                <div className="absolute -bottom-20 -left-20 w-[300px] h-[300px] bg-black/20 blur-[80px] rounded-full animate-pulse"></div>
+        <div className="max-w-7xl mx-auto px-4 mb-12">
+            <div className="bg-red-600 rounded-[2.5rem] p-8 sm:p-12 text-white shadow-2xl overflow-hidden relative group">
+                {/* Background Glow */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-white/20 blur-[100px] rounded-full -mr-20 -mt-20 group-hover:bg-white/30 transition-all duration-700"></div>
                 
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 mb-12 relative z-10">
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 mb-10 relative z-10">
                     <div>
-                        <div className="flex items-center gap-4 mb-4">
-                            <span className="bg-white/20 backdrop-blur-md text-white px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-[0.2em] border border-white/20">Active Now</span>
-                            <h2 className="font-display font-black text-4xl sm:text-5xl tracking-tighter">⚡ Flash Zone</h2>
+                        <div className="flex items-center gap-3 mb-2">
+                            <span className="bg-white text-red-600 px-3 py-1 rounded-full text-xs font-black uppercase tracking-widest animate-pulse">Live Now</span>
+                            <h2 className="font-display font-black text-3xl sm:text-4xl italic tracking-tighter">⚡ Flash Zone</h2>
                         </div>
-                        <p className="text-white/80 text-lg font-medium max-w-lg">Premium products nearing expiry at <span className="text-white font-black underline">70-90% OFF</span>. Grab them before they vanish!</p>
+                        <p className="text-red-100 font-medium">Items nearing expiry at 70-90% OFF. Grab them before they vanish!</p>
                     </div>
-                    <div className="flex items-center gap-4 bg-black/40 backdrop-blur-xl px-8 py-5 rounded-[2rem] border border-white/10 shadow-2xl">
+                    <div className="flex items-center gap-4 bg-black/20 backdrop-blur-md px-6 py-3 rounded-2xl border border-white/10">
                         <div className="text-center">
-                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/60 mb-1">Ending In</p>
-                            <p className="font-display font-black text-3xl tracking-tighter tabular-nums">00:45:12</p>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-red-200">Ending In</p>
+                            <p className="font-mono font-black text-xl">00:45:12</p>
                         </div>
                     </div>
                 </div>
 
-                <div className="flex gap-8 overflow-x-auto pb-8 no-scrollbar relative z-10">
+                <div className="flex gap-6 overflow-x-auto pb-4 no-scrollbar relative z-10">
                     {flashProducts.map(p => (
-                        <div key={p.id} className="min-w-[240px] glass dark:bg-white/10 rounded-[2.5rem] p-5 text-white border-white/10 shadow-2xl group/card hover:-translate-y-2 transition-all duration-500">
-                            <div className="relative aspect-square rounded-[2rem] bg-white/5 mb-5 overflow-hidden border border-white/5">
-                                <img 
-                                    src={p.image_url ? `${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}${p.image_url}` : 'https://placehold.co/400x400?text=Flash'} 
-                                    className="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-700"
-                                    alt={p.name}
-                                />
-                                <div className="absolute top-3 right-3 bg-luxury-rose text-white text-[10px] font-black px-3 py-1.5 rounded-xl shadow-2xl border border-white/20">-{Math.round(((p.price - p.flash_price)/p.price)*100)}%</div>
+                        <div key={p.id} className="min-w-[200px] bg-white rounded-3xl p-4 text-gray-900 shadow-xl flex flex-col justify-between group/card hover:-translate-y-2 transition-all">
+                            <div className="relative">
+                                <div className="aspect-square rounded-2xl bg-gray-50 mb-4 overflow-hidden">
+                                    <img 
+                                        src={p.image_url ? `${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}${p.image_url}` : 'https://placehold.co/400x400?text=Flash'} 
+                                        className="w-full h-full object-cover group-hover/card:scale-110 transition-transform duration-500"
+                                        alt={p.name}
+                                    />
+                                </div>
+                                <span className="absolute top-2 right-2 bg-red-600 text-white text-[10px] font-black px-2 py-1 rounded-lg shadow-lg italic">-{Math.round(((p.price - p.flash_price)/p.price)*100)}%</span>
                             </div>
                             <div>
-                                <h4 className="font-bold text-sm line-clamp-1 mb-2 opacity-90 tracking-tight">{p.name}</h4>
-                                <div className="flex items-end gap-3 mb-6">
-                                    <span className="text-2xl font-black tracking-tighter">₹{p.flash_price}</span>
-                                    <span className="text-xs text-white/40 line-through mb-1 font-bold">₹{p.price}</span>
+                                <h4 className="font-black text-sm line-clamp-1 mb-1">{p.name}</h4>
+                                <div className="flex items-end gap-2 mb-4">
+                                    <span className="text-xl font-black text-red-600 tracking-tighter">₹{p.flash_price}</span>
+                                    <span className="text-xs text-gray-400 line-through mb-1 font-bold">₹{p.price}</span>
                                 </div>
-                                <button className="w-full bg-white text-luxury-rose py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-105 transition-all shadow-xl">Quick Grab</button>
+                                <button className="w-full bg-gray-900 text-white py-2.5 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-red-600 transition-colors">Grab Now</button>
                             </div>
                         </div>
                     ))}
@@ -180,32 +124,28 @@ export default function Home() {
       )}
 
       <div className="max-w-7xl mx-auto px-4">
-        {/* Elite Categories Grid */}
-        <section className="mb-20">
-          <div className="flex items-center justify-between mb-10">
-            <div className="flex items-center gap-3">
-              <div className="w-1.5 h-8 bg-brand-500 rounded-full"></div>
-              <h2 className="font-display font-black text-3xl text-gray-900 dark:text-white tracking-tight">Browse Boutique</h2>
-            </div>
-            <button className="text-sm font-black text-brand-500 hover:tracking-widest transition-all uppercase tracking-widest">See All</button>
+        {/* Categories Grid */}
+        <section className="mb-12">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="font-display font-black text-2xl text-gray-900 tracking-tight">Shop by Category</h2>
+            <button className="text-sm font-bold text-blinkit-green hover:underline">See All</button>
           </div>
-          
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-9 gap-6">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-9 gap-4">
             <button 
               onClick={() => setCategory('All')}
-              className={`flex flex-col items-center gap-4 p-6 rounded-[2.5rem] transition-all duration-500 ${category === 'All' ? 'bg-brand-500 text-white shadow-neon-blue -translate-y-2' : 'glass hover:bg-brand-500/5 hover:border-brand-500/20'}`}
+              className={`flex flex-col items-center gap-3 p-4 rounded-3xl transition-all ${category === 'All' ? 'bg-brand-100 border-2 border-brand-500 shadow-lg shadow-brand-50' : 'bg-white border border-gray-100 hover:border-brand-200'}`}
             >
-              <div className="text-4xl filter drop-shadow-lg">🏠</div>
-              <span className={`text-[10px] font-black uppercase tracking-widest ${category === 'All' ? 'text-white' : 'text-gray-500'}`}>All</span>
+              <div className="text-3xl">🏠</div>
+              <span className="text-xs font-black text-gray-700 uppercase tracking-tighter">All</span>
             </button>
             {CATEGORIES.map(c => (
               <button
                 key={c.name}
                 onClick={() => setCategory(c.name)}
-                className={`flex flex-col items-center gap-4 p-6 rounded-[2.5rem] transition-all duration-500 ${category === c.name ? 'bg-brand-500 text-white shadow-neon-blue -translate-y-2' : 'glass hover:bg-brand-500/5 hover:border-brand-500/20'}`}
+                className={`flex flex-col items-center gap-3 p-4 rounded-3xl transition-all ${category === c.name ? 'bg-brand-100 border-2 border-brand-500 shadow-lg shadow-brand-50' : 'bg-white border border-gray-100 hover:border-brand-200'}`}
               >
-                <div className="text-4xl filter drop-shadow-lg">{c.icon}</div>
-                <span className={`text-[10px] font-black uppercase tracking-widest text-center leading-tight ${category === c.name ? 'text-white' : 'text-gray-500'}`}>{c.name}</span>
+                <div className="text-3xl">{c.icon}</div>
+                <span className="text-xs font-black text-gray-700 uppercase tracking-tighter text-center">{c.name}</span>
               </button>
             ))}
           </div>
