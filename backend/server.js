@@ -11,6 +11,9 @@ const sequelize = require('./config/database');
 // Load models
 require('./models');
 
+const app = express();
+const PORT = process.env.PORT || 5001;
+
 app.set('trust proxy', 1); // Trust first proxy (Render, Vercel, Nginx)
 
 // ── Health Check ─────────────────────────────────────────────────────────────
