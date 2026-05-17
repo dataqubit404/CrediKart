@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sora:wght@600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=Sora:wght@600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -14,101 +14,85 @@
   }
 
   body {
-    @apply bg-white text-gray-900;
+    @apply bg-[#0B0C10] text-gray-100 font-sans antialiased selection:bg-brand-500/30 selection:text-brand-300;
   }
 }
 
 @layer components {
+  /* ── Premium Buttons ── */
   .btn-primary {
-    @apply bg-brand-500 hover:bg-brand-600 text-black font-bold px-4 py-2 rounded-xl transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm;
+    @apply relative overflow-hidden bg-brand-500 hover:bg-brand-400 text-[#0B0C10] font-bold px-6 py-2.5 rounded-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(247,211,0,0.3)] hover:shadow-[0_0_25px_rgba(247,211,0,0.5)] transform hover:-translate-y-0.5 active:translate-y-0;
   }
 
   .btn-blinkit {
-    @apply bg-blinkit-green hover:bg-green-700 text-white font-bold px-4 py-2 rounded-xl transition-all duration-150 shadow-sm;
+    @apply relative overflow-hidden bg-blinkit-green hover:bg-[#329a38] text-white font-bold px-6 py-2.5 rounded-xl transition-all duration-300 shadow-[0_0_15px_rgba(59,177,67,0.3)] hover:shadow-[0_0_25px_rgba(59,177,67,0.5)] transform hover:-translate-y-0.5 active:translate-y-0;
   }
 
   .btn-secondary {
-    @apply bg-gray-100 hover:bg-gray-200 text-gray-900 font-semibold px-4 py-2 rounded-xl transition-all duration-150 border border-gray-100;
-    @apply dark:bg-gray-800 dark:hover:bg-gray-700 dark:text-gray-200 dark:border-gray-700;
+    @apply bg-white/5 hover:bg-white/10 text-white font-semibold px-6 py-2.5 rounded-xl transition-all duration-300 border border-white/10 backdrop-blur-md;
   }
 
-
-
+  /* ── Premium Cards & Glassmorphism ── */
   .card {
-    @apply bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200;
-    @apply dark:bg-gray-900 dark:border-gray-800;
+    @apply bg-luxe-glass backdrop-blur-xl border border-luxe-border rounded-2xl shadow-glass transition-all duration-300 hover:bg-white/[0.08] hover:border-white/20;
   }
 
   .card-light {
-    @apply bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-200;
+    @apply bg-white/90 backdrop-blur-xl border border-gray-200 rounded-2xl shadow-glass-sm transition-all duration-300 hover:shadow-glass hover:bg-white;
   }
 
+  .glass-panel {
+    @apply bg-luxe-glass backdrop-blur-2xl border border-luxe-border shadow-glass;
+  }
+
+  /* ── Inputs ── */
   .input {
-    @apply w-full bg-white border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all;
-    @apply dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder-gray-500;
+    @apply w-full bg-luxe-800/50 backdrop-blur-md border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-500/50 focus:border-brand-500/50 transition-all duration-300;
   }
 
   .label {
-    @apply block text-sm font-semibold text-gray-500 mb-1.5;
-    @apply dark:text-gray-400;
+    @apply block text-sm font-medium text-gray-400 mb-1.5 tracking-wide;
   }
 
+  /* ── Badges ── */
   .badge-blue {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-600 border border-blue-100;
-    @apply dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500/20;
+    @apply inline-flex items-center px-3 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold bg-blue-500/10 text-blue-400 border border-blue-500/20 backdrop-blur-md shadow-[0_0_10px_rgba(59,130,246,0.1)];
   }
 
   .badge-green {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-50 text-green-600 border border-green-100;
-    @apply dark:bg-green-500/10 dark:text-green-400 dark:border-green-500/20;
+    @apply inline-flex items-center px-3 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold bg-green-500/10 text-green-400 border border-green-500/20 backdrop-blur-md shadow-[0_0_10px_rgba(34,197,94,0.1)];
   }
 
   .badge-yellow {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-yellow-50 text-yellow-600 border border-yellow-100;
-    @apply dark:bg-yellow-500/10 dark:text-yellow-400 dark:border-yellow-500/20;
+    @apply inline-flex items-center px-3 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 backdrop-blur-md shadow-[0_0_10px_rgba(234,179,8,0.1)];
   }
 
   .badge-red {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-50 text-red-600 border border-red-100;
-    @apply dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20;
+    @apply inline-flex items-center px-3 py-1 rounded-full text-[10px] uppercase tracking-wider font-bold bg-red-500/10 text-red-400 border border-red-500/20 backdrop-blur-md shadow-[0_0_10px_rgba(239,68,68,0.1)];
   }
 
   .skeleton {
-    @apply bg-gray-100 dark:bg-gray-800 rounded animate-pulse;
-    background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
-    @apply dark:from-gray-800 dark:via-gray-700 dark:to-gray-800;
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
+    @apply bg-luxe-800 rounded animate-pulse relative overflow-hidden;
+  }
+  
+  .skeleton::after {
+    content: '';
+    @apply absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/5 to-transparent animate-[shimmer_1.5s_infinite];
   }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-
-  100% {
-    background-position: 200% 0;
-  }
-}
-
-/* Scrollbar */
+/* ── Scrollbar Polish ── */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f9fafb;
+  @apply bg-[#0B0C10];
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d1d5db;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;
+  @apply bg-white/10 rounded-full hover:bg-white/20 transition-colors;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
