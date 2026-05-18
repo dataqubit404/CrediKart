@@ -61,6 +61,10 @@ module.exports = {
         fadeUp: { from: { opacity: 0, transform: 'translateY(20px)' }, to: { opacity: 1, transform: 'translateY(0)' } },
         pulseGlow: { '0%, 100%': { opacity: 1 }, '50%': { opacity: 0.7, boxShadow: '0 0 20px rgba(247, 211, 0, 0.7)' } },
         shimmer: { '0%': { backgroundPosition: '-200% 0' }, '100%': { backgroundPosition: '200% 0' } },
+        'gradient-shift': {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
       },
     },
   },

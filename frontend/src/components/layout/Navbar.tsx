@@ -30,7 +30,7 @@ export default function Navbar() {
               <div className="w-10 h-10 rounded-xl bg-brand-500 flex items-center justify-center text-[#0B0C10] font-black text-lg shadow-[0_0_15px_rgba(247,211,0,0.3)] group-hover:shadow-[0_0_25px_rgba(247,211,0,0.5)] transition-all duration-300 transform group-hover:scale-105">
                 CK
               </div>
-              <span className="font-display font-black text-white text-2xl tracking-tight hidden lg:block group-hover:text-brand-300 transition-colors">CrediKart</span>
+              <span className="font-display font-black text-2xl tracking-tight hidden lg:block transition-colors text-gradient-luxe">CrediKart</span>
             </Link>
           </div>
 
