@@ -20,13 +20,16 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="font-display font-bold text-2xl text-gray-900">Hello, {user.name?.split(' ')[0]} 👋</h1>
-        <p className="text-gray-500 mt-1">Manage your orders and CrediPay account</p>
+      <div className="mb-10 bg-luxe-800/50 backdrop-blur-xl border border-white/10 rounded-[2rem] p-8 shadow-glass">
+        <h1 className="font-display font-black text-3xl text-white tracking-tight">Hello, {user.name?.split(' ')[0]} 👋</h1>
+        <p className="text-gray-400 mt-2 text-sm font-medium">Manage your elite orders and CrediPay account</p>
         {!user.is_verified && (
-          <div className="mt-3 p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-xl text-yellow-700 text-sm">
-            ⚠ Please upload your ID proof to enable CrediPay and full access.{' '}
-            <Link href="/dashboard/verify" className="underline">Verify now</Link>
+          <div className="mt-5 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-xl text-yellow-400 text-sm flex items-center gap-3">
+            <span className="text-xl">⚠</span> 
+            <div>
+              <p className="font-bold mb-0.5">Verification Required</p>
+              <p className="opacity-80">Please upload your ID proof to enable CrediPay and full access. <Link href="/dashboard/verify" className="underline font-bold hover:text-yellow-300 transition-colors">Verify now</Link></p>
+            </div>
           </div>
         )}
       </div>
@@ -35,12 +38,12 @@ export default function DashboardPage() {
         <div className="md:col-span-1">
           <CreditMeter />
         </div>
-        <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-5">
           {cards.map(c => (
-            <Link key={c.href} href={c.href} className="card p-5 hover:border-gray-300 transition-all group">
-              <div className="text-3xl mb-3">{c.icon}</div>
-              <p className="font-semibold text-gray-900 group-hover:text-brand-500 transition-colors">{c.label}</p>
-              <p className="text-gray-500 text-xs mt-1">{c.desc}</p>
+            <Link key={c.href} href={c.href} className="bg-luxe-800/80 backdrop-blur-md border border-white/5 rounded-3xl p-6 hover:border-brand-500/50 hover:bg-luxe-700/80 hover:shadow-[0_10px_30px_rgba(247,211,0,0.15)] transition-all duration-300 group">
+              <div className="text-4xl mb-4 drop-shadow-md group-hover:scale-110 transition-transform origin-left">{c.icon}</div>
+              <p className="font-black text-lg text-white group-hover:text-brand-400 transition-colors tracking-tight">{c.label}</p>
+              <p className="text-gray-400 text-xs mt-1.5 font-medium">{c.desc}</p>
             </Link>
           ))}
         </div>
