@@ -48,95 +48,98 @@ export default function ProductCard({ product }: { product: Product }) {
   const BASE = API_URL.replace('/api', '');
 
   return (
-    <div className="bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-3 flex flex-col gap-2 hover:border-brand-300 dark:hover:border-brand-700 transition-all duration-200 group relative">
+    <div className="bg-luxe-800/80 backdrop-blur-xl border border-white/5 rounded-[1.5rem] p-3 flex flex-col gap-2 hover:border-brand-500/50 hover:bg-luxe-700/80 shadow-glass-sm hover:shadow-[0_8px_30px_rgba(247,211,0,0.15)] transition-all duration-500 group relative overflow-hidden">
+      {/* Background Glow */}
+      <div className="absolute top-0 right-0 w-32 h-32 bg-brand-500/0 blur-[60px] rounded-full group-hover:bg-brand-500/10 transition-all duration-700 pointer-events-none"></div>
+
       {/* Badges */}
-      <div className="absolute top-2 left-2 z-10 flex flex-col gap-1">
+      <div className="absolute top-2 left-2 z-10 flex flex-col gap-1.5">
         {product.is_donation && (
-          <div className="bg-green-600 text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm flex items-center gap-1 uppercase">
+          <div className="bg-green-500/20 backdrop-blur-md border border-green-500/30 text-green-400 text-[9px] font-black px-2.5 py-1 rounded-lg shadow-sm flex items-center gap-1.5 uppercase tracking-widest">
             <span>🌍</span> FREE
           </div>
         )}
         {isFlashActive && (
-          <div className="bg-red-600 text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm flex items-center gap-1 uppercase italic animate-pulse">
+          <div className="bg-red-500/20 backdrop-blur-md border border-red-500/30 text-red-400 text-[9px] font-black px-2.5 py-1 rounded-lg shadow-[0_0_10px_rgba(239,68,68,0.2)] flex items-center gap-1.5 uppercase italic animate-pulse">
             <span>⚡</span> FLASH
           </div>
         )}
         {product.offer_type === 'BOGO' && (
-          <div className="bg-yellow-400 text-black text-[9px] font-black px-2 py-0.5 rounded shadow-sm flex items-center gap-1 uppercase">
+          <div className="bg-brand-500/20 backdrop-blur-md border border-brand-500/30 text-brand-300 text-[9px] font-black px-2.5 py-1 rounded-lg shadow-[0_0_10px_rgba(247,211,0,0.2)] flex items-center gap-1.5 uppercase tracking-widest">
             <span>🎁</span> BOGO
           </div>
         )}
         {product.offer_type === 'COMBO' && (
-          <div className="bg-indigo-600 text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm flex items-center gap-1 uppercase">
+          <div className="bg-indigo-500/20 backdrop-blur-md border border-indigo-500/30 text-indigo-300 text-[9px] font-black px-2.5 py-1 rounded-lg shadow-sm flex items-center gap-1.5 uppercase tracking-widest">
             <span>🤝</span> COMBO
           </div>
         )}
         {discount > 0 && !product.is_donation && (
-          <div className="bg-blue-600 text-white text-[9px] font-black px-2 py-0.5 rounded shadow-sm flex flex-col items-center leading-none">
+          <div className="bg-blue-500/20 backdrop-blur-md border border-blue-500/30 text-blue-400 text-[9px] font-black px-2.5 py-1 rounded-lg shadow-sm flex flex-col items-center leading-none tracking-wider">
             <span>{discount}% OFF</span>
           </div>
         )}
       </div>
 
       {/* Image */}
-      <div className="relative bg-gray-50 dark:bg-gray-800 rounded-xl overflow-hidden aspect-square flex items-center justify-center">
+      <div className="relative bg-luxe-900 rounded-[1rem] overflow-hidden aspect-square flex items-center justify-center border border-white/5">
         {product.image_url ? (
           <img
             src={`${BASE}${product.image_url}`}
             alt={product.name}
-            className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-500"
+            className="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform duration-700 opacity-90 group-hover:opacity-100"
           />
         ) : (
-          <div className="text-4xl opacity-20">🛍️</div>
+          <div className="text-4xl opacity-20 drop-shadow-md">🛍️</div>
         )}
         
         {product.stock === 0 && (
-          <div className="absolute inset-0 bg-white/80 dark:bg-black/80 flex items-center justify-center backdrop-blur-[1px]">
-            <span className="text-gray-900 dark:text-white text-xs font-black uppercase tracking-tighter border-2 border-gray-900 dark:border-white px-2 py-1 rounded">Sold Out</span>
+          <div className="absolute inset-0 bg-luxe-900/80 backdrop-blur-sm flex items-center justify-center">
+            <span className="text-white text-xs font-black uppercase tracking-widest border border-white/20 bg-white/5 px-3 py-1.5 rounded-lg shadow-xl">Sold Out</span>
           </div>
         )}
       </div>
 
       {/* Info */}
-      <div className="flex-1 mt-1">
-        <div className="flex items-center gap-1 mb-1">
-          <span className="text-[10px] font-bold text-gray-400 dark:text-gray-500 bg-gray-50 dark:bg-gray-800 px-1.5 py-0.5 rounded uppercase tracking-wide">
+      <div className="flex-1 mt-2 z-10">
+        <div className="flex items-center gap-1 mb-1.5">
+          <span className="text-[9px] font-bold text-gray-400 bg-white/5 border border-white/5 px-2 py-0.5 rounded-md uppercase tracking-widest">
             {product.unit || 'Each'}
           </span>
         </div>
-        <h3 className="text-sm font-bold text-gray-800 dark:text-gray-200 leading-tight line-clamp-2 h-10">
+        <h3 className="text-sm font-bold text-gray-200 leading-tight line-clamp-2 h-10 group-hover:text-white transition-colors">
           {product.name}
         </h3>
       </div>
 
       {/* Price + Add Section */}
-      <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-50 dark:border-gray-800">
+      <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/5 z-10">
         <div className="flex flex-col">
-          <span className={`text-sm font-black ${product.is_donation ? 'text-green-600' : (isFlashActive ? 'text-red-600' : 'text-gray-900 dark:text-white')}`}>
+          <span className={`text-sm font-black tracking-tight ${product.is_donation ? 'text-green-400' : (isFlashActive ? 'text-red-400' : 'text-white')}`}>
             {product.is_donation ? 'FREE' : `₹${currentPrice}`}
           </span>
           {(product.mrp && product.mrp > currentPrice) || isFlashActive ? (
-            <span className="text-[10px] text-gray-400 dark:text-gray-500 line-through">₹{product.is_donation ? product.price : (isFlashActive ? product.price : product.mrp)}</span>
+            <span className="text-[10px] text-gray-500 line-through font-medium">₹{product.is_donation ? product.price : (isFlashActive ? product.price : product.mrp)}</span>
           ) : null}
         </div>
 
         {product.stock > 0 && (
           inCart ? (
-            <div className="flex items-center bg-blinkit-green rounded-xl overflow-hidden shadow-md shadow-green-100">
+            <div className="flex items-center bg-blinkit-green/20 backdrop-blur-md border border-blinkit-green/30 rounded-xl overflow-hidden shadow-[0_0_15px_rgba(59,177,67,0.2)]">
               <button
                 onClick={() => updateQty(product.id, inCart.qty - 1)}
-                className="w-8 h-8 flex items-center justify-center text-white font-black hover:bg-black/10 transition-colors"
+                className="w-8 h-8 flex items-center justify-center text-green-400 font-black hover:bg-blinkit-green/20 transition-colors"
               >−</button>
               <span className="text-white font-black w-4 text-center text-xs">{inCart.qty}</span>
               <button
                 onClick={() => updateQty(product.id, inCart.qty + 1)}
-                className="w-8 h-8 flex items-center justify-center text-white font-black hover:bg-black/10 transition-colors"
+                className="w-8 h-8 flex items-center justify-center text-green-400 font-black hover:bg-blinkit-green/20 transition-colors"
               >+</button>
             </div>
           ) : (
             <button
               onClick={handleAdd}
-              className="bg-white dark:bg-gray-900 hover:bg-brand-50 dark:hover:bg-gray-800 text-blinkit-green border border-blinkit-green font-black px-4 py-1.5 rounded-xl text-xs transition-all uppercase tracking-tighter hover:shadow-lg hover:shadow-brand-100"
+              className="bg-white/5 hover:bg-blinkit-green/20 text-green-400 border border-white/10 hover:border-blinkit-green/40 font-black px-4 py-2 rounded-xl text-xs transition-all duration-300 uppercase tracking-widest shadow-sm hover:shadow-[0_0_15px_rgba(59,177,67,0.2)] transform active:scale-95"
             >
               Add
             </button>
