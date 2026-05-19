@@ -1,6 +1,8 @@
 'use client';
+import { useState } from 'react';
 import { useCartStore } from '@/store/cartStore';
 import toast from 'react-hot-toast';
+import QuickViewModal from './QuickViewModal';
 
 interface Product {
   id: number;
@@ -22,6 +24,7 @@ interface Product {
 
 export default function ProductCard({ product }: { product: Product }) {
   const { addItem, items, updateQty } = useCartStore();
+  const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const inCart = items.find(i => i.product_id === product.id);
 
   const isFlashActive = product.is_flash_sale && product.flash_ends_at && new Date(product.flash_ends_at) > new Date();
@@ -82,15 +85,18 @@ export default function ProductCard({ product }: { product: Product }) {
       </div>
 
       {/* Image */}
-      <div className="relative bg-luxe-900 rounded-[1rem] overflow-hidden aspect-square flex items-center justify-center border border-white/5">
+      <div 
+        className="relative bg-luxe-900 rounded-[1rem] overflow-hidden aspect-square flex items-center justify-center border border-white/5 cursor-pointer group/img"
+        onClick={() => setIsQuickViewOpen(true)}
+      >
         {product.image_url ? (
           <img
             src={`${BASE}${product.image_url}`}
             alt={product.name}
-            className="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform duration-700 opacity-90 group-hover:opacity-100"
+            className="w-full h-full object-contain p-4 group-hover/img:scale-110 transition-transform duration-700 opacity-90 group-hover/img:opacity-100"
           />
         ) : (
-          <div className="text-4xl opacity-20 drop-shadow-md">🛍️</div>
+          <div className="text-4xl opacity-20 drop-shadow-md group-hover/img:scale-110 transition-transform duration-700">🛍️</div>
         )}
         
         {product.stock === 0 && (
@@ -146,6 +152,12 @@ export default function ProductCard({ product }: { product: Product }) {
           )
         )}
       </div>
+
+      <QuickViewModal 
+        product={product} 
+        isOpen={isQuickViewOpen} 
+        onClose={() => setIsQuickViewOpen(false)} 
+      />
     </div>
   );
 }
