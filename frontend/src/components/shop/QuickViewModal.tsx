@@ -1,6 +1,7 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useCartStore } from '@/store/cartStore';
+import toast from 'react-hot-toast';
 
 interface Product {
   id: number;
@@ -20,6 +21,39 @@ interface Product {
 }
 
 export default function QuickViewModal({ product, isOpen, onClose }: { product: Product | null, isOpen: boolean, onClose: () => void }) {
+  const { addItem, items, updateQty } = useCartStore();
+  const [isAdding, setIsAdding] = useState(false);
+  
+  const inCart = product ? items.find(i => i.product_id === product.id) : undefined;
+
+  const handleAdd = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!product || !product.shop) {
+      toast.error('Shop info missing');
+      return;
+    }
+    
+    setIsAdding(true);
+    
+    setTimeout(() => {
+      const isFlashActive = product.is_flash_sale && product.flash_ends_at && new Date(product.flash_ends_at) > new Date();
+      const currentPrice = product.is_donation ? 0 : (isFlashActive ? Number(product.flash_price) : product.price);
+      
+      addItem({
+        product_id: product.id,
+        shop_id: product.shop.id,
+        shop_name: product.shop.name,
+        name: product.name,
+        price: currentPrice,
+        mrp: product.mrp,
+        unit: product.unit,
+        image_url: product.image_url,
+      });
+      toast.success(`${product.name} added to cart`);
+      setIsAdding(false);
+    }, 600); // 600ms artificial delay for the morphing animation
+  };
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
@@ -123,8 +157,46 @@ export default function QuickViewModal({ product, isOpen, onClose }: { product: 
               </p>
             </div>
 
-            <div className="mt-auto">
-              <div className="text-white opacity-50 border-t border-white/10 pt-4">Part 4: Morphing Add to Cart</div>
+            <div className="mt-auto pt-6">
+              <div className="flex items-center gap-4">
+                {product.stock > 0 ? (
+                  inCart ? (
+                    <div className="flex-1 flex items-center justify-between bg-green-500/10 border border-green-500/30 rounded-2xl p-2 shadow-[0_0_15px_rgba(34,197,94,0.1)]">
+                      <button
+                        onClick={(e) => { e.stopPropagation(); updateQty(product.id, inCart.qty - 1); }}
+                        className="w-12 h-12 flex items-center justify-center rounded-xl bg-white/5 hover:bg-white/10 text-green-400 text-xl font-black transition-colors"
+                      >−</button>
+                      <span className="text-white font-black text-xl w-8 text-center">{inCart.qty}</span>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); updateQty(product.id, inCart.qty + 1); }}
+                        className="w-12 h-12 flex items-center justify-center rounded-xl bg-green-500/20 hover:bg-green-500/30 text-green-400 text-xl font-black transition-colors"
+                      >+</button>
+                    </div>
+                  ) : (
+                    <button
+                      onClick={handleAdd}
+                      disabled={isAdding}
+                      className={`flex-1 relative overflow-hidden font-black text-lg py-4 rounded-2xl transition-all duration-300 shadow-[0_0_20px_rgba(247,211,0,0.2)] hover:shadow-[0_0_30px_rgba(247,211,0,0.4)] ${
+                        isAdding 
+                          ? 'bg-green-500 text-[#0B0C10] scale-95' 
+                          : 'bg-brand-500 text-[#0B0C10] hover:bg-brand-400 transform hover:-translate-y-1'
+                      }`}
+                    >
+                      {isAdding ? (
+                        <span className="flex items-center justify-center gap-2 animate-pulse">
+                          <span className="text-2xl">✓</span> Added
+                        </span>
+                      ) : (
+                        <span className="uppercase tracking-widest">Add to Cart</span>
+                      )}
+                    </button>
+                  )
+                ) : (
+                  <button disabled className="flex-1 bg-white/5 border border-white/10 text-gray-500 font-black py-4 rounded-2xl uppercase tracking-widest cursor-not-allowed">
+                    Out of Stock
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
