@@ -11,17 +11,20 @@ export const metadata: Metadata = {
   description: 'Hyperlocal grocery delivery with buy-now-pay-later CrediPay credit system.',
 };
 
+import CommandPalette from '@/components/layout/CommandPalette';
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${sora.variable} font-sans bg-white text-gray-900 antialiased`}>
+      <body className={`${inter.variable} ${sora.variable} font-sans bg-[#0B0C10] text-gray-100 antialiased`}>
         {children}
+        <CommandPalette />
         <Toaster
           position="top-right"
           toastOptions={{
-            style: { background: '#ffffff', color: '#111827', border: '1px solid #e5e7eb', borderRadius: '12px' },
-            success: { iconTheme: { primary: '#3BB143', secondary: '#fff' } },
-            error: { iconTheme: { primary: '#ef4444', secondary: '#fff' } },
+            style: { background: '#15171F', color: '#E2E8F0', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' },
+            success: { iconTheme: { primary: '#3BB143', secondary: '#15171F' } },
+            error: { iconTheme: { primary: '#ef4444', secondary: '#15171F' } },
           }}
         />
       </body>
