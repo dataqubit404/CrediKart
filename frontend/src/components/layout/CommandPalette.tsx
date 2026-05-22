@@ -1,5 +1,5 @@
 'use client';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchStore } from '@/store/searchStore';
 
 export default function CommandPalette() {
@@ -22,9 +22,13 @@ export default function CommandPalette() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, toggleSearch, closeSearch]);
 
+  const [query, setQuery] = useState('');
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
+      // Clear query when opening
+      setQuery('');
     } else {
       document.body.style.overflow = 'auto';
     }
@@ -47,8 +51,28 @@ export default function CommandPalette() {
           className="w-full max-w-2xl bg-luxe-900/90 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.8)] overflow-hidden pointer-events-auto transform transition-all duration-300 animate-slide-in"
           onClick={e => e.stopPropagation()}
         >
-           {/* Part 3: Premium Search Input Placeholder */}
-           <div className="p-4 border-b border-white/5 opacity-50">Part 3: Search Input</div>
+           {/* Part 3: Premium Search Input */}
+           <div className="relative flex items-center px-4 border-b border-white/5">
+              <span className="text-gray-400 text-xl pl-2 pointer-events-none">🔍</span>
+              <input 
+                type="text"
+                autoFocus
+                value={query}
+                onChange={e => setQuery(e.target.value)}
+                placeholder="Search products, shops, or actions..."
+                className="w-full bg-transparent text-white placeholder-gray-500 font-medium text-lg px-4 py-5 focus:outline-none focus:ring-0 appearance-none border-none"
+              />
+              <div className="flex items-center gap-2 pr-2">
+                {query && (
+                  <button onClick={() => setQuery('')} className="text-gray-500 hover:text-white transition-colors p-1">
+                    ✕
+                  </button>
+                )}
+                <span className="hidden sm:flex items-center gap-1 text-[10px] font-black text-gray-500 bg-white/5 border border-white/10 px-2 py-1 rounded-md tracking-widest uppercase">
+                  ESC
+                </span>
+              </div>
+           </div>
            
            {/* Part 4-7: Results Placeholder */}
            <div className="p-4 opacity-50">Part 4-7: Dynamic Results Area</div>
