@@ -54,6 +54,7 @@ module.exports = {
         'fade-up': 'fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
         'pulse-glow': 'pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         shimmer: 'shimmer 1.5s infinite',
+        'sonar-ping': 'sonarPing 3s cubic-bezier(0, 0, 0.2, 1) infinite',
       },
       keyframes: {
         slideIn: { from: { transform: 'translateX(100%)' }, to: { transform: 'translateX(0)' } },
@@ -64,6 +65,10 @@ module.exports = {
         'gradient-shift': {
           '0%, 100%': { backgroundPosition: '0% 50%' },
           '50%': { backgroundPosition: '100% 50%' },
+        },
+        sonarPing: {
+          '0%': { transform: 'scale(1)', opacity: 1 },
+          '100%': { transform: 'scale(3)', opacity: 0 },
         },
       },
     },
