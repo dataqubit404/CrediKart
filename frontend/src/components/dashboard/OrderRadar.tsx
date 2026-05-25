@@ -1,6 +1,21 @@
 'use client';
+import { useEffect, useState } from 'react';
 
 export default function OrderRadar() {
+  // Simulate driver distance (100 is furthest, 0 is at home)
+  const [distance, setDistance] = useState(100);
+
+  useEffect(() => {
+    // Slowly move the driver closer every second for demo purposes
+    const interval = setInterval(() => {
+      setDistance((prev) => {
+        if (prev <= 0) return 100; // Loop back for demo
+        return prev - 2;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="w-full bg-luxe-800 rounded-3xl p-8 border border-white/5 shadow-glass relative overflow-hidden flex flex-col items-center justify-center min-h-[400px]">
       
@@ -33,8 +48,19 @@ export default function OrderRadar() {
         <div className="absolute w-full h-[1px] bg-white/5"></div>
         <div className="absolute h-full w-[1px] bg-white/5"></div>
 
-        {/* Part 2: Delivery Agent Pulsing Dot Placeholder */}
-        <div className="absolute top-4 right-8 opacity-50">Part 2: Driver Dot</div>
+        {/* Part 2: Delivery Agent Pulsing Dot */}
+        <div 
+          className="absolute z-40 transition-all duration-1000 ease-linear flex flex-col items-center gap-1"
+          style={{ 
+            // Calculate a circular position based on distance (using some trigonometry for a cool orbit effect)
+            transform: `translate(${Math.cos(distance * 0.1) * (distance + 20)}px, ${Math.sin(distance * 0.1) * (distance + 20)}px)`
+          }}
+        >
+          <div className="w-4 h-4 bg-blinkit-green rounded-full shadow-[0_0_15px_rgba(59,177,67,1)] animate-pulse border-2 border-[#0B0C10]"></div>
+          <span className="text-[9px] font-bold text-green-400 bg-white/5 backdrop-blur-md px-1.5 py-0.5 rounded border border-white/10 uppercase tracking-widest whitespace-nowrap shadow-glass-sm">
+            Agent
+          </span>
+        </div>
       </div>
 
       {/* Part 3: Floating Status Cards Placeholder */}
