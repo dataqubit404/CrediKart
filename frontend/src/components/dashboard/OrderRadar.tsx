@@ -63,8 +63,30 @@ export default function OrderRadar() {
         </div>
       </div>
 
-      {/* Part 3: Floating Status Cards Placeholder */}
-      <div className="absolute bottom-6 w-full px-6 opacity-50 text-center">Part 3: Floating Status Card</div>
+      {/* Part 3: Floating Status Cards */}
+      <div className="absolute bottom-6 w-full px-8 flex justify-between items-end pointer-events-none z-50">
+        
+        {/* ETA Card */}
+        <div className="bg-luxe-900/80 backdrop-blur-xl border border-white/10 p-4 rounded-2xl shadow-glass-sm max-w-[200px]">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="relative flex h-3 w-3">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-3 w-3 bg-brand-500"></span>
+            </span>
+            <span className="text-xs font-bold text-brand-400 uppercase tracking-wider">Live ETA</span>
+          </div>
+          <h3 className="text-white font-display text-2xl font-bold">{Math.ceil(distance / 10)} <span className="text-sm font-normal text-gray-400">mins</span></h3>
+        </div>
+
+        {/* Current Status Card */}
+        <div className="bg-gradient-to-r from-luxe-800/90 to-luxe-900/90 backdrop-blur-xl border border-white/10 p-4 rounded-2xl shadow-glass-sm max-w-[250px] text-right flex flex-col items-end">
+          <div className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-1">Current Status</div>
+          <h3 className="text-white font-medium text-lg flex items-center gap-2">
+            Driver Approaching
+            <span className="text-2xl animate-bounce">🛵</span>
+          </h3>
+        </div>
+      </div>
       
     </div>
   );
