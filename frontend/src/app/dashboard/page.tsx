@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import CreditMeter from '@/components/credipay/CreditMeter';
+import OrderRadar from '@/components/dashboard/OrderRadar';
 import { useAuthStore } from '@/store/authStore';
 
 export default function DashboardPage() {
@@ -20,6 +21,11 @@ export default function DashboardPage() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
+      {/* Live Order Radar (Demo Integration) */}
+      <div className="mb-10">
+        <OrderRadar />
+      </div>
+
       <div className="mb-10 bg-luxe-800/50 backdrop-blur-xl border border-white/10 rounded-[2rem] p-8 shadow-glass">
         <h1 className="font-display font-black text-3xl text-white tracking-tight">Hello, {user.name?.split(' ')[0]} 👋</h1>
         <p className="text-gray-400 mt-2 text-sm font-medium">Manage your elite orders and CrediPay account</p>
