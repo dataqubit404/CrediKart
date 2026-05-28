@@ -36,131 +36,101 @@ export default function RewardsPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto px-4 py-12">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-        <div>
-            <h1 className="font-display font-black text-5xl text-gray-900 tracking-tight mb-2 italic">Rewards Hub</h1>
-            <p className="text-gray-500 font-medium">Earn points, level up, and unlock exclusive perks.</p>
+    <div className="max-w-7xl mx-auto px-4 py-8 animate-fade-in text-white">
+      
+      {/* Page Header */}
+      <div className="mb-10 flex flex-col md:flex-row items-center justify-between gap-6">
+        <div className="text-center md:text-left">
+          <h1 className="font-display font-black text-4xl text-white tracking-tight flex items-center justify-center md:justify-start gap-3 italic">
+            <span className="text-brand-500 animate-pulse-glow">🏆</span> VIP Rewards Hub
+          </h1>
+          <p className="text-gray-400 mt-2 font-medium">Earn points, maintain your streak, and spin for daily rewards.</p>
         </div>
-        <div className="bg-black text-white px-8 py-4 rounded-3xl shadow-2xl flex items-center gap-4">
-            <span className="text-3xl">🏆</span>
+        <div className="bg-luxe-800/80 backdrop-blur-xl border border-white/10 px-8 py-4 rounded-3xl shadow-glass flex items-center gap-4">
+            <span className="text-3xl drop-shadow-md">💎</span>
             <div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-gray-400">Total Balance</p>
-                <p className="text-2xl font-black">{data?.loyalty_points} <span className="text-sm font-medium text-gray-400">Points</span></p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-500">Total Balance</p>
+                <p className="text-2xl font-black text-white">{data?.loyalty_points} <span className="text-sm font-medium text-brand-400">Points</span></p>
             </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-        {/* Tier Card */}
-        <div className={`lg:col-span-2 relative overflow-hidden bg-gradient-to-br ${tierColors[data?.membership_tier]} rounded-[3rem] p-10 text-white shadow-2xl`}>
-            <div className="relative z-10">
-                <p className="text-sm font-black uppercase tracking-[0.2em] mb-1 opacity-80">Current Status</p>
-                <h2 className="text-6xl font-black tracking-tighter mb-8 italic">{data?.membership_tier}</h2>
-                
-                {data?.next_tier && (
-                    <div className="max-w-md">
-                        <div className="flex justify-between text-sm font-black mb-3 uppercase tracking-wider">
-                            <span>Progress to {data?.next_tier}</span>
-                            <span>{data?.loyalty_points} / {data?.points_needed}</span>
-                        </div>
-                        <div className="h-4 bg-white/20 rounded-full overflow-hidden backdrop-blur-md">
-                            <div 
-                                className="h-full bg-white rounded-full transition-all duration-1000 ease-out shadow-[0_0_20px_rgba(255,255,255,0.5)]" 
-                                style={{ width: `${data?.progress}%` }}
-                            />
-                        </div>
-                        <p className="mt-4 text-xs font-bold opacity-80 uppercase tracking-widest">
-                            {data?.points_needed - data?.loyalty_points} points to unlock {data?.next_tier} benefits
-                        </p>
-                    </div>
-                )}
+      {/* Main Glassmorphism Shell */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10">
+        
+        {/* Left Column: Progress & Spin Wheel */}
+        <div className="lg:col-span-8 flex flex-col gap-8">
+          
+          {/* Part 2: VIP Tier Progress Bar Placeholder */}
+          <div className="bg-luxe-800/80 backdrop-blur-2xl border border-white/5 rounded-3xl p-8 shadow-glass text-gray-500 text-center">
+            Part 2: VIP Tier Progress Bar (Current: {data?.membership_tier})
+          </div>
+
+          {/* Wheel Container Shell */}
+          <div className="bg-luxe-900/90 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-8 md:p-12 shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center relative overflow-hidden min-h-[500px]">
+            {/* Ambient Background Glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-md max-h-md bg-brand-500/10 blur-[120px] rounded-full pointer-events-none"></div>
+            
+            {/* Part 4-7: Spin Wheel Placeholders */}
+            <div className="z-10 text-gray-500 text-center">
+              Part 4-7: Interactive 3D Spin Wheel Area
             </div>
-            {/* Abstract Background Element */}
-            <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-white/10 rounded-full blur-3xl" />
+          </div>
         </div>
 
-        {/* Referral Card */}
-        <div className="bg-white border-4 border-black rounded-[3rem] p-10 shadow-xl flex flex-col justify-between">
-            <div>
-                <h3 className="font-display font-black text-2xl mb-2">Invite Friends</h3>
-                <p className="text-gray-500 text-sm font-medium leading-relaxed mb-8">Share your code and get ₹500 credit bonus when they make their first purchase.</p>
-                
-                <div className="bg-gray-100 rounded-2xl p-4 flex items-center justify-between group border-2 border-transparent hover:border-black transition-all">
-                    <code className="font-black text-xl tracking-widest">{data?.referral_code}</code>
-                    <button 
-                        onClick={copyReferral}
-                        className="bg-black text-white px-4 py-2 rounded-xl text-xs font-black uppercase hover:scale-105 active:scale-95 transition-all"
-                    >
-                        {copied ? 'Copied!' : 'Copy'}
-                    </button>
-                </div>
-            </div>
-            <div className="mt-8 pt-8 border-t border-gray-100 italic font-black text-gray-400 text-sm">
-                #CrediKartCommunity
-            </div>
-        </div>
-      </div>
+        {/* Right Column: Streak & History */}
+        <div className="lg:col-span-4 flex flex-col gap-8">
+          
+          {/* Part 3: Daily Login Streak Placeholder */}
+          <div className="bg-gradient-to-b from-brand-500/5 to-luxe-800/80 backdrop-blur-xl border border-brand-500/20 rounded-3xl p-6 shadow-glass text-brand-400/50 text-center">
+            Part 3: Daily Login Streak Tracker
+          </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-        {/* Activity Feed */}
-        <div>
-            <h3 className="font-display font-black text-2xl mb-8 flex items-center gap-3">
-                <span className="w-8 h-8 bg-brand-100 text-brand-700 rounded-lg flex items-center justify-center text-sm">✨</span>
-                Points Activity
-            </h3>
-            <div className="space-y-4">
+          {/* Part 8: Rewards History Activity Log (Using Existing Logic) */}
+          <div className="bg-luxe-800/50 backdrop-blur-md border border-white/5 rounded-3xl p-6 flex flex-col shadow-glass min-h-[300px]">
+             <h3 className="font-display font-black text-xl mb-4 text-white">Points Activity</h3>
+             <div className="space-y-3 flex-1 overflow-y-auto max-h-[400px] scrollbar-hide pr-2">
                 {data?.transactions?.map((t: any) => (
-                    <div key={t.id} className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex items-center justify-between hover:shadow-md transition-all">
-                        <div className="flex items-center gap-4">
-                            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-xl ${
-                                t.type === 'EARNED' ? 'bg-green-50 text-green-600' : 
-                                (t.type === 'REFERRAL_BONUS' ? 'bg-purple-50 text-purple-600' : 'bg-red-50 text-red-600')
+                    <div key={t.id} className="bg-white/5 p-4 rounded-2xl border border-white/10 flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg ${
+                                t.type === 'EARNED' ? 'bg-green-500/20 text-green-400' : 
+                                (t.type === 'REFERRAL_BONUS' ? 'bg-brand-500/20 text-brand-400' : 'bg-red-500/20 text-red-400')
                             }`}>
                                 {t.type === 'EARNED' ? '🛍️' : (t.type === 'REFERRAL_BONUS' ? '🎁' : '🔥')}
                             </div>
                             <div>
-                                <p className="font-black text-gray-900 leading-none mb-1">{t.description}</p>
-                                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{new Date(t.created_at).toLocaleDateString()}</p>
+                                <p className="font-bold text-gray-200 text-sm leading-none mb-1">{t.description}</p>
+                                <p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest">{new Date(t.created_at).toLocaleDateString()}</p>
                             </div>
                         </div>
-                        <span className={`font-black text-lg ${t.amount > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        <span className={`font-black text-sm ${t.amount > 0 ? 'text-green-400' : 'text-red-400'}`}>
                             {t.amount > 0 ? '+' : ''}{t.amount}
                         </span>
                     </div>
                 ))}
                 {data?.transactions?.length === 0 && (
-                    <div className="text-center py-12 bg-gray-50 rounded-[2.5rem] border-2 border-dashed border-gray-200">
+                    <div className="text-center py-8 opacity-50">
                         <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">No activity yet</p>
                     </div>
                 )}
-            </div>
-        </div>
+             </div>
+          </div>
 
-        {/* Benefits Sidebar */}
-        <div className="bg-gray-900 rounded-[3rem] p-10 text-white shadow-2xl">
-            <h3 className="font-display font-black text-2xl mb-10 italic">Tier Benefits</h3>
-            <div className="space-y-8">
-                {[
-                    { tier: 'BRONZE', perk: 'Standard Points', active: data?.membership_tier === 'BRONZE' },
-                    { tier: 'SILVER', perk: '5% Lower Interest Rates', active: data?.membership_tier === 'SILVER' },
-                    { tier: 'GOLD', perk: 'Free Delivery on Orders > ₹500', active: data?.membership_tier === 'GOLD' },
-                    { tier: 'PLATINUM', perk: 'Instant Approval on High Credits', active: data?.membership_tier === 'PLATINUM' },
-                ].map(item => (
-                    <div key={item.tier} className={`flex items-center justify-between p-4 rounded-2xl border ${item.active ? 'border-white bg-white/10' : 'border-white/10 opacity-50'}`}>
-                        <div>
-                            <p className="text-[10px] font-black uppercase tracking-widest mb-1">{item.tier}</p>
-                            <p className="font-bold text-sm">{item.perk}</p>
-                        </div>
-                        {item.active && <span className="text-xs font-black bg-white text-black px-3 py-1 rounded-full">ACTIVE</span>}
-                    </div>
-                ))}
+          {/* Referral Card (Migrated) */}
+          <div className="bg-white/5 border border-white/10 rounded-[2rem] p-6 shadow-glass">
+            <h3 className="font-display font-black text-lg mb-1 text-white">Invite Friends</h3>
+            <p className="text-gray-400 text-xs font-medium mb-4">Share code for ₹500 credit bonus.</p>
+            <div className="bg-luxe-900 rounded-xl p-3 flex items-center justify-between border border-white/10">
+                <code className="font-black text-brand-400 tracking-widest">{data?.referral_code}</code>
+                <button 
+                    onClick={copyReferral}
+                    className="bg-white text-black px-3 py-1.5 rounded-lg text-[10px] font-black uppercase hover:bg-gray-200 transition-colors"
+                >
+                    {copied ? 'Copied!' : 'Copy'}
+                </button>
             </div>
-            <div className="mt-12 bg-white/5 p-6 rounded-3xl border border-white/10">
-                <p className="text-xs font-medium text-gray-400 leading-relaxed">
-                    *Benefits are automatically applied at checkout based on your current tier. Tiers are calculated based on your lifetime loyalty points.
-                </p>
-            </div>
+          </div>
         </div>
       </div>
     </div>
