@@ -61,9 +61,46 @@ export default function RewardsPage() {
         {/* Left Column: Progress & Spin Wheel */}
         <div className="lg:col-span-8 flex flex-col gap-8">
           
-          {/* Part 2: VIP Tier Progress Bar Placeholder */}
-          <div className="bg-luxe-800/80 backdrop-blur-2xl border border-white/5 rounded-3xl p-8 shadow-glass text-gray-500 text-center">
-            Part 2: VIP Tier Progress Bar (Current: {data?.membership_tier})
+          {/* Part 2: VIP Tier Progress Bar */}
+          <div className="bg-luxe-800/80 backdrop-blur-2xl border border-white/5 rounded-[2rem] p-8 shadow-glass relative overflow-hidden group">
+            {/* Ambient Background Element */}
+            <div className="absolute -right-20 -bottom-20 w-64 h-64 bg-brand-500/10 rounded-full blur-3xl group-hover:bg-brand-500/20 transition-colors duration-700" />
+            
+            <div className="relative z-10">
+                <div className="flex justify-between items-end mb-6">
+                  <div>
+                    <p className="text-xs font-black uppercase tracking-[0.2em] mb-1 text-gray-500">Current Status</p>
+                    <h2 className="text-5xl font-display font-black tracking-tighter italic text-transparent bg-clip-text bg-gradient-to-r from-brand-300 to-brand-500">{data?.membership_tier}</h2>
+                  </div>
+                  {data?.next_tier && (
+                    <div className="text-right">
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Next Tier</p>
+                      <p className="text-xl font-black text-white italic">{data?.next_tier}</p>
+                    </div>
+                  )}
+                </div>
+                
+                {data?.next_tier && (
+                    <div className="max-w-full">
+                        <div className="flex justify-between text-xs font-black mb-3 uppercase tracking-wider text-gray-400">
+                            <span>{data?.progress}% Completed</span>
+                            <span className="text-brand-400">{data?.loyalty_points} / {data?.points_needed} PTS</span>
+                        </div>
+                        <div className="h-3 bg-white/5 rounded-full overflow-hidden border border-white/10">
+                            <div 
+                                className="h-full bg-gradient-to-r from-brand-600 to-brand-400 rounded-full transition-all duration-1000 ease-out relative" 
+                                style={{ width: `${data?.progress}%` }}
+                            >
+                                {/* Glowing Head */}
+                                <div className="absolute top-0 right-0 w-4 h-full bg-white blur-sm opacity-50 rounded-full"></div>
+                            </div>
+                        </div>
+                        <p className="mt-4 text-[10px] font-bold text-gray-500 uppercase tracking-widest">
+                            <span className="text-white">{data?.points_needed - data?.loyalty_points} points</span> to unlock {data?.next_tier} benefits
+                        </p>
+                    </div>
+                )}
+            </div>
           </div>
 
           {/* Wheel Container Shell */}
