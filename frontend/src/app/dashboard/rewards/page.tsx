@@ -118,9 +118,33 @@ export default function RewardsPage() {
         {/* Right Column: Streak & History */}
         <div className="lg:col-span-4 flex flex-col gap-8">
           
-          {/* Part 3: Daily Login Streak Placeholder */}
-          <div className="bg-gradient-to-b from-brand-500/5 to-luxe-800/80 backdrop-blur-xl border border-brand-500/20 rounded-3xl p-6 shadow-glass text-brand-400/50 text-center">
-            Part 3: Daily Login Streak Tracker
+          {/* Part 3: Daily Login Streak Tracker */}
+          <div className="bg-gradient-to-b from-luxe-800/90 to-luxe-900/90 backdrop-blur-xl border border-white/10 rounded-[2rem] p-6 shadow-glass relative">
+            <h3 className="font-display font-black text-xl mb-1 text-white flex items-center justify-between">
+              Login Streak
+              <span className="text-brand-400 text-sm flex items-center gap-1 animate-pulse"><span className="text-lg">🔥</span> 4 Days</span>
+            </h3>
+            <p className="text-gray-400 text-xs font-medium mb-6">Login 7 days in a row for a mega spin!</p>
+            
+            <div className="flex justify-between gap-2">
+              {[1, 2, 3, 4, 5, 6, 7].map(day => (
+                <div key={day} className="flex flex-col items-center gap-2">
+                  <div className={`w-8 h-10 rounded-full flex items-center justify-center font-black text-sm border-2 transition-all duration-500 ${
+                    day <= 4 
+                      ? 'bg-brand-500/20 border-brand-500 text-brand-400 shadow-[0_0_15px_rgba(247,211,0,0.3)] scale-110' 
+                      : 'bg-white/5 border-white/10 text-gray-600'
+                  }`}>
+                    {day <= 4 ? '✓' : day}
+                  </div>
+                  <span className={`text-[9px] font-bold uppercase ${day <= 4 ? 'text-brand-500' : 'text-gray-600'}`}>D{day}</span>
+                </div>
+              ))}
+            </div>
+            
+            {/* Progress line behind pills */}
+            <div className="absolute bottom-[42px] left-[32px] right-[32px] h-0.5 bg-white/10 -z-10 rounded-full">
+               <div className="h-full bg-brand-500/50 w-[50%] rounded-full shadow-[0_0_10px_rgba(247,211,0,0.5)]"></div>
+            </div>
           </div>
 
           {/* Part 8: Rewards History Activity Log (Using Existing Logic) */}
