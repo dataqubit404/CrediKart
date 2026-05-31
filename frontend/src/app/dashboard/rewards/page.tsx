@@ -106,12 +106,45 @@ export default function RewardsPage() {
           {/* Wheel Container Shell */}
           <div className="bg-luxe-900/90 backdrop-blur-3xl border border-white/10 rounded-[2.5rem] p-8 md:p-12 shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center relative overflow-hidden min-h-[500px]">
             {/* Ambient Background Glow */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-md max-h-md bg-brand-500/10 blur-[120px] rounded-full pointer-events-none"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-md max-h-md bg-brand-500/10 blur-[120px] rounded-full pointer-events-none z-0"></div>
             
-            {/* Part 4-7: Spin Wheel Placeholders */}
-            <div className="z-10 text-gray-500 text-center">
-              Part 4-7: Interactive 3D Spin Wheel Area
+            {/* Part 4: Spin Wheel Foundation & SVG Shell */}
+            <div className="relative z-10 w-full max-w-[320px] aspect-square">
+              
+              {/* Outer Glowing Ring */}
+              <div className="absolute inset-0 rounded-full border-[8px] border-luxe-800 shadow-[0_0_30px_rgba(247,211,0,0.2)] bg-luxe-800"></div>
+
+              {/* The Wheel (SVG) */}
+              <div className="absolute inset-2 rounded-full overflow-hidden border-[4px] border-white/5">
+                <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
+                  {/* Wheel Slices - We will make this dynamic in Part 6, static for now to build foundation */}
+                  <path d="M50 50 L100 50 A50 50 0 0 1 75 93.3 Z" fill="#F7D300" className="opacity-90"/>
+                  <path d="M50 50 L75 93.3 A50 50 0 0 1 25 93.3 Z" fill="#15171F" />
+                  <path d="M50 50 L25 93.3 A50 50 0 0 1 0 50 Z" fill="#2A2E3D" />
+                  <path d="M50 50 L0 50 A50 50 0 0 1 25 6.7 Z" fill="#15171F" />
+                  <path d="M50 50 L25 6.7 A50 50 0 0 1 75 6.7 Z" fill="#2A2E3D" />
+                  <path d="M50 50 L75 6.7 A50 50 0 0 1 100 50 Z" fill="#15171F" />
+                </svg>
+              </div>
+
+              {/* Center Hub */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-gradient-to-br from-brand-400 to-brand-600 rounded-full border-4 border-luxe-900 shadow-[0_0_20px_rgba(0,0,0,0.5)] z-20 flex items-center justify-center">
+                <div className="w-8 h-8 rounded-full border border-white/30 bg-black/20"></div>
+              </div>
+
+              {/* Pointer */}
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-30 filter drop-shadow-[0_4px_4px_rgba(0,0,0,0.5)]">
+                <svg width="32" height="40" viewBox="0 0 32 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16 40L0 16C0 7.16344 7.16344 0 16 0C24.8366 0 32 7.16344 32 16L16 40Z" fill="#F7D300"/>
+                  <path d="M16 35L4 16C4 9.37258 9.37258 4 16 4C22.6274 4 28 9.37258 28 16L16 35Z" fill="#c27803"/>
+                </svg>
+              </div>
             </div>
+
+            {/* Spin Button */}
+            <button className="mt-12 z-20 relative px-10 py-4 bg-brand-500 hover:bg-brand-400 text-black font-black text-xl rounded-full shadow-[0_0_30px_rgba(247,211,0,0.4)] transition-all hover:scale-105 active:scale-95 uppercase tracking-widest">
+              Spin Now
+            </button>
           </div>
         </div>
 
