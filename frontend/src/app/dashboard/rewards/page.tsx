@@ -7,6 +7,8 @@ export default function RewardsPage() {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [rotation, setRotation] = useState(0);
+  const [isSpinning, setIsSpinning] = useState(false);
 
   useEffect(() => {
     api.get('/loyalty/me')
@@ -19,6 +21,24 @@ export default function RewardsPage() {
     navigator.clipboard.writeText(data?.referral_code);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleSpin = () => {
+    if (isSpinning) return;
+    setIsSpinning(true);
+    
+    // Physics: 5 to 10 full rotations (360 * 5) + a random extra slice degree
+    const extraSpins = Math.floor(Math.random() * 5) + 5;
+    const randomDegree = Math.floor(Math.random() * 360);
+    const newRotation = rotation + (360 * extraSpins) + randomDegree;
+    
+    setRotation(newRotation);
+
+    // Wheel stops spinning after exactly 5 seconds (matching our CSS transition)
+    setTimeout(() => {
+        setIsSpinning(false);
+        // Part 7: Winning Modal logic will go here
+    }, 5000);
   };
 
   if (loading) return (
@@ -114,8 +134,14 @@ export default function RewardsPage() {
               {/* Outer Glowing Ring */}
               <div className="absolute inset-0 rounded-full border-[8px] border-luxe-800 shadow-[0_0_30px_rgba(247,211,0,0.2)] bg-luxe-800"></div>
 
-              {/* The Wheel (SVG) */}
-              <div className="absolute inset-2 rounded-full overflow-hidden border-[4px] border-white/5">
+              {/* The Wheel (SVG) - Now Rotating with Physics */}
+              <div 
+                className="absolute inset-2 rounded-full overflow-hidden border-[4px] border-white/5"
+                style={{
+                  transform: `rotate(${rotation}deg)`,
+                  transition: 'transform 5s cubic-bezier(0.15, 0.9, 0.15, 1)' // Super smooth deceleration easing
+                }}
+              >
                 <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
                   {/* Wheel Slices - We will make this dynamic in Part 6, static for now to build foundation */}
                   <path d="M50 50 L100 50 A50 50 0 0 1 75 93.3 Z" fill="#F7D300" className="opacity-90"/>
@@ -142,8 +168,16 @@ export default function RewardsPage() {
             </div>
 
             {/* Spin Button */}
-            <button className="mt-12 z-20 relative px-10 py-4 bg-brand-500 hover:bg-brand-400 text-black font-black text-xl rounded-full shadow-[0_0_30px_rgba(247,211,0,0.4)] transition-all hover:scale-105 active:scale-95 uppercase tracking-widest">
-              Spin Now
+            <button 
+              onClick={handleSpin}
+              disabled={isSpinning}
+              className={`mt-12 z-20 relative px-10 py-4 font-black text-xl rounded-full transition-all uppercase tracking-widest ${
+                isSpinning 
+                  ? 'bg-gray-600 text-gray-400 cursor-not-allowed scale-95' 
+                  : 'bg-brand-500 hover:bg-brand-400 text-black shadow-[0_0_30px_rgba(247,211,0,0.4)] hover:scale-105 active:scale-95'
+              }`}
+            >
+              {isSpinning ? 'Spinning...' : 'Spin Now'}
             </button>
           </div>
         </div>
