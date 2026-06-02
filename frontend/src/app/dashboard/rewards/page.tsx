@@ -9,6 +9,16 @@ export default function RewardsPage() {
   const [copied, setCopied] = useState(false);
   const [rotation, setRotation] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
+  const [winningPrize, setWinningPrize] = useState<any>(null);
+
+  const prizes = [
+    { label: "₹50 Cashback", color: "#F7D300", text: "#000" },
+    { label: "Better Luck!", color: "#15171F", text: "#FFF" },
+    { label: "Free Delivery", color: "#2A2E3D", text: "#FFF" },
+    { label: "100 Points", color: "#15171F", text: "#FFF" },
+    { label: "₹20 Cashback", color: "#2A2E3D", text: "#FFF" },
+    { label: "Try Again", color: "#15171F", text: "#FFF" },
+  ];
 
   useEffect(() => {
     api.get('/loyalty/me')
@@ -26,6 +36,7 @@ export default function RewardsPage() {
   const handleSpin = () => {
     if (isSpinning) return;
     setIsSpinning(true);
+    setWinningPrize(null);
     
     // Physics: 5 to 10 full rotations (360 * 5) + a random extra slice degree
     const extraSpins = Math.floor(Math.random() * 5) + 5;
@@ -34,10 +45,18 @@ export default function RewardsPage() {
     
     setRotation(newRotation);
 
-    // Wheel stops spinning after exactly 5 seconds (matching our CSS transition)
+    // Wheel stops spinning after exactly 5 seconds
     setTimeout(() => {
         setIsSpinning(false);
-        // Part 7: Winning Modal logic will go here
+        // Calculate Winner: 
+        // 1 slice = 60 deg. The pointer is at the top (which relative to standard SVG is -90deg).
+        // The rotation is clockwise. We normalize rotation % 360.
+        // We calculate the winning index by finding how many 60 degree blocks passed the pointer.
+        const normalized = newRotation % 360;
+        const sliceAngle = 360 / prizes.length;
+        // Accounting for SVG offset and the pointer position
+        const winningIndex = Math.floor(((360 - normalized + sliceAngle / 2) % 360) / sliceAngle);
+        setWinningPrize(prizes[winningIndex]);
     }, 5000);
   };
 
@@ -128,13 +147,13 @@ export default function RewardsPage() {
             {/* Ambient Background Glow */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-md max-h-md bg-brand-500/10 blur-[120px] rounded-full pointer-events-none z-0"></div>
             
-            {/* Part 4: Spin Wheel Foundation & SVG Shell */}
+            {/* Part 4-6: Spin Wheel Foundation & SVG Shell */}
             <div className="relative z-10 w-full max-w-[320px] aspect-square">
               
               {/* Outer Glowing Ring */}
               <div className="absolute inset-0 rounded-full border-[8px] border-luxe-800 shadow-[0_0_30px_rgba(247,211,0,0.2)] bg-luxe-800"></div>
 
-              {/* The Wheel (SVG) - Now Rotating with Physics */}
+              {/* The Wheel (SVG) - Now Rotating with Physics and Dynamic Slices */}
               <div 
                 className="absolute inset-2 rounded-full overflow-hidden border-[4px] border-white/5"
                 style={{
@@ -143,13 +162,34 @@ export default function RewardsPage() {
                 }}
               >
                 <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
-                  {/* Wheel Slices - We will make this dynamic in Part 6, static for now to build foundation */}
-                  <path d="M50 50 L100 50 A50 50 0 0 1 75 93.3 Z" fill="#F7D300" className="opacity-90"/>
-                  <path d="M50 50 L75 93.3 A50 50 0 0 1 25 93.3 Z" fill="#15171F" />
-                  <path d="M50 50 L25 93.3 A50 50 0 0 1 0 50 Z" fill="#2A2E3D" />
-                  <path d="M50 50 L0 50 A50 50 0 0 1 25 6.7 Z" fill="#15171F" />
-                  <path d="M50 50 L25 6.7 A50 50 0 0 1 75 6.7 Z" fill="#2A2E3D" />
-                  <path d="M50 50 L75 6.7 A50 50 0 0 1 100 50 Z" fill="#15171F" />
+                  {prizes.map((prize, i) => {
+                    const sliceAngle = 360 / prizes.length;
+                    const startAngle = i * sliceAngle;
+                    const endAngle = (i + 1) * sliceAngle;
+                    // SVG Path Arc logic
+                    const startX = 50 + 50 * Math.cos((Math.PI * startAngle) / 180);
+                    const startY = 50 + 50 * Math.sin((Math.PI * startAngle) / 180);
+                    const endX = 50 + 50 * Math.cos((Math.PI * endAngle) / 180);
+                    const endY = 50 + 50 * Math.sin((Math.PI * endAngle) / 180);
+                    const textAngle = startAngle + sliceAngle / 2;
+                    return (
+                      <g key={i}>
+                        <path d={`M50 50 L${startX} ${startY} A50 50 0 0 1 ${endX} ${endY} Z`} fill={prize.color} stroke="#111" strokeWidth="0.5"/>
+                        {/* Prize Text Label (rotated to face outward) */}
+                        <text 
+                          x="75" y="52" 
+                          fill={prize.text} 
+                          fontSize="5" 
+                          fontFamily="sans-serif"
+                          fontWeight="bold"
+                          textAnchor="middle"
+                          transform={`rotate(${textAngle}, 50, 50)`}
+                        >
+                          {prize.label}
+                        </text>
+                      </g>
+                    );
+                  })}
                 </svg>
               </div>
 
