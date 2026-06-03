@@ -301,6 +301,46 @@ export default function RewardsPage() {
           </div>
         </div>
       </div>
+
+      {/* Part 7: The "Winner" Celebration Modal */}
+      {winningPrize && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm animate-fade-in px-4">
+          <div className="bg-luxe-900 border border-brand-500/30 rounded-[3rem] p-10 max-w-sm w-full text-center shadow-[0_0_100px_rgba(247,211,0,0.2)] relative overflow-hidden animate-fade-up">
+            
+            {/* Celebration Particles Effect (CSS simulated) */}
+            <div className="absolute -top-20 -left-20 w-40 h-40 bg-brand-500/20 rounded-full blur-3xl animate-pulse-glow"></div>
+            <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-brand-500/20 rounded-full blur-3xl animate-pulse-glow" style={{ animationDelay: '1s' }}></div>
+
+            <div className="relative z-10">
+              <div className="text-6xl mb-6 animate-bounce">
+                {winningPrize.label.includes('Better Luck') || winningPrize.label.includes('Try Again') ? '😔' : '🎉'}
+              </div>
+              
+              <h2 className="font-display font-black text-3xl mb-2 text-white italic">
+                {winningPrize.label.includes('Better Luck') || winningPrize.label.includes('Try Again') ? 'Aw, Snap!' : 'You Won!'}
+              </h2>
+              
+              <div className="bg-luxe-800 border border-white/10 rounded-2xl p-4 my-6 shadow-inner">
+                <p className="text-brand-400 font-black text-2xl tracking-tight">{winningPrize.label}</p>
+              </div>
+
+              <p className="text-gray-400 text-sm font-medium mb-8 leading-relaxed">
+                {winningPrize.label.includes('Better Luck') || winningPrize.label.includes('Try Again') 
+                  ? 'Keep up your daily login streak for another chance to spin tomorrow!' 
+                  : 'Your reward has been automatically credited to your CrediKart account.'}
+              </p>
+
+              <button 
+                onClick={() => setWinningPrize(null)}
+                className="w-full bg-white text-black font-black uppercase tracking-widest text-sm py-4 rounded-xl hover:bg-gray-200 transition-colors shadow-lg active:scale-95"
+              >
+                {winningPrize.label.includes('Better Luck') || winningPrize.label.includes('Try Again') ? 'Close' : 'Claim Reward'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
