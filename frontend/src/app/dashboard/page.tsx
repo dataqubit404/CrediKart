@@ -15,7 +15,7 @@ export default function DashboardPage() {
   const cards = [
     { label: 'My Orders', href: '/dashboard/orders', icon: '📦', desc: 'Track and manage orders' },
     { label: 'CrediPay Dues', href: '/dashboard/credit', icon: '💳', desc: 'View and pay dues' },
-    { label: 'Rewards Hub', href: '/dashboard/rewards', icon: '🏆', desc: 'Points and Perks' },
+    { label: 'VIP Rewards', href: '/dashboard/rewards', icon: '🎡', desc: 'Daily Spin & Winnings' },
     { label: 'Subscriptions', href: '/dashboard/subscriptions', icon: '⭐', desc: 'Manage your plan' },
   ];
 
