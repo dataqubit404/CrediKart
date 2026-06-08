@@ -70,6 +70,10 @@ module.exports = {
           '0%': { transform: 'scale(1)', opacity: 1 },
           '100%': { transform: 'scale(3)', opacity: 0 },
         },
+        scan: {
+          '0%': { transform: 'translateY(0)' },
+          '100%': { transform: 'translateY(500px)' },
+        },
       },
     },
   },

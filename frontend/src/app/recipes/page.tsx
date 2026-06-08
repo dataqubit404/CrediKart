@@ -5,6 +5,8 @@ import Link from 'next/link';
 export default function SmartRecipesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
+  const [selectedRecipe, setSelectedRecipe] = useState<any>(null);
+  const [isParsing, setIsParsing] = useState(false);
 
   const categories = ['All', 'High Protein', 'Keto', 'Vegan', 'Italian', 'Quick 10-Min', 'Desserts'];
 
@@ -41,6 +43,15 @@ export default function SmartRecipesPage() {
   const filteredRecipes = activeCategory === 'All' 
     ? recipes 
     : recipes.filter(r => r.category === activeCategory);
+
+  const handleRecipeClick = (recipe: any) => {
+    setSelectedRecipe(recipe);
+    setIsParsing(true);
+    // Simulate AI parsing for 2.5 seconds
+    setTimeout(() => {
+      setIsParsing(false);
+    }, 2500);
+  };
 
   return (
     <div className="min-h-screen bg-luxe-900 text-white animate-fade-in relative overflow-hidden pt-24 pb-12">
@@ -100,6 +111,7 @@ export default function SmartRecipesPage() {
           {filteredRecipes.map(recipe => (
             <div 
               key={recipe.id} 
+              onClick={() => handleRecipeClick(recipe)}
               className="group relative h-96 rounded-[2.5rem] overflow-hidden cursor-pointer shadow-glass border border-white/10 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(247,211,0,0.15)]"
             >
               {/* Background Image */}
@@ -139,11 +151,74 @@ export default function SmartRecipesPage() {
           ))}
         </div>
 
-        {/* Part 4 & 5: Magic Wand Parser & Pantry Checklist Modal Placeholder */}
-        {/* This will be an overlay modal triggered when a recipe is clicked */}
-        <div className="fixed bottom-4 right-4 bg-luxe-800 border border-white/10 p-4 rounded-xl text-xs text-gray-500 opacity-50 z-50 pointer-events-none">
-          Part 4-6 Modal Hidden
-        </div>
+        {/* Part 4 & 5: Magic Wand Parser & Pantry Checklist Modal */}
+        {selectedRecipe && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-md animate-fade-in p-4">
+            <div className="bg-luxe-900 border border-white/10 rounded-[2.5rem] w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col md:flex-row shadow-[0_0_50px_rgba(0,0,0,0.5)] relative animate-fade-up">
+              
+              {/* Close Button */}
+              <button 
+                onClick={() => setSelectedRecipe(null)}
+                className="absolute top-6 right-6 z-50 w-10 h-10 bg-black/50 backdrop-blur-md border border-white/10 rounded-full flex items-center justify-center text-gray-400 hover:text-white transition-colors"
+              >
+                ✕
+              </button>
+
+              {/* Left Side: Recipe Image & Parser */}
+              <div className="w-full md:w-1/2 relative min-h-[300px] md:min-h-[500px]">
+                <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${selectedRecipe.image})` }}></div>
+                <div className="absolute inset-0 bg-luxe-900/40"></div>
+                
+                {isParsing && (
+                  <>
+                    {/* The Scanning Laser */}
+                    <div className="absolute top-0 left-0 w-full h-1 bg-brand-500 shadow-[0_0_20px_rgba(247,211,0,0.8)] animate-pulse-glow z-20"
+                         style={{ animation: 'scan 2.5s ease-in-out infinite alternate' }}
+                    ></div>
+                    {/* Parser Overlay Content */}
+                    <div className="absolute inset-0 z-10 flex flex-col items-center justify-center backdrop-blur-sm bg-luxe-900/60 p-8 text-center animate-fade-in">
+                      <div className="text-5xl mb-6 animate-bounce">🪄</div>
+                      <h3 className="font-display font-black text-2xl mb-2 text-brand-400 italic">AI Parsing Recipe...</h3>
+                      <p className="text-sm font-medium text-gray-300">Extracting raw ingredients from {selectedRecipe.title}</p>
+                      
+                      {/* Fake terminal extraction lines */}
+                      <div className="mt-8 text-left w-full max-w-xs space-y-2">
+                        {selectedRecipe.ingredients.map((ing: string, i: number) => (
+                           <div key={i} className="text-xs font-mono text-brand-500/70" style={{ animation: `fade-in 0.5s ease forwards`, animationDelay: `${i * 0.4}s`, opacity: 0 }}>
+                             > Analyzing {ing.toLowerCase()}... [OK]
+                           </div>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* Recipe Info Header (Visible when not parsing) */}
+                {!isParsing && (
+                  <div className="absolute bottom-0 left-0 w-full p-8 bg-gradient-to-t from-luxe-900 to-transparent">
+                    <h2 className="font-display font-black text-3xl mb-2 text-white">{selectedRecipe.title}</h2>
+                    <p className="text-brand-400 font-bold tracking-widest uppercase text-xs">Recipe Breakdown</p>
+                  </div>
+                )}
+              </div>
+
+              {/* Right Side: Pantry Checklist (Part 5) */}
+              <div className="w-full md:w-1/2 p-8 md:p-12 bg-luxe-900 flex flex-col">
+                {isParsing ? (
+                   <div className="flex-1 flex flex-col items-center justify-center text-gray-500">
+                     <div className="w-16 h-16 border-4 border-white/5 border-t-brand-500 rounded-full animate-spin mb-6"></div>
+                     <p className="font-bold text-sm uppercase tracking-widest">Building Checklist...</p>
+                   </div>
+                ) : (
+                   <div className="flex-1 flex flex-col text-gray-500 text-center justify-center">
+                     Part 5: Interactive Pantry Checklist
+                   </div>
+                )}
+              </div>
+
+            </div>
+          </div>
+        )}
 
       </div>
     </div>
