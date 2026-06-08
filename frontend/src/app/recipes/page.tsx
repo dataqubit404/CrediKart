@@ -8,6 +8,40 @@ export default function SmartRecipesPage() {
 
   const categories = ['All', 'High Protein', 'Keto', 'Vegan', 'Italian', 'Quick 10-Min', 'Desserts'];
 
+  const recipes = [
+    {
+      id: 1,
+      title: 'Artisan Avocado Toast',
+      time: '10 Min',
+      difficulty: 'Easy',
+      category: 'Vegan',
+      image: '/images/recipes/avocado_toast.png',
+      ingredients: ['Sourdough Bread', 'Avocado', 'Eggs', 'Chili Flakes', 'Microgreens']
+    },
+    {
+      id: 2,
+      title: 'Teriyaki Salmon Bowl',
+      time: '25 Min',
+      difficulty: 'Medium',
+      category: 'High Protein',
+      image: '/images/recipes/salmon_bowl.png',
+      ingredients: ['Salmon Fillet', 'Sushi Rice', 'Edamame', 'Teriyaki Sauce', 'Sesame Seeds']
+    },
+    {
+      id: 3,
+      title: 'Seared Ribeye Steak',
+      time: '35 Min',
+      difficulty: 'Hard',
+      category: 'Keto',
+      image: '/images/recipes/steak_dinner.png',
+      ingredients: ['Ribeye Steak', 'Asparagus', 'Garlic', 'Butter', 'Thyme']
+    }
+  ];
+
+  const filteredRecipes = activeCategory === 'All' 
+    ? recipes 
+    : recipes.filter(r => r.category === activeCategory);
+
   return (
     <div className="min-h-screen bg-luxe-900 text-white animate-fade-in relative overflow-hidden pt-24 pb-12">
       
@@ -61,11 +95,48 @@ export default function SmartRecipesPage() {
           </div>
         </div>
 
-        {/* Part 3: Dynamic Recipe Cards Placeholder */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div className="bg-luxe-800/30 backdrop-blur-sm border border-white/5 rounded-3xl h-80 flex items-center justify-center text-gray-500">Part 3: Recipe Card</div>
-          <div className="bg-luxe-800/30 backdrop-blur-sm border border-white/5 rounded-3xl h-80 flex items-center justify-center text-gray-500">Part 3: Recipe Card</div>
-          <div className="bg-luxe-800/30 backdrop-blur-sm border border-white/5 rounded-3xl h-80 flex items-center justify-center text-gray-500">Part 3: Recipe Card</div>
+        {/* Part 3: Dynamic Recipe Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          {filteredRecipes.map(recipe => (
+            <div 
+              key={recipe.id} 
+              className="group relative h-96 rounded-[2.5rem] overflow-hidden cursor-pointer shadow-glass border border-white/10 transform transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(247,211,0,0.15)]"
+            >
+              {/* Background Image */}
+              <div 
+                className="absolute inset-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
+                style={{ backgroundImage: `url(${recipe.image})` }}
+              ></div>
+              
+              {/* Deep Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-luxe-900 via-luxe-900/60 to-transparent opacity-90 transition-opacity duration-300 group-hover:opacity-100"></div>
+
+              {/* Card Content */}
+              <div className="absolute inset-0 p-8 flex flex-col justify-end">
+                <div className="flex items-center gap-3 mb-3">
+                  <span className="px-3 py-1 bg-white/10 backdrop-blur-md rounded-lg text-xs font-bold uppercase tracking-widest border border-white/20 text-white">
+                    {recipe.category}
+                  </span>
+                  <span className="flex items-center gap-1 text-xs font-bold text-gray-300">
+                    ⏱ {recipe.time}
+                  </span>
+                </div>
+                
+                <h3 className="font-display font-black text-2xl mb-2 text-white leading-tight group-hover:text-brand-400 transition-colors">
+                  {recipe.title}
+                </h3>
+                
+                <div className="flex items-center justify-between mt-4 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                  <span className="text-sm font-medium text-gray-400">
+                    {recipe.ingredients.length} Ingredients
+                  </span>
+                  <div className="w-10 h-10 rounded-full bg-brand-500 text-black flex items-center justify-center font-bold shadow-[0_0_15px_rgba(247,211,0,0.4)]">
+                    🪄
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Part 4 & 5: Magic Wand Parser & Pantry Checklist Modal Placeholder */}
