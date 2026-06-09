@@ -7,6 +7,7 @@ export default function SmartRecipesPage() {
   const [activeCategory, setActiveCategory] = useState('All');
   const [selectedRecipe, setSelectedRecipe] = useState<any>(null);
   const [isParsing, setIsParsing] = useState(false);
+  const [ownedIngredients, setOwnedIngredients] = useState<string[]>([]);
 
   const categories = ['All', 'High Protein', 'Keto', 'Vegan', 'Italian', 'Quick 10-Min', 'Desserts'];
 
@@ -46,11 +47,20 @@ export default function SmartRecipesPage() {
 
   const handleRecipeClick = (recipe: any) => {
     setSelectedRecipe(recipe);
+    setOwnedIngredients([]); // Reset pantry for new recipe
     setIsParsing(true);
     // Simulate AI parsing for 2.5 seconds
     setTimeout(() => {
       setIsParsing(false);
     }, 2500);
+  };
+
+  const toggleIngredient = (ing: string) => {
+    if (ownedIngredients.includes(ing)) {
+      setOwnedIngredients(ownedIngredients.filter(item => item !== ing));
+    } else {
+      setOwnedIngredients([...ownedIngredients, ing]);
+    }
   };
 
   return (
@@ -210,8 +220,40 @@ export default function SmartRecipesPage() {
                      <p className="font-bold text-sm uppercase tracking-widest">Building Checklist...</p>
                    </div>
                 ) : (
-                   <div className="flex-1 flex flex-col text-gray-500 text-center justify-center">
-                     Part 5: Interactive Pantry Checklist
+                   <div className="flex-1 flex flex-col animate-fade-in">
+                     <h3 className="font-display font-black text-2xl mb-2 text-white">Your Pantry Checklist</h3>
+                     <p className="text-gray-400 text-sm font-medium mb-6">Tap the ingredients you already have at home to cross them off the shopping list.</p>
+                     
+                     <div className="flex-1 overflow-y-auto pr-4 space-y-3 custom-scrollbar mb-8">
+                       {selectedRecipe.ingredients.map((ing: string, i: number) => {
+                         const isOwned = ownedIngredients.includes(ing);
+                         return (
+                           <div 
+                             key={i} 
+                             onClick={() => toggleIngredient(ing)}
+                             className={`flex items-center gap-4 p-4 rounded-2xl border cursor-pointer transition-all duration-300 ${
+                               isOwned 
+                                 ? 'bg-brand-500/5 border-brand-500/30 opacity-60' 
+                                 : 'bg-luxe-800 border-white/10 hover:border-brand-500/50 hover:bg-luxe-800/80 shadow-glass-sm'
+                             }`}
+                           >
+                             <div className={`w-6 h-6 rounded-md border flex items-center justify-center transition-colors ${
+                               isOwned ? 'bg-brand-500 border-brand-500 text-black' : 'bg-luxe-900 border-white/20'
+                             }`}>
+                               {isOwned && '✓'}
+                             </div>
+                             <span className={`font-bold transition-all duration-300 ${isOwned ? 'line-through text-gray-500' : 'text-white'}`}>
+                               {ing}
+                             </span>
+                           </div>
+                         );
+                       })}
+                     </div>
+
+                     {/* Part 6: Add to Cart Button Placeholder */}
+                     <button className="w-full bg-brand-500 text-black font-black uppercase tracking-widest py-4 rounded-xl hover:bg-brand-400 transition-colors shadow-[0_0_20px_rgba(247,211,0,0.3)] hover:shadow-[0_0_30px_rgba(247,211,0,0.5)] flex items-center justify-center gap-2">
+                       <span>🛒</span> Add {selectedRecipe.ingredients.length - ownedIngredients.length} Items to Cart
+                     </button>
                    </div>
                 )}
               </div>
