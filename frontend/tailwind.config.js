@@ -74,6 +74,11 @@ module.exports = {
           '0%': { transform: 'translateY(0)' },
           '100%': { transform: 'translateY(500px)' },
         },
+        flyToCart: {
+          '0%': { opacity: 1, transform: 'translateX(-50%) translateY(0) scale(1)' },
+          '60%': { opacity: 1, transform: 'translateX(-50%) translateY(-60px) scale(0.9)' },
+          '100%': { opacity: 0, transform: 'translateX(-50%) translateY(-100px) scale(0.5)' },
+        },
       },
     },
   },

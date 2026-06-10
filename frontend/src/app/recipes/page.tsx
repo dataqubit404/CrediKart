@@ -1,13 +1,17 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useCartStore } from '@/store/cartStore';
 
 export default function SmartRecipesPage() {
+  const { addItem } = useCartStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState('All');
   const [selectedRecipe, setSelectedRecipe] = useState<any>(null);
   const [isParsing, setIsParsing] = useState(false);
   const [ownedIngredients, setOwnedIngredients] = useState<string[]>([]);
+  const [addedToCart, setAddedToCart] = useState(false);
+  const [flyingItems, setFlyingItems] = useState<string[]>([]);
 
   const categories = ['All', 'High Protein', 'Keto', 'Vegan', 'Italian', 'Quick 10-Min', 'Desserts'];
 
@@ -61,6 +65,36 @@ export default function SmartRecipesPage() {
     } else {
       setOwnedIngredients([...ownedIngredients, ing]);
     }
+  };
+
+  const handleAddToCart = () => {
+    if (addedToCart) return;
+    const itemsToAdd = selectedRecipe.ingredients.filter(
+      (ing: string) => !ownedIngredients.includes(ing)
+    );
+    if (itemsToAdd.length === 0) return;
+
+    // Trigger flying animation
+    setFlyingItems(itemsToAdd);
+
+    // Add each ingredient to the global cart store after a stagger
+    itemsToAdd.forEach((ing: string, i: number) => {
+      setTimeout(() => {
+        addItem({
+          id: `recipe-${selectedRecipe.id}-${i}`,
+          name: ing,
+          price: Math.floor(Math.random() * 80) + 20,
+          image: selectedRecipe.image,
+          quantity: 1,
+        });
+      }, i * 150);
+    });
+
+    // Show success state after all items have flown
+    setTimeout(() => {
+      setFlyingItems([]);
+      setAddedToCart(true);
+    }, itemsToAdd.length * 150 + 400);
   };
 
   return (
@@ -250,10 +284,44 @@ export default function SmartRecipesPage() {
                        })}
                      </div>
 
-                     {/* Part 6: Add to Cart Button Placeholder */}
-                     <button className="w-full bg-brand-500 text-black font-black uppercase tracking-widest py-4 rounded-xl hover:bg-brand-400 transition-colors shadow-[0_0_20px_rgba(247,211,0,0.3)] hover:shadow-[0_0_30px_rgba(247,211,0,0.5)] flex items-center justify-center gap-2">
-                       <span>🛒</span> Add {selectedRecipe.ingredients.length - ownedIngredients.length} Items to Cart
-                     </button>
+                     {/* Part 6: Add to Cart with Micro-Animation */}
+                     <div className="relative">
+                       {/* Flying Item Particles */}
+                       {flyingItems.map((item, i) => (
+                         <div
+                           key={i}
+                           className="absolute left-1/2 bottom-full mb-2 px-3 py-1.5 bg-brand-500/20 border border-brand-500/40 rounded-full text-xs font-bold text-brand-400 whitespace-nowrap pointer-events-none z-50"
+                           style={{
+                             animation: `flyToCart 0.6s ease-in forwards`,
+                             animationDelay: `${i * 0.15}s`,
+                             opacity: 0,
+                             transform: `translateX(-50%) translateY(${-i * 8}px)`,
+                           }}
+                         >
+                           {item}
+                         </div>
+                       ))}
+
+                       <button
+                         onClick={handleAddToCart}
+                         disabled={addedToCart || selectedRecipe.ingredients.length - ownedIngredients.length === 0}
+                         className={`w-full font-black uppercase tracking-widest py-4 rounded-xl transition-all duration-500 flex items-center justify-center gap-3 ${
+                           addedToCart
+                             ? 'bg-green-500 text-white shadow-[0_0_20px_rgba(34,197,94,0.4)] scale-[1.02]'
+                             : selectedRecipe.ingredients.length - ownedIngredients.length === 0
+                               ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                               : 'bg-brand-500 text-black shadow-[0_0_20px_rgba(247,211,0,0.3)] hover:shadow-[0_0_30px_rgba(247,211,0,0.5)] hover:bg-brand-400 hover:scale-[1.02] active:scale-95'
+                         }`}
+                       >
+                         {addedToCart ? (
+                           <><span className="text-lg">✓</span> Added to Cart!</>
+                         ) : selectedRecipe.ingredients.length - ownedIngredients.length === 0 ? (
+                           <>All Items Owned 🎉</>
+                         ) : (
+                           <><span className="text-lg">🛒</span> Add {selectedRecipe.ingredients.length - ownedIngredients.length} Items to Cart</>
+                         )}
+                       </button>
+                     </div>
                    </div>
                 )}
               </div>
