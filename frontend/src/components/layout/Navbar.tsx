@@ -53,10 +53,13 @@ export default function Navbar() {
           <div className="flex items-center gap-4 shrink-0">
             {mounted && (
               <div className="flex items-center gap-3">
-                <Link href="/dashboard/rewards" className="text-sm font-bold text-white hover:text-brand-300 transition-colors flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-brand-600 to-brand-400 rounded-xl shadow-[0_0_15px_rgba(247,211,0,0.4)] hover:shadow-[0_0_25px_rgba(247,211,0,0.6)] hover:scale-105 active:scale-95 animate-pulse-glow border border-white/20">
+                <Link href="/recipes" className="text-sm font-bold text-white hover:text-brand-300 transition-all flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-xl shadow-[0_0_15px_rgba(16,185,129,0.4)] hover:shadow-[0_0_25px_rgba(16,185,129,0.6)] hover:scale-105 active:scale-95 border border-white/20">
+                  <span className="text-lg">🪄</span> Smart Recipes
+                </Link>
+                <Link href="/dashboard/rewards" className="text-sm font-bold text-white hover:text-brand-300 transition-colors flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-brand-600 to-brand-400 rounded-xl shadow-[0_0_15px_rgba(247,211,0,0.4)] hover:shadow-[0_0_25px_rgba(247,211,0,0.6)] hover:scale-105 active:scale-95 animate-pulse-glow border border-white/20 hidden md:flex">
                   <span className="text-lg">🎡</span> Spin & Win
                 </Link>
-                <Link href="/flash-deals" className="text-sm font-bold text-brand-400 hover:text-brand-300 transition-colors flex items-center gap-1.5 px-4 py-2 bg-brand-500/10 border border-brand-500/20 rounded-xl shadow-[0_0_10px_rgba(247,211,0,0.1)] hover:shadow-[0_0_15px_rgba(247,211,0,0.2)] hidden md:flex">
+                <Link href="/flash-deals" className="text-sm font-bold text-brand-400 hover:text-brand-300 transition-colors flex items-center gap-1.5 px-4 py-2 bg-brand-500/10 border border-brand-500/20 rounded-xl shadow-[0_0_10px_rgba(247,211,0,0.1)] hover:shadow-[0_0_15px_rgba(247,211,0,0.2)] hidden lg:flex">
                   <span>⚡</span> Flash Deals
                 </Link>
               </div>
