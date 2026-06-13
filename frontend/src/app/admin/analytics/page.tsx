@@ -2,7 +2,29 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+
+const recipeFunnelData = [
+  { stage: 'Recipe Views', count: 8400 },
+  { stage: 'Clicked', count: 5200 },
+  { stage: 'AI Parsed', count: 4800 },
+  { stage: 'Added to Cart', count: 3100 },
+  { stage: 'Purchased', count: 2400 },
+];
+
+const FunnelTooltip = ({ active, payload }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-luxe-900 border border-white/10 p-4 rounded-xl shadow-[0_0_20px_rgba(0,0,0,0.5)] backdrop-blur-md">
+        <p className="font-bold text-white mb-1">{payload[0].payload.stage}</p>
+        <p className="text-emerald-400 font-black text-lg">
+          {payload[0].value.toLocaleString()} <span className="text-sm font-medium text-gray-400">users</span>
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
 
 const revenueData = [
   { name: 'Mon', revenue: 12400, credipay: 4000 },
@@ -112,11 +134,19 @@ export default function AdminAnalyticsDashboard() {
           </div>
 
           {/* Part 3: Smart Recipes Funnel/Bar Chart */}
-          <div className="bg-luxe-800/50 backdrop-blur-xl border border-white/5 rounded-[2rem] p-8 shadow-glass xl:col-span-3 min-h-[400px] flex items-center justify-center text-gray-500 font-bold border-dashed border-2">
-            Part 3: Smart Recipes Funnel Chart
+          <div className="bg-luxe-800/50 backdrop-blur-xl border border-white/5 rounded-[2rem] p-8 shadow-glass xl:col-span-3 flex flex-col min-h-[450px]">
+            <h2 className="font-display font-black text-2xl text-white mb-2">Smart Recipe Conversion Funnel</h2>
+            <p className="text-gray-400 text-sm font-medium mb-8">Tracking user progression through the new AI Recipe feature.</p>
+            
+            <div className="flex-1 w-full h-full min-h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={recipeFunnelData} layout="vertical" margin={{ top: 0, right: 30, left: 40, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" horizontal={false} />
+                  <XAxis type="number" stroke="rgba(255,255,255,0.2)" tick={{ fill: '#9ca3af', fontSize: 12 }} tickLine={false} axisLine={false} />
+                  <YAxis dataKey="stage" type="category" stroke="rgba(255,255,255,0.2)" tick={{ fill: '#e5e7eb', fontSize: 13, fontWeight: 'bold' }} tickLine={false} axisLine={false} width={120} />
+                  <Tooltip content={<FunnelTooltip />} cursor={{ fill: 'rgba(255,255,255,0.05)' }} />
+                  <Bar dataKey="count" fill="#10b981" radius={[0, 8, 8, 0]} barSize={32} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
-        </div>
-      )}
-    </div>
-  );
-}
