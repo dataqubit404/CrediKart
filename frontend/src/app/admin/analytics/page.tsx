@@ -2,7 +2,32 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, Legend, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+
+const spinRewardsData = [
+  { name: '10% Discount', value: 4500, color: '#3b82f6' },
+  { name: 'Free Delivery', value: 3200, color: '#10b981' },
+  { name: '₹50 Cashback', value: 1800, color: '#8b5cf6' },
+  { name: 'Mystery Box', value: 900, color: '#f59e0b' },
+  { name: 'Jackpot', value: 150, color: '#ef4444' },
+];
+
+const PieTooltip = ({ active, payload }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-luxe-900 border border-white/10 p-4 rounded-xl shadow-[0_0_20px_rgba(0,0,0,0.5)] backdrop-blur-md">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="w-3 h-3 rounded-full" style={{ backgroundColor: payload[0].payload.color }}></span>
+          <p className="font-bold text-white">{payload[0].name}</p>
+        </div>
+        <p className="text-gray-300 font-medium text-sm ml-5">
+          Won <span className="text-white font-bold">{payload[0].value.toLocaleString()}</span> times
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
 
 const recipeFunnelData = [
   { stage: 'Recipe Views', count: 8400 },
@@ -129,8 +154,37 @@ export default function AdminAnalyticsDashboard() {
           </div>
 
           {/* Part 4: VIP Spin & Win Rewards Distribution */}
-          <div className="bg-luxe-800/50 backdrop-blur-xl border border-white/5 rounded-[2rem] p-8 shadow-glass min-h-[400px] flex items-center justify-center text-gray-500 font-bold border-dashed border-2">
-            Part 4: Spin Wheel Distribution Pie Chart
+          <div className="bg-luxe-800/50 backdrop-blur-xl border border-white/5 rounded-[2rem] p-8 shadow-glass flex flex-col min-h-[450px]">
+            <h2 className="font-display font-black text-2xl text-white mb-2">Rewards Distribution</h2>
+            <p className="text-gray-400 text-sm font-medium mb-8">Prizes claimed via VIP Spin & Win.</p>
+            
+            <div className="flex-1 w-full h-full min-h-[300px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Tooltip content={<PieTooltip />} />
+                  <Pie
+                    data={spinRewardsData}
+                    cx="50%"
+                    cy="45%"
+                    innerRadius={70}
+                    outerRadius={100}
+                    paddingAngle={5}
+                    dataKey="value"
+                    stroke="none"
+                  >
+                    {spinRewardsData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Legend 
+                    verticalAlign="bottom" 
+                    height={36} 
+                    iconType="circle"
+                    formatter={(value, entry: any) => <span className="text-gray-300 text-xs font-bold ml-1">{value}</span>}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
           </div>
 
           {/* Part 3: Smart Recipes Funnel/Bar Chart */}
