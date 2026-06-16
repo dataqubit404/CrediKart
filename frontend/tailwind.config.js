@@ -55,8 +55,10 @@ module.exports = {
         'pulse-glow': 'pulseGlow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         shimmer: 'shimmer 1.5s infinite',
         'sonar-ping': 'sonarPing 3s cubic-bezier(0, 0, 0.2, 1) infinite',
+        'slow-zoom': 'slowZoom 20s linear infinite alternate',
       },
       keyframes: {
+        slowZoom: { '0%': { transform: 'scale(1)' }, '100%': { transform: 'scale(1.15)' } },
         slideIn: { from: { transform: 'translateX(100%)' }, to: { transform: 'translateX(0)' } },
         fadeIn: { from: { opacity: 0 }, to: { opacity: 1 } },
         fadeUp: { from: { opacity: 0, transform: 'translateY(20px)' }, to: { opacity: 1, transform: 'translateY(0)' } },

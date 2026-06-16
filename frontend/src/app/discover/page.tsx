@@ -3,9 +3,9 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 
 const feedItems = [
-  { id: 1, title: 'A5 Wagyu Steak', type: 'product' },
-  { id: 2, title: 'Artisan Avocado Toast', type: 'recipe' },
-  { id: 3, title: 'Organic Ceremonial Matcha', type: 'product' },
+  { id: 1, title: 'A5 Wagyu Steak', type: 'product', src: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1469&auto=format&fit=crop' },
+  { id: 2, title: 'Artisan Avocado Toast', type: 'recipe', src: 'https://images.unsplash.com/photo-1603048297172-c92544798d5e?q=80&w=1470&auto=format&fit=crop' },
+  { id: 3, title: 'Organic Ceremonial Matcha', type: 'product', src: 'https://images.unsplash.com/photo-1515823064-d6e0c04616a7?q=80&w=1471&auto=format&fit=crop' },
 ];
 
 export default function DiscoverFeed() {
@@ -33,10 +33,24 @@ export default function DiscoverFeed() {
       {/* Full Screen Snapping Container */}
       <div className="w-full h-full snap-y snap-mandatory overflow-y-scroll scroll-smooth hide-scrollbar">
         {feedItems.map((item, index) => (
-          <div key={item.id} className="w-full h-screen snap-start snap-always relative flex items-center justify-center bg-luxe-900 border-b border-white/5">
-            <h2 className="text-3xl font-black font-display tracking-tight text-white/20">
-              Video / Image #{index + 1}
-            </h2>
+          <div key={item.id} className="w-full h-screen snap-start snap-always relative flex items-center justify-center bg-black overflow-hidden group">
+            {/* Dynamic Media Player */}
+            <div className="absolute inset-0 w-full h-full">
+              <img 
+                src={item.src} 
+                alt={item.title}
+                className="w-full h-full object-cover animate-slow-zoom"
+              />
+              {/* Gradient Overlays for Readability */}
+              <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80 pointer-events-none" />
+            </div>
+            
+            {/* Temporary Placeholder Text for Debugging Part 3 */}
+            <div className="relative z-10 pointer-events-none opacity-50">
+              <h2 className="text-3xl font-black font-display tracking-tight text-white drop-shadow-lg">
+                {item.title}
+              </h2>
+            </div>
           </div>
         ))}
       </div>
