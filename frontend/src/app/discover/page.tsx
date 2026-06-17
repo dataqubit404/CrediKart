@@ -10,10 +10,20 @@ const feedItems = [
 
 export default function DiscoverFeed() {
   const [mounted, setMounted] = useState(false);
+  const [likes, setLikes] = useState<Record<number, boolean>>({});
+  const [saves, setSaves] = useState<Record<number, boolean>>({});
   
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const toggleLike = (id: number) => {
+    setLikes(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const toggleSave = (id: number) => {
+    setSaves(prev => ({ ...prev, [id]: !prev[id] }));
+  };
 
   if (!mounted) return <div className="h-screen bg-black w-full" />;
 
@@ -44,9 +54,46 @@ export default function DiscoverFeed() {
               {/* Gradient Overlays for Readability */}
               <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/80 pointer-events-none" />
             </div>
+
+            {/* Part 4: Engagement Overlay UI */}
+            <div className="absolute right-4 bottom-32 flex flex-col items-center gap-6 z-20">
+              <button 
+                onClick={() => toggleLike(item.id)}
+                className="flex flex-col items-center gap-1 group/btn"
+              >
+                <div className={`w-12 h-12 rounded-full backdrop-blur-xl border flex items-center justify-center text-2xl transition-all duration-300 ${likes[item.id] ? 'bg-red-500/20 border-red-500 text-red-500 shadow-[0_0_20px_rgba(239,68,68,0.5)] scale-110' : 'bg-black/40 border-white/20 text-white hover:bg-white/10'}`}>
+                  {likes[item.id] ? '❤️' : '🤍'}
+                </div>
+                <span className="text-xs font-bold drop-shadow-md">{likes[item.id] ? '12.4K' : '12.3K'}</span>
+              </button>
+
+              <button className="flex flex-col items-center gap-1 group/btn">
+                <div className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-xl border border-white/20 flex items-center justify-center text-2xl text-white hover:bg-white/10 transition-all duration-300">
+                  💬
+                </div>
+                <span className="text-xs font-bold drop-shadow-md">842</span>
+              </button>
+
+              <button 
+                onClick={() => toggleSave(item.id)}
+                className="flex flex-col items-center gap-1 group/btn"
+              >
+                <div className={`w-12 h-12 rounded-full backdrop-blur-xl border flex items-center justify-center text-2xl transition-all duration-300 ${saves[item.id] ? 'bg-brand-500/20 border-brand-500 text-brand-500 shadow-[0_0_20px_rgba(247,211,0,0.5)] scale-110' : 'bg-black/40 border-white/20 text-white hover:bg-white/10'}`}>
+                  {saves[item.id] ? '⭐' : '🔖'}
+                </div>
+                <span className="text-xs font-bold drop-shadow-md">{saves[item.id] ? 'Saved' : 'Save'}</span>
+              </button>
+
+              <button className="flex flex-col items-center gap-1 group/btn">
+                <div className="w-12 h-12 rounded-full bg-black/40 backdrop-blur-xl border border-white/20 flex items-center justify-center text-2xl text-white hover:bg-white/10 transition-all duration-300">
+                  🔗
+                </div>
+                <span className="text-xs font-bold drop-shadow-md">Share</span>
+              </button>
+            </div>
             
-            {/* Temporary Placeholder Text for Debugging Part 3 */}
-            <div className="relative z-10 pointer-events-none opacity-50">
+            {/* Temporary Placeholder Text for Debugging */}
+            <div className="relative z-10 pointer-events-none opacity-50 absolute bottom-1/2">
               <h2 className="text-3xl font-black font-display tracking-tight text-white drop-shadow-lg">
                 {item.title}
               </h2>
