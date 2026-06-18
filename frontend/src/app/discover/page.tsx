@@ -3,9 +3,27 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 
 const feedItems = [
-  { id: 1, title: 'A5 Wagyu Steak', type: 'product', src: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1469&auto=format&fit=crop' },
-  { id: 2, title: 'Artisan Avocado Toast', type: 'recipe', src: 'https://images.unsplash.com/photo-1603048297172-c92544798d5e?q=80&w=1470&auto=format&fit=crop' },
-  { id: 3, title: 'Organic Ceremonial Matcha', type: 'product', src: 'https://images.unsplash.com/photo-1515823064-d6e0c04616a7?q=80&w=1471&auto=format&fit=crop' },
+  {
+    id: 1, title: 'A5 Wagyu Steak', type: 'product',
+    src: 'https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1469&auto=format&fit=crop',
+    price: '₹4,999', originalPrice: '₹6,499', rating: 4.9, reviews: 1284,
+    shop: 'Luxe Meats Co.', shopAvatar: '🥩', tag: '⚡ Flash Deal',
+    desc: 'Premium marbled Japanese Wagyu, graded A5 — the highest possible rating.',
+  },
+  {
+    id: 2, title: 'Artisan Avocado Toast', type: 'recipe',
+    src: 'https://images.unsplash.com/photo-1603048297172-c92544798d5e?q=80&w=1470&auto=format&fit=crop',
+    price: '₹349', originalPrice: null, rating: 4.7, reviews: 568,
+    shop: 'The Green Table', shopAvatar: '🥑', tag: '🪄 Smart Recipe',
+    desc: 'All 5 ingredients auto-added to cart by our AI Recipe Builder.',
+  },
+  {
+    id: 3, title: 'Organic Ceremonial Matcha', type: 'product',
+    src: 'https://images.unsplash.com/photo-1515823064-d6e0c04616a7?q=80&w=1471&auto=format&fit=crop',
+    price: '₹1,199', originalPrice: '₹1,599', rating: 4.8, reviews: 902,
+    shop: 'Zen Harvest', shopAvatar: '🍵', tag: '✨ Trending',
+    desc: 'First harvest ceremonial grade matcha from Uji, Kyoto, Japan.',
+  },
 ];
 
 export default function DiscoverFeed() {
@@ -92,11 +110,50 @@ export default function DiscoverFeed() {
               </button>
             </div>
             
-            {/* Temporary Placeholder Text for Debugging */}
-            <div className="relative z-10 pointer-events-none opacity-50 absolute bottom-1/2">
-              <h2 className="text-3xl font-black font-display tracking-tight text-white drop-shadow-lg">
-                {item.title}
-              </h2>
+            {/* Part 5: Product Highlight Card */}
+            <div className="absolute bottom-5 left-4 right-20 z-20 animate-fade-up">
+              {/* Shop info row */}
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-base">
+                  {item.shopAvatar}
+                </div>
+                <span className="text-sm font-black text-white drop-shadow-md tracking-wide">{item.shop}</span>
+                <span className="ml-1 px-2 py-0.5 text-[10px] font-black uppercase tracking-widest rounded-full bg-brand-500/20 border border-brand-500/40 text-brand-400">
+                  {item.tag}
+                </span>
+              </div>
+
+              {/* Glass Card */}
+              <div className="bg-black/50 backdrop-blur-2xl border border-white/10 rounded-3xl p-5 shadow-[0_8px_32px_rgba(0,0,0,0.6)]">
+                <h2 className="font-display font-black text-2xl text-white tracking-tight mb-1">{item.title}</h2>
+                <p className="text-gray-300 text-sm font-medium mb-3 leading-relaxed line-clamp-2">{item.desc}</p>
+
+                {/* Rating */}
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="flex gap-0.5">
+                    {[...Array(5)].map((_, i) => (
+                      <span key={i} className={`text-sm ${i < Math.floor(item.rating) ? 'text-brand-400' : 'text-white/20'}`}>★</span>
+                    ))}
+                  </div>
+                  <span className="text-brand-400 font-black text-sm">{item.rating}</span>
+                  <span className="text-gray-500 text-xs font-medium">({item.reviews.toLocaleString()} reviews)</span>
+                </div>
+
+                {/* Price Row */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-2xl font-black text-white">{item.price}</span>
+                    {item.originalPrice && (
+                      <span className="text-sm text-gray-500 line-through font-medium">{item.originalPrice}</span>
+                    )}
+                  </div>
+                  {item.originalPrice && (
+                    <span className="px-2.5 py-1 text-xs font-black uppercase tracking-widest rounded-full bg-green-500/20 border border-green-500/40 text-green-400">
+                      {Math.round((1 - parseInt(item.price.replace(/[₹,]/g,'')) / parseInt(item.originalPrice.replace(/[₹,]/g,''))) * 100)}% OFF
+                    </span>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
         ))}
