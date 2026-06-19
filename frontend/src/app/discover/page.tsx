@@ -1,6 +1,7 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
+import { useCartStore } from '@/store/cartStore';
 
 const feedItems = [
   {
@@ -26,10 +27,83 @@ const feedItems = [
   },
 ];
 
+function SlideToButton({ onComplete, price }: { onComplete: () => void; price: string }) {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [dragging, setDragging] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    setDragging(true);
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!dragging || !trackRef.current) return;
+    const rect = trackRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const thumbWidth = 56;
+    const maxTravel = rect.width - thumbWidth;
+    const pct = Math.min(Math.max((x - thumbWidth / 2) / maxTravel, 0), 1);
+    setProgress(pct);
+  };
+
+  const handlePointerUp = () => {
+    setDragging(false);
+    if (progress > 0.85) {
+      setProgress(1);
+      onComplete();
+    } else {
+      setProgress(0);
+    }
+  };
+
+  const thumbWidth = 56;
+
+  return (
+    <div
+      ref={trackRef}
+      className="relative h-14 rounded-2xl bg-white/5 border border-white/10 overflow-hidden select-none touch-none cursor-grab active:cursor-grabbing"
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
+      onPointerCancel={handlePointerUp}
+    >
+      {/* Animated fill */}
+      <div
+        className="absolute inset-y-0 left-0 bg-gradient-to-r from-brand-500/30 to-brand-500/10 rounded-2xl transition-all"
+        style={{ width: `${progress * 100}%`, transition: dragging ? 'none' : 'width 0.4s cubic-bezier(0.16,1,0.3,1)' }}
+      />
+
+      {/* Center label */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <span
+          className="text-sm font-black uppercase tracking-widest text-white/40 transition-opacity"
+          style={{ opacity: 1 - progress * 2 }}
+        >
+          Slide to Buy · {price}
+        </span>
+      </div>
+
+      {/* Draggable thumb */}
+      <div
+        className={`absolute top-1 bottom-1 w-12 rounded-xl bg-brand-500 flex items-center justify-center text-black text-xl font-black shadow-[0_0_20px_rgba(247,211,0,0.5)] transition-all ${dragging ? 'scale-105' : ''}`}
+        style={{
+          left: `calc(${progress * 100}% * (1 - ${thumbWidth}px / ${trackRef.current?.offsetWidth || 300}px) + 4px)`,
+          transition: dragging ? 'none' : 'left 0.4s cubic-bezier(0.16,1,0.3,1)',
+        }}
+        onPointerDown={handlePointerDown}
+      >
+        →
+      </div>
+    </div>
+  );
+}
+
 export default function DiscoverFeed() {
   const [mounted, setMounted] = useState(false);
   const [likes, setLikes] = useState<Record<number, boolean>>({});
   const [saves, setSaves] = useState<Record<number, boolean>>({});
+  const [purchased, setPurchased] = useState<Record<number, boolean>>({});
+  const addItem = useCartStore((s: any) => s.addItem);
   
   useEffect(() => {
     setMounted(true);
@@ -41,6 +115,17 @@ export default function DiscoverFeed() {
 
   const toggleSave = (id: number) => {
     setSaves(prev => ({ ...prev, [id]: !prev[id] }));
+  };
+
+  const handlePurchase = (item: typeof feedItems[0]) => {
+    setPurchased(prev => ({ ...prev, [item.id]: true }));
+    addItem({
+      id: item.id * 1000,
+      name: item.title,
+      price: parseFloat(item.price.replace(/[₹,]/g, '')),
+      image: item.src,
+      shop_id: item.id,
+    });
   };
 
   if (!mounted) return <div className="h-screen bg-black w-full" />;
@@ -151,6 +236,18 @@ export default function DiscoverFeed() {
                     <span className="px-2.5 py-1 text-xs font-black uppercase tracking-widest rounded-full bg-green-500/20 border border-green-500/40 text-green-400">
                       {Math.round((1 - parseInt(item.price.replace(/[₹,]/g,'')) / parseInt(item.originalPrice.replace(/[₹,]/g,''))) * 100)}% OFF
                     </span>
+                  )}
+                </div>
+
+                {/* Part 6: Slide to Buy */}
+                <div className="mt-4">
+                  {purchased[item.id] ? (
+                    <div className="h-14 rounded-2xl bg-green-500/20 border border-green-500/40 flex items-center justify-center gap-2 animate-fade-in">
+                      <span className="text-2xl">✓</span>
+                      <span className="font-black text-green-400 uppercase tracking-widest text-sm">Added to Cart</span>
+                    </div>
+                  ) : (
+                    <SlideToButton onComplete={() => handlePurchase(item)} price={item.price} />
                   )}
                 </div>
               </div>
