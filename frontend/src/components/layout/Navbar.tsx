@@ -56,6 +56,9 @@ export default function Navbar() {
                 <Link href="/recipes" className="text-sm font-bold text-white hover:text-brand-300 transition-all flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-emerald-600 to-emerald-400 rounded-xl shadow-[0_0_15px_rgba(16,185,129,0.4)] hover:shadow-[0_0_25px_rgba(16,185,129,0.6)] hover:scale-105 active:scale-95 border border-white/20">
                   <span className="text-lg">🪄</span> Smart Recipes
                 </Link>
+                <Link href="/discover" className="text-sm font-bold text-white hover:text-brand-300 transition-all flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-xl shadow-[0_0_15px_rgba(124,58,237,0.4)] hover:shadow-[0_0_25px_rgba(124,58,237,0.6)] hover:scale-105 active:scale-95 border border-white/20 animate-pulse-glow hidden md:flex">
+                  <span className="text-lg">🎬</span> Discover
+                </Link>
                 <Link href="/dashboard/rewards" className="text-sm font-bold text-white hover:text-brand-300 transition-colors flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-brand-600 to-brand-400 rounded-xl shadow-[0_0_15px_rgba(247,211,0,0.4)] hover:shadow-[0_0_25px_rgba(247,211,0,0.6)] hover:scale-105 active:scale-95 animate-pulse-glow border border-white/20 hidden md:flex">
                   <span className="text-lg">🎡</span> Spin & Win
                 </Link>

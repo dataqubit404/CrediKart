@@ -17,6 +17,7 @@ export default function DashboardPage() {
     { label: 'CrediPay Dues', href: '/dashboard/credit', icon: '💳', desc: 'View and pay dues' },
     { label: 'VIP Rewards', href: '/dashboard/rewards', icon: '🎡', desc: 'Daily Spin & Winnings' },
     { label: 'Smart Recipes', href: '/recipes', icon: '🪄', desc: 'AI-powered meal builder' },
+    { label: 'CK Discover', href: '/discover', icon: '🎬', desc: 'Watch & shop vertical feed' },
     { label: 'Subscriptions', href: '/dashboard/subscriptions', icon: '⭐', desc: 'Manage your plan' },
   ];
 
@@ -69,6 +70,34 @@ export default function DashboardPage() {
             </div>
             <div className="px-6 py-3 bg-emerald-500 text-white font-black uppercase tracking-widest text-sm rounded-full shadow-[0_0_20px_rgba(16,185,129,0.4)] group-hover:scale-105 transition-transform">
               Cook Now →
+            </div>
+          </div>
+        </div>
+      </Link>
+
+      {/* Trending on Discover Promo Banner */}
+      <Link href="/discover" className="block mt-6 group">
+        <div className="bg-gradient-to-r from-purple-950/60 to-luxe-800/80 backdrop-blur-xl border border-purple-500/20 rounded-[2rem] p-8 shadow-glass relative overflow-hidden hover:border-purple-500/40 transition-all duration-500 hover:shadow-[0_10px_40px_rgba(147,51,234,0.15)]">
+          {/* Ambient glow */}
+          <div className="absolute -right-16 -top-16 w-48 h-48 bg-purple-500/15 rounded-full blur-3xl group-hover:bg-purple-500/25 transition-colors duration-700" />
+          <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-6">
+              <div className="w-16 h-16 rounded-2xl overflow-hidden border border-white/10 hidden sm:block relative">
+                <img 
+                  src="https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=150&auto=format&fit=crop" 
+                  alt="Trending Wagyu" 
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <span className="absolute top-1 left-1 bg-red-500 text-white font-black text-[8px] px-1 rounded">LIVE</span>
+              </div>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-purple-400 mb-2">🔥 Trending on Discover</p>
+                <h3 className="font-display font-black text-2xl text-white tracking-tight italic">Premium Japanese Wagyu A5</h3>
+                <p className="text-gray-400 text-sm font-medium mt-1">Watch video highlights · Slide to Buy instant-adds to cart</p>
+              </div>
+            </div>
+            <div className="px-6 py-3 bg-purple-600 text-white font-black uppercase tracking-widest text-sm rounded-full shadow-[0_0_20px_rgba(147,51,234,0.4)] group-hover:scale-105 transition-transform">
+              Watch Feed 🎬
             </div>
           </div>
         </div>
